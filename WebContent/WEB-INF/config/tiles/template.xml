@@ -1,0 +1,74 @@
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" 
+    "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+<tiles-definitions>
+	<!-- 관리자 템플릿 -->
+	<definition name="adminTemplate" template="/WEB-INF/template/admin/root.jsp">
+        <put-attribute name="title" value="관리자" />
+        <put-attribute name="include" value="/WEB-INF/template/admin/include.jsp" />
+        <put-attribute name="header" value="/WEB-INF/template/admin/header.jsp" />
+    </definition>
+	<!-- 모바일 템플릿 -->
+	<definition name="mobileTemplate" template="/WEB-INF/template/root.jsp">
+		<put-attribute name="title" value="모바일" />
+        <put-attribute name="include" value="/WEB-INF/template/include.jsp" />
+        <put-attribute name="header" value="/WEB-INF/template/header.jsp" />
+	</definition>
+	<!-- 관리자 심플 템플릿 -->
+	<definition name="adminEmptyTemplate" template="/WEB-INF/template/admin/empty.jsp">
+		<put-attribute name="include" value="/WEB-INF/template/admin/include.jsp" />
+    </definition>
+	<!-- 모바일 심플 템플릿 -->
+	<definition name="mobileEmptyTemplate" template="/WEB-INF/template/empty.jsp">
+		<put-attribute name="include" value="/WEB-INF/template/include.jsp" />
+    </definition>
+    <!-- 관리자 로그인 페이지 -->
+    <definition name="admin/login" extends="adminEmptyTemplate">
+    	<put-attribute name="title" value="관리자 로그인" />
+		<put-attribute name="content" value="/WEB-INF/view/admin/login.jsp" />
+	</definition>
+	<!-- 모바일 로그인 페이지 -->
+	<definition name="login" extends="mobileEmptyTemplate">
+    	<put-attribute name="title" value="로그인" />
+		<put-attribute name="content" value="/WEB-INF/view/login.jsp" />
+	</definition>
+    <!-- 모바일 메인 페이지 -->
+    <definition name="index" extends="mobileEmptyTemplate">
+    	<put-attribute name="title" value="메인화면" />
+		<put-attribute name="content" value="/WEB-INF/view/index.jsp" />
+	</definition>
+	<!-- 모바일 병원선택 페이지 -->
+    <definition name="hospital" template="/WEB-INF/template/hospital.jsp">
+    	<put-attribute name="include" value="/WEB-INF/template/include.jsp" />
+	</definition>
+	<!-- 공통 에러 페이지 -->
+    <definition name="error" extends="mobileEmptyTemplate">
+    	<put-attribute name="title" value="에러안내" />
+        <put-attribute name="content" value="/WEB-INF/view/error.jsp" />
+    </definition>
+    <!-- 409 에러 페이지 -->
+    <definition name="error409" extends="mobileEmptyTemplate">
+    	<put-attribute name="title" value="에러안내" />
+        <put-attribute name="content" value="/WEB-INF/template/error409.jsp" />
+    </definition>
+    <!-- 관리자 패턴 -->
+    <definition name="admin/*" extends="adminTemplate">
+        <put-attribute name="content" expression="/WEB-INF/view/admin/{1}.jsp" />
+    </definition>
+    <definition name="admin/*/*" extends="adminTemplate">
+        <put-attribute name="content" expression="/WEB-INF/view/admin/{1}/{2}.jsp" />
+    </definition>
+    <definition name="admin/*/*/*" extends="adminTemplate">
+        <put-attribute name="content" expression="/WEB-INF/view/admin/{1}/{2}/{3}.jsp" />
+    </definition>
+    <!-- 모바일 패턴 -->
+    <definition name="*" extends="mobileTemplate">
+        <put-attribute name="content" expression="/WEB-INF/view/{1}.jsp" />
+    </definition>
+    <definition name="*/*" extends="mobileTemplate">
+        <put-attribute name="content" expression="/WEB-INF/view/{1}/{2}.jsp" />
+    </definition>
+    <definition name="*/*/*" extends="mobileTemplate">
+        <put-attribute name="content" expression="/WEB-INF/view/{1}/{2}/{3}.jsp" />
+    </definition>
+</tiles-definitions>

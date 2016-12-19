@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration>
+<configuration scan="true" scanPeriod="30 seconds">
+    <!-- 화면용 -->
+	<appender name="consoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>@@ %date{MM-dd HH:mm:ss.SSS}|%-5level|%throwable{4}%logger{0}.%M\(%line\)::%msg | ${application-name:-mcare} %thread %n</pattern>
+		</encoder>
+	</appender>
+	
+	<!-- 정상로그용 -->
+	<appender name="fileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+	    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+	    	<fileNamePattern>../logs/mcare.%d{yyyy-MM-dd}.log</fileNamePattern>
+	    	<maxHistory>3</maxHistory>
+	    </rollingPolicy>
+		<encoder>
+			<pattern>@@ %date{MM-dd HH:mm:ss.SSS}|%-5level|%throwable{4}%logger{0}.%M\(%line\)::%msg | ${application-name:-mcare} %thread %n</pattern>
+		</encoder>
+	</appender>	
+	
+	<!-- 에러로그용 -->
+	<appender name="errorFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+	    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+	    	<fileNamePattern>../logs/mcare_error.%d{yyyy-MM-dd}.log</fileNamePattern>
+	    	<maxHistory>30</maxHistory>
+	    </rollingPolicy>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>ERROR</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>	    
+		<encoder>
+			<pattern>@@ %date{MM-dd HH:mm:ss.SSS}|%-5level|%throwable{10}%logger{0}.%M\(%line\)::%msg | ${application-name:-mcare} %thread %n</pattern>
+		</encoder>
+	</appender>	
+	
+	<!-- 로그 저장용. mcare2계정에 붙은것은 의도적인 것임 -->
+	<!-- 
+    <appender name="db" class="ch.qos.logback.classic.db.DBAppender">
+        <connectionSource class="ch.qos.logback.core.db.DriverManagerConnectionSource">
+            <driverClass>oracle.jdbc.driver.OracleDriver</driverClass>
+            <url>jdbc:oracle:thin:@//localhost:1521/Mcare</url>
+            <user>mcare2</user>
+            <password>mcare2</password> 
+        </connectionSource>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>ERROR</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>	  
+		<encoder>
+			<pattern>%msg</pattern>
+		</encoder>        
+    </appender>		
+    <appender name="async_db" class="ch.qos.logback.classic.AsyncAppender">
+            <appender-ref ref="db" />
+            <includeCallerData>true</includeCallerData>
+    </appender>
+     -->
+
+	<logger name="com.dbs.mcare">
+	    <level value="debug"/> 
+	</logger>
+	<logger name="com.dbs.mcare.framework">
+	    <level value="info"/> 
+	</logger>	
+	<logger name="com.dbs.mcare.framework.listener">
+	    <level value="debug"/> 
+	</logger>	
+	<logger name="org.springframework">
+	    <level value="warn"/> 
+	</logger> 
+	<!-- 디버깅용 
+	<logger name="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
+	    <level value="debug"/> 
+	</logger>	-->
+	<logger name="org.apache.tiles">
+	    <level value="info"/> 
+	</logger>
+	<logger name="org.springframework.transaction">
+	    <level value="info"/> 
+	</logger>
+	<logger name="org.springframework.jdbc">
+	    <level value="info"/> 
+	</logger>	
+	<logger name="org.apache.commons">
+	    <level value="info"/> 
+	</logger>
+	<logger name="org.apache.http">
+	    <level value="warn"/> 
+	</logger>
+	<root level="DEBUG">
+		<appender-ref ref="consoleAppender" />
+		<appender-ref ref="fileAppender" />
+		<appender-ref ref="errorFileAppender" />
+		<!-- 
+		<appender-ref ref="async_db" /> 
+		 -->
+	</root>
+	
+</configuration>

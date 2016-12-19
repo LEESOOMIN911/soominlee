@@ -1,0 +1,58 @@
+@CHARSET "UTF-8";
+
+.sec_con,.thi_con{margin-top:1em;}
+.sec_con .ui-checkbox {border-bottom:1px solid #d2d2d2;border-radius:0 !important;}
+
+.ui-controlgroup-vertical .ui-controlgroup-controls .ui-btn.ui-last-child{border-bottom:0;}
+
+.ui-noboxshadow.pnuh .ui-btn.ui-btn-b.disable{background-color:#7e7d7e;}
+textarea#etc_request {
+    height: 150px !important;
+}
+
+.ui-controlgroup-controls {display:block !important;
+	margin-bottom:0.5em;}
+
+	.sec_con .ui-checkbox{
+	position:relative;
+	width:32.3% !important;
+	background:#fff !important;
+	border:1px solid #d2d2d2;
+	text-align:center !important;
+	font-size:1.5em;
+	margin-right:1%;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	}
+	.sec_con .ui-checkbox label.ui-btn{border-radius:0;
+	text-align:center;
+	height:100%;
+	background:transparent;
+	padding:40px 0 10px 0;}
+	.ui-checkbox input{opacity:0 !important}
+
+	.sec_con .ui-checkbox label.ui-btn.ui-checkbox-on{color:#fff;
+	background-color:#249fff}
+
+	.sec_con .ui-checkbox label.ui-btn.ui-checkbox-on:before{color:#fff;
+	background-color:#249fff;
+	content:'\f14a'}
+
+
+	.sec_con .ui-checkbox label:before
+	{
+	position:absolute;
+	display:block;
+	width:30px;
+	height:30px;
+	left:50%;
+	margin-left:-15px;
+	top:10px;
+	font: normal normal normal 28px/1 FontAwesome;
+	text-align:center;
+	color:#777}
+
+	.sec_con .ui-checkbox:first-child label:before{content:'\f183'}
+	.sec_con .ui-checkbox:nth-child(2) label:before{content:'\f236'}
+	.sec_con .ui-checkbox:last-child label:before{content:'\f252'}

@@ -1,0 +1,9 @@
+@CHARSET "UTF-8";
+.container{margin:10px 0;}
+.cardNum{padding:5px;}
+.cardValiDt {width: 35%;display: inline-block;}
+.cardValiDt.sec{width:10%;vertical-align: text-bottom;}
+.cardValiDt.sec>div{margin:.5em 0;}
+.cardValiDt.sec>div label{min-height:2.2em;text-align:center;line-height:2.2em;}
+.cardPass {width: 25%;display: inline-block;}
+.payAmount label{text-align: center;border-bottom: 1px solid #333;font-size: 1.5em;color: #FFA000;}

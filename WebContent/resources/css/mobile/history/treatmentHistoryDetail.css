@@ -1,0 +1,14 @@
+@CHARSET "UTF-8";
+.fir_con{border-collapse: collapse;}
+.form_div{overflow:hidden;}
+.form_div > .form_label,
+.form_div > .form_input{margin: 0;padding:.5em 0;border: 0;float: left;min-height: 1px;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;border:1px solid #ccc;}
+.form_label{width:25%;height:100%;background: #ddd;}
+.form_input{width:75%;}
+.form_input > * {margin:0;}
+
+.form_label > span, .form_input > span { padding:8px;}
+.resultContainer {margin-bottom: 20px;}
+.sec_con .resultContainer {padding-bottom: .5em;}
+.resultContainer .resultData li span:first-child {width: 35%;}
+.resultContainer .resultData li span:last-child {width: 65%;}

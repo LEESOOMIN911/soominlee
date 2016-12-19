@@ -1,0 +1,91 @@
+@CHARSET "UTF-8";
+/*.telNoList a{
+	float: right;
+	text-decoration: none;
+	margin-right: 8%
+}
+
+.telNoList a span:after{
+	left:95%;
+}
+.ui-listview>.ui-li-static {
+    padding: 1pc 1em;
+}
+*/
+
+/*.telNoList.ui-listview li{background-image:linear-gradient(#FAFAFA,#eee);
+border-bottom:1px solid #bdbdbd;
+border-top:1px solid #e0e0e0;
+border-top:#f1f3f2;
+position:relative;
+padding:18px 15px 15px 15px;}*/
+
+.telNoList{}
+.telNoList.ui-listview li{list-style:none;
+background:linear-gradient(#fff,#fefefe);
+margin-bottom:7px !important;
+box-shadow: 0 1px 1px rgba(0,0,0,0.2);
+border: 1px solid #fff;}
+
+.telNoList.ui-listview li a{display:block;
+height:50px;
+line-height:50px;
+padding:0;
+overflow:hidden; 
+width:100%;
+background:yellow;
+-webkit-box-sizing: border-box;
+-moz-box-sizing: border-box;
+box-sizing: border-box;}
+
+.telNoList.ui-listview li a:after{content:'';display:block;clear:both;}
+
+.telNoList.ui-listview li a .teltitle{position:relative;
+color:#555;font-size:1.1em;
+float:left;padding-left:34px;
+width:70%;
+-webkit-box-sizing: border-box;
+-moz-box-sizing: border-box;
+box-sizing: border-box;
+overflow:hidden;
+text-overflow:ellipsis}
+
+.telNoList.ui-listview li a .teltitle:before{content:'\f0f8';
+display:inline-block;
+width:22px;
+height:22px;
+/*background-color:#aaa;*/
+position:absolute;left:10px;top:13px;
+font: normal normal normal 18px/1 FontAwesome;
+color:#555;
+/*border-radius:30px;*/
+text-align:center;
+line-height:22px;}
+
+.telNoList.ui-listview li a .telNo{
+width:30%;
+position:relative;color:#03a9f5;font-size:18px;float:right;
+padding-right:50px;
+line-height:50px;
+-webkit-box-sizing: border-box;
+-moz-box-sizing: border-box;
+box-sizing: border-box;
+text-align:right;}
+
+.telNoList.ui-listview li a .telNo:after{content:'\f095';
+display:block;
+width:32px;
+height:32px;
+background-color:#09c856;
+position:absolute;right:10px;top:50%;
+margin-top:-16px;
+font-size:28px;color:#fff;
+font-family:FontAwesome;
+line-height:32px;
+text-align:center;
+border-radius:5px;}
+
+.telNoList.ui-listview li:hover{box-shadow: 1px 1px 3px rgba(8,114,188,0.5);
+border: 1px solid #03a9f5}
+
+.telNoList.ui-listview li a.ui-btn.ui-btn-icon-right.ui-icon-carat-r:after{right:-3em;}

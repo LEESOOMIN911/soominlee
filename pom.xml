@@ -1,0 +1,278 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.dbs.mcare</groupId>
+	<artifactId>mcare</artifactId>
+	<version>1.6</version>
+	<packaging>war</packaging>
+
+	<properties>
+		<com.dbs.mcare.framework.version>1.3.11</com.dbs.mcare.framework.version>
+		<findbugs.maven.plugin.version>3.0.1</findbugs.maven.plugin.version>
+		<maven.ant.run.plugin.version>1.7</maven.ant.run.plugin.version>
+		<maven.compiler.plugin.version>3.1</maven.compiler.plugin.version>
+		<maven.jxr.plugin.version>2.5</maven.jxr.plugin.version>
+		<maven.pmd.plugin.version>3.5</maven.pmd.plugin.version>
+		<maven.resources.plugin.version>2.7</maven.resources.plugin.version>
+		<maven.war.plugin.version>2.6</maven.war.plugin.version>
+		<!-- tomcat7은 servlet 3.0, jsp 2.2 기준임 -->
+		<javax.servlet.version>3.0.1</javax.servlet.version>
+		<javax.servlet.jsp.version>2.2</javax.servlet.jsp.version>
+		<jstl.version>1.2</jstl.version>
+		<tiles.version>3.0.1</tiles.version>
+		<nice.id.version>1.1</nice.id.version>
+		<ipin.client.version>1.0.0</ipin.client.version>		
+		<commons.dbcp.version>1.4</commons.dbcp.version>
+		
+		<!-- 컴파일 옵션 -->
+		<maven.compiler.source.version>1.7</maven.compiler.source.version>
+		<maven.compiler.target.version>1.7</maven.compiler.target.version>
+		<maven.compiler.debug.mode>true</maven.compiler.debug.mode>	
+		
+		<!-- 개발용 (부산대 병원 deploy용)-->
+		<!-- 
+		<build.final.name>mcare_${user.name}</build.final.name>
+		--> 
+		<build.final.name>mcare</build.final.name>
+		<org.apache.tomcat.maven.version>2.1</org.apache.tomcat.maven.version>
+	</properties>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<!-- eclipse에서 maven을 편리하게 사용하기 위한 플러그인 -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.apache.maven.plugins</groupId>
+										<artifactId>maven-compiler-plugin</artifactId>
+										<versionRange>[1.0.0,)</versionRange>
+										<goals>
+											<goal>compile</goal>
+											<goal>testCompile</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.codehaus.mojo</groupId>
+										<artifactId>build-helper-maven-plugin</artifactId>
+										<versionRange>[1.7,)</versionRange>
+										<goals>
+											<goal>add-source</goal>
+											<goal>add-test-source</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+				<!-- 여기부터  -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-pmd-plugin</artifactId>
+					<version>${maven.pmd.plugin.version}</version>
+					<configuration>
+						<linkXRef>true</linkXRef>
+						<sourceEncoding>${encoding.type}</sourceEncoding>
+						<minimumTokens>100</minimumTokens>
+						<targetJdk>${maven.compiler.target.version}</targetJdk>
+					</configuration>	
+					<executions>
+						<execution>
+							<phase>compile</phase>
+							<goals>
+								<goal>check</goal>
+								<!-- 로그 때문에 중복라인이 있어서 중복체크는 제외  
+								<goal>cpd-check</goal>
+								-->
+							</goals>
+						</execution>
+					</executions>		
+				</plugin>				
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.1</version>
+					<configuration>
+						<source>${maven.compiler.source.version}</source>
+						<target>${maven.compiler.target.version}</target>
+						<maven.compiler.debug>${maven.compiler.debug.mode}</maven.compiler.debug>
+						<encoding>${encoding.type}</encoding>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>${maven.resources.plugin.version}</version>
+					<configuration>
+						<encoding>${encoding.type}</encoding>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-war-plugin</artifactId>
+					<version>${maven.war.plugin.version}</version>
+					<configuration>
+						<webResources>
+							<resource>
+								<directory>WebContent</directory>
+							</resource>
+						</webResources>
+						<warSourceDirectory>WebContent</warSourceDirectory>
+						<webXml>WebContent/WEB-INF/web.xml</webXml>
+						<packagingExcludes>
+							<!-- servlet, jsp는 WAS에 들어 있으므로 제외시킴 -->
+							WEB-INF/lib/servlet-api-*.jar,
+							WEB-INF/lib/javax.servlet-api-*.jar, 
+							WEB-INF/lib/jsp-api-*.jar 
+						</packagingExcludes>					
+					</configuration>
+				</plugin>
+				<!-- 부산대병원 운영서버 -->
+				<plugin>
+					<groupId>org.apache.tomcat.maven</groupId>
+					<artifactId>tomcat7-maven-plugin</artifactId>
+	   				<version>${org.apache.tomcat.maven.version}</version>
+	   				<configuration>
+	   					<url>http://beacon.pnuh.or.kr/manager/text</url>
+	   					<server>mcare4pnuh</server>
+	   					<path>/${build.final.name}</path>
+	   					<username>dbs</username>
+	   					<password>!@#$dbs!</password>
+	   				</configuration>
+				</plugin>				
+				
+				<!-- 여기까지 -->
+			</plugins>
+		</pluginManagement>
+		<finalName>${build.final.name}</finalName>
+	</build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>${maven.pmd.plugin.version}</version>              
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>${findbugs.maven.plugin.version}</version>
+            </plugin>    
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+                <version>${maven.jxr.plugin.version}</version>
+            </plugin>                    
+        </plugins>
+	</reporting>
+
+	<dependencies>
+		<!-- mobile-core -->
+		<dependency>
+			<groupId>com.dbs.mcare</groupId>
+			<artifactId>mcare-framework</artifactId>
+			<version>${com.dbs.mcare.framework.version}</version>
+		</dependency>
+		<!-- servlet -->
+ 		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>${javax.servlet.version}</version>
+		</dependency>	
+		<dependency>
+			<groupId>javax.servlet.jsp</groupId>
+			<artifactId>jsp-api</artifactId>
+			<version>${javax.servlet.jsp.version}</version>
+		</dependency>
+		
+		<!-- jstl -->
+		<dependency>
+			<groupId>jstl</groupId>
+			<artifactId>jstl</artifactId>
+			<version>${jstl.version}</version>
+		</dependency>
+		<!-- tiles -->
+		<dependency>
+			<groupId>org.apache.tiles</groupId>
+			<artifactId>tiles-core</artifactId>
+			<version>${tiles.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jcl-over-slf4j</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tiles</groupId>
+			<artifactId>tiles-jsp</artifactId>
+			<version>${tiles.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tiles</groupId>
+			<artifactId>tiles-servlet</artifactId>
+			<version>${tiles.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tiles</groupId>
+			<artifactId>tiles-template</artifactId>
+			<version>${tiles.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tiles</groupId>
+			<artifactId>tiles-el</artifactId>
+			<version>${tiles.version}</version>
+		</dependency>
+		<!-- DB connection pool -->
+		<dependency>
+			<groupId>commons-dbcp</groupId>
+			<artifactId>commons-dbcp</artifactId>
+			<version>${commons.dbcp.version}</version>
+		</dependency>		
+		<!-- 본인인증 -->
+		<dependency>
+			<groupId>com.dbs.mcare</groupId>
+			<artifactId>niceID</artifactId>
+			<version>${nice.id.version}</version>
+		</dependency>
+		<!-- 아이핀 -->
+		<dependency>
+			<groupId>com.dbs.mcare</groupId>
+			<artifactId>ipinClient</artifactId>
+			<version>${ipin.client.version}</version>
+		</dependency>				
+	</dependencies>
+
+	<repositories>
+		<repository>
+			<id>mcare_release</id>
+			<name>mcare_release</name>
+			<url>http://sa.idatabank.com/nexus/content/repositories/mcare_release</url>
+		</repository>
+		<repository>
+			<id>3rd_party</id>
+			<name>3rd_party</name>
+			<url>http://sa.idatabank.com/nexus/content/repositories/thirdparty/</url>
+		</repository>		
+	</repositories>
+</project>

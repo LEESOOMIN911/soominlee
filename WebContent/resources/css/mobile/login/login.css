@@ -1,0 +1,18 @@
+@CHARSET "UTF-8";
+.fir_con,.sec_con{position:relative;}
+/*.form_input{width: 90%;}*/
+.form_input{width:100%;}
+.findBtn{position: absolute;right: 0; top:-5px;}
+
+/*하단이미지*/
+.ui-panel-wrapper{
+background-color:#f3f3f7 !important;
+background-image:url(../../images/mobile/main/back1.png), url(../../images/mobile/main/back2.png);
+background-position:center bottom,left bottom;
+background-repeat:no-repeat,repeat-x;
+background-size:320px 80px,23px 80px;
+overflow-x:hidden;
+}
+.ui-content{
+	margin-bottom: 80px;
+}

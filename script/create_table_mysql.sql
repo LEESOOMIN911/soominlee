@@ -1,0 +1,288 @@
+-- ALTER DATABASE databasename CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+
+CREATE TABLE MCARE_ACCESS_HISTORY (
+	HISTORY_SEQ BIGINT NOT NULL AUTO_INCREMENT COMMENT '시퀀스', 
+	DEVICE_UUID_ID VARCHAR(255) COMMENT '장비 고유식별자 or IP', 
+	MENU_ID VARCHAR(255) COMMENT '장비 고유식별자 or IP', 
+	MENU_NAME VARCHAR(255) COMMENT 'access원하는 메뉴명 (메뉴가 동적으로 바뀔 수 있으므로 이름백업)', 
+	REQ_URI_ADDR VARCHAR(1024) COMMENT 'access 주소 (ui의 action)', 
+	REMOTE_IP_ADDR VARCHAR(1024) COMMENT 'client의 ip', 
+	ACCESS_DT DATE COMMENT '요청일시', 
+	PLATFORM_TYPE VARCHAR(50) COMMENT 'http 요청의 user agent 분석을 통해 결정되는 플랫폼 유형', 
+	BROWSER_VALUE VARCHAR(255) COMMENT 'http 요청의 user agent 분석을 통해 결정되는 브라우저 유형', 
+	SERVER_IP_ADDR VARCHAR(1024) COMMENT '서버주소',
+	UNIQUE KEY UQ_ACCESS_HISTORY_SEQ (HISTORY_SEQ)
+) CHARSET=utf8;
+
+---------------------------------------------------------------------------------------------- 
+
+CREATE TABLE MCARE_AGG_ACCESS 
+(	
+  	ACCESS_SEQ BIGINT NOT NULL AUTO_INCREMENT  COMMENT '시퀀스', 
+	MENU_ID VARCHAR(255) COMMENT '메뉴ID', 
+	MENU_NAME VARCHAR(255) COMMENT '메뉴명', 
+	REQ_URI_ADDR VARCHAR(1024) COMMENT 'access 주소 (ui의 action)', 
+	HIT_CNT INT COMMENT '방문횟수', 
+	AGG_DT DATE COMMENT '통계일시 (이 시간에 해당 메뉴에 얼마나 방문했는지)', 
+	CONSTRAINT UQ_ACCESS_DT_MENU_ID UNIQUE (AGG_DT, MENU_ID),
+	UNIQUE KEY UQ_AGG_ACCESS_SEQ (ACCESS_SEQ)
+) CHARSET=utf8;
+
+---------------------------------------------------------------------------------------------- 
+
+CREATE TABLE MCARE_AGG_DAILY 
+(	
+   	DAILY_SEQ BIGINT NOT NULL AUTO_INCREMENT  COMMENT '시퀀스', 
+	AGG_DT DATE COMMENT '통계일시 (이 시간에 해당 메뉴에 얼마나 방문했는지)', 
+	HIT_CNT INT COMMENT '방문횟수', 
+	WEEK_ORDER INT COMMENT '무슨요일인지', 
+	CONSTRAINT UQ_AGG_DT_WEEK_ORDER UNIQUE (AGG_DT, WEEK_ORDER),
+	UNIQUE KEY UQ_AGG_DAILY_SEQ (DAILY_SEQ)
+) CHARSET=utf8;
+   
+---------------------------------------------------------------------------------------------- 
+   
+CREATE TABLE MCARE_AGG_HOURLY 
+(	
+	HOURLY_SEQ BIGINT NOT NULL AUTO_INCREMENT  COMMENT '시퀀스', 
+	AGG_DT DATE COMMENT '통계일시 (이 시간에 해당 메뉴에 얼마나 방문했는지)', 
+	HIT_CNT INT COMMENT '방문횟수', 
+	TIME_ORDER INT COMMENT '몇시인지', 
+	CONSTRAINT UQ_AGG_DT_TIME_ORDER UNIQUE (AGG_DT, TIME_ORDER), 
+	UNIQUE KEY UQ_AGG_HOURLY_SEQ (HOURLY_SEQ)
+) CHARSET=utf8;
+
+---------------------------------------------------------------------------------------------- 
+
+CREATE TABLE MCARE_AGG_PLATFORM 
+(	
+	PLATFORM_SEQ BIGINT NOT NULL AUTO_INCREMENT  COMMENT '시퀀스', 
+	PLATFORM_TYPE VARCHAR(50) COMMENT '플랫폼', 
+	HIT_CNT INT COMMENT '통계일시 (이 시간에 해당 메뉴에 얼마나 방문했는지)', 
+	AGG_DT DATE COMMENT '방문횟수', 
+	CONSTRAINT UQ_AGG_DT_PLATFROM_TYPE UNIQUE (AGG_DT, PLATFORM_TYPE),
+	UNIQUE KEY UQ_AGG_PLATFORM_SEQ (PLATFORM_SEQ)
+) CHARSET=utf8; 
+
+---------------------------------------------------------------------------------------------- 
+
+CREATE TABLE MCARE_API_CATEGORY 
+(	
+    CAT_SEQ BIGINT NOT NULL AUTO_INCREMENT  COMMENT '시퀀스', 
+	CAT_NAME VARCHAR(255) COMMENT '카테고리명', 
+	CAT_DESC VARCHAR(500) COMMENT '설명', 
+	PARENT_CAT_SEQ BIGINT COMMENT '부모 시퀀스', 
+	PATH_NAME VARCHAR(255) COMMENT '카테고리 경로', 
+	CREATE_DT DATE COMMENT '생성일시', 
+	CREATE_ID VARCHAR(255) COMMENT '생성자', 
+	UPDATE_DT DATE COMMENT '수정일시', 
+	UPDATE_ID VARCHAR(255) COMMENT '수정자', 
+	CONSTRAINT PK_MCARE_API_CATEGORY PRIMARY KEY (CAT_SEQ)
+) CHARSET=utf8;
+
+---------------------------------------------------------------------------------------------- 
+   
+CREATE TABLE MCARE_API 
+(	
+    API_SEQ BIGINT NOT NULL AUTO_INCREMENT  COMMENT '시퀀스', 
+	API_TYPE VARCHAR(50) COMMENT '유형 (SQL, WEB SERVICE..)', 
+	DATA_SOURCE_NAME VARCHAR(255) COMMENT 'SQL타입인 경우 사용할 DataSource명', 
+	API_DESC VARCHAR(500) COMMENT '설명', 
+	HTTP_METHOD_TYPE VARCHAR(50) COMMENT 'HTTP통신이 사용되는 경우 메소드 유형 (GET/PUT/POST/DELETE)', 
+	API_NAME VARCHAR(255) COMMENT '이름', 
+	TARGET_NAME VARCHAR(255) COMMENT '삭제예정', 
+	QUERY_VALUE VARCHAR(255) COMMENT 'DB연동인 경우 질의문', 
+	RESULT_TYPE VARCHAR(50) COMMENT '결과유형 (MAP, LIST, INT..)', 
+	REQ_URL_ADDR VARCHAR(1024) COMMENT '요청과 맵핑되는 주소 (category가 제외된 형태)', 
+	REQ_URL_NAME VARCHAR(255) COMMENT '삭제예정', 
+	TARGET_URL_ADDR VARCHAR(1024) COMMENT 'HTTP 통신인 경우, API가 호출해야 하는 상대편 웹 서비스 주소 (파라미터 포함)', 
+	CAT_SEQ BIGINT COMMENT 'API가 어느 카테고리에 포함되는지 시퀀스', 
+	CAT_NAME VARCHAR(255) COMMENT 'API가 포함되는 카테고리 명 (반정규화)', 
+	CAT_PATH_NAME VARCHAR(255) COMMENT 'API가 포함되는 카테고리 경로명 (반정규화)', 
+	CREATE_DT DATE COMMENT '생성일시', 
+	CREATE_ID VARCHAR(255) COMMENT '생성자', 
+	UPDATE_DT DATE COMMENT '수정일시', 
+	UPDATE_ID VARCHAR(255) COMMENT '수정자', 
+	CONSTRAINT PK_MCARE_API PRIMARY KEY (API_SEQ),
+	CONSTRAINT FK_API_CAT_SEQ FOREIGN KEY (CAT_SEQ) REFERENCES MCARE_API_CATEGORY (CAT_SEQ)
+) CHARSET=utf8; 
+--- CONSTRAINT UQ_MCARE_API_CAT_REQ UNIQUE (CAT_PATH_NAME, REQ_URL_ADDR) 는 키 제한 때문에 못 들어감 
+---------------------------------------------------------------------------------------------- 
+
+CREATE TABLE MCARE_API_HEADER 
+(	
+    HEADER_SEQ BIGINT NOT NULL AUTO_INCREMENT  COMMENT '시퀀스', 
+	API_SEQ BIGINT COMMENT '어떤 API의 헤더인지에 대한 시퀀스', 
+	HEADER_NAME VARCHAR(255) COMMENT '헤더명', 
+	HEADER_VALUE VARCHAR(255) COMMENT '헤더값', 
+	CONSTRAINT FK_API_HEADER_API_SEQ FOREIGN KEY (API_SEQ) REFERENCES MCARE_API (API_SEQ),
+	UNIQUE KEY UQ_API_HEADER_SEQ (HEADER_SEQ)
+) CHARSET=utf8;
+
+---------------------------------------------------------------------------------------------- 
+
+CREATE TABLE MCARE_API_PARAM 
+(	
+    PARAM_SEQ BIGINT NOT NULL AUTO_INCREMENT  COMMENT '시퀀스', 
+	API_SEQ BIGINT COMMENT '어떤 API에 대한 파라미터인지', 
+	DATA_TYPE VARCHAR(50) COMMENT '파라미터의 데이터 타입', 
+	PARAM_DESC VARCHAR(500) COMMENT '설명', 
+	PARAM_NAME VARCHAR(255) COMMENT '이름', 
+	SAMPLE_VALUE VARCHAR(4000) COMMENT '샘플 값',
+	CONSTRAINT FK_API_PARAM_API_SEQ FOREIGN KEY (API_SEQ) REFERENCES MCARE_API (API_SEQ), 
+	UNIQUE KEY UQ_API_PARAM_SEQ (PARAM_SEQ)
+) CHARSET=utf8;
+ 
+---------------------------------------------------------------------------------------------- 
+
+CREATE TABLE MCARE_MENU 
+(	
+	MENU_ID VARCHAR(255) COMMENT '식별자', 
+	PARENT_MENU_ID VARCHAR(255) COMMENT '부모메뉴 식별자', 
+	MENU_ORDER INT COMMENT '표시순서', 
+	MENU_TYPE VARCHAR(50) DEFAULT 'MAIN' COMMENT '메뉴유형 (NAVI, SIDE, CONT..)', 
+	MENU_NAME VARCHAR(255) COMMENT '메뉴명 (사용자가 보는 text)', 
+	ENABLED_YN CHAR(1) DEFAULT 'N' COMMENT '사용되는지 여부', 
+	ACCESS_URI_ADDR VARCHAR(1024) COMMENT '접근주소', 
+	IMAGE_URI_ADDR VARCHAR(1024) COMMENT '이미지 주소', 
+	MENU_DESC VARCHAR(500) COMMENT '설명', 
+	AUTH_YN CHAR(1) DEFAULT 'Y' COMMENT '로그인한 사용자만 쓰는지 여부', 
+	CONSTRAINT PK_MCARE_MENU PRIMARY KEY (MENU_ID)
+) CHARSET=utf8;
+
+---------------------------------------------------------------------------------------------- 
+
+CREATE TABLE MCARE_I18N 
+(	
+    MENU_ID VARCHAR(255) COMMENT '메뉴 ID', 
+	I18N_CD CHAR(2) COMMENT '언어코드', 
+	CD_TEXT VARCHAR(255) COMMENT '코드에 대핟되는 문자열',
+	CONSTRAINT UQ_I18N_MENU_ID_I18N_CD UNIQUE (MENU_ID, I18N_CD), 
+	CONSTRAINT FK_I18N_MENU_ID FOREIGN KEY (MENU_ID) REFERENCES MCARE_MENU (MENU_ID)
+) CHARSET=utf8;
+
+---------------------------------------------------------------------------------------------- 
+  
+CREATE TABLE MCARE_LOGIN_HISTORY 
+(	
+    LOGIN_SEQ BIGINT NOT NULL AUTO_INCREMENT  COMMENT '시퀀스', 
+	USER_ID VARCHAR(255) COMMENT '사용자 ID', 
+	LOGIN_DT DATE COMMENT '로그인 일시', 
+	REMEMBER_ME_YN CHAR(1) COMMENT '자동 로그인 여부',
+	UNIQUE KEY UQ_LOGIN_HISTORY_SEQ (LOGIN_SEQ)
+) CHARSET=utf8;
+
+---------------------------------------------------------------------------------------------- 
+
+CREATE TABLE MCARE_MANAGER 
+(	
+    USER_ID VARCHAR(255) COMMENT '로그인 ID', 
+	USER_NAME VARCHAR(255) COMMENT '이름', 
+	ENABLED_YN CHAR(1) DEFAULT 'N' COMMENT '활성화 여부', 
+	DEPT_NAME VARCHAR(255) COMMENT '부서명', 
+	PWD_VALUE VARCHAR(255) COMMENT '로그인 암호', 
+	CREATE_DT DATE COMMENT '생성일시', 
+	CREATE_ID VARCHAR(255) COMMENT '생성자', 
+	UPDATE_DT DATE COMMENT '수정일시', 
+	UPDATE_ID VARCHAR(255) COMMENT '수정자', 
+	CONSTRAINT PK_MCARE_MANAGER PRIMARY KEY (USER_ID)
+) CHARSET=utf8;
+INSERT INTO MCARE_MANAGER(USER_ID, USER_NAME, ENABLED_YN, DEPT_NAME, PWD_VALUE, CREATE_DT, CREATE_ID)
+VALUES('admin', 'admin', 'Y', 'default', 'admin', NOW(), 'SCRIPT'); 
+---------------------------------------------------------------------------------------------- 
+
+CREATE TABLE MCARE_VERSION 
+(	
+    PLATFORM_TYPE VARCHAR(50) COMMENT '플랫폼 유형', 
+	VERSION_VALUE VARCHAR(255) COMMENT '현재 최신버전', 
+	APP_NAME VARCHAR(255) COMMENT '배포된 이름', 
+	MARKET_URL VARCHAR(1024) COMMENT '앱을 다운로드 받기 위한 마켓 주소',
+	CONSTRAINT UQ_VERSION_PLATFORM_VERSION UNIQUE (PLATFORM_TYPE, VERSION_VALUE)
+) CHARSET=utf8;
+
+---------------------------------------------------------------------------------------------- 
+
+   
+CREATE TABLE MNS_RECEIVER_DEVICE 
+(	
+	RECEIVER_ID VARCHAR(255) NOT NULL COMMENT '수신자 아이디 (예 : 사용자ID)', 
+	DEVICE_TOKEN_ID VARCHAR(255) NOT NULL COMMENT '토큰', 
+	PLATFORM_TYPE VARCHAR(50) NOT NULL COMMENT '플랫폼 구분 (A : Android, I : iPhone)',
+	CONSTRAINT PK_RECEIVER_ID PRIMARY KEY (RECEIVER_ID), 
+	CONSTRAINT UQ_DEVICE_TOKEN_ID UNIQUE (DEVICE_TOKEN_ID)
+) CHARSET=utf8;
+
+---------------------------------------------------------------------------------------------- 
+
+CREATE TABLE MNS_CONTENTS 
+(	
+	CONTENTS_SEQ BIGINT NOT NULL AUTO_INCREMENT   COMMENT '발송순서', 
+	CONTENTS_MSG VARCHAR(4000) NOT NULL COMMENT '메시지 내용', 
+	SENDER_ID VARCHAR(100) NOT NULL COMMENT '발송자아이디', 
+	SENDER_CD VARCHAR(8) COMMENT '발송자코드(ex:진료안내, 검사안내)', 
+	CREATE_DT DATE DEFAULT '1970-01-01' COMMENT '레코드 등록일시',
+	CONSTRAINT PK_MNS_CONTENTS PRIMARY KEY (CONTENTS_SEQ)
+) CHARSET=utf8;
+
+---------------------------------------------------------------------------------------------- 
+
+CREATE TABLE MNS_CONTENTS_RESULT 
+(	
+	CONTENTS_SEQ BIGINT COMMENT '발송순서', 
+	COMPLETE_DT DATE NOT NULL COMMENT '전체 수신자에 대한 발송완료 일시',
+	CONSTRAINT FK_CONTENTS_SEQ FOREIGN KEY (CONTENTS_SEQ) REFERENCES MNS_CONTENTS (CONTENTS_SEQ), 
+	CONSTRAINT UQ_CONTENTS_SEQ UNIQUE (CONTENTS_SEQ)
+) CHARSET=utf8;
+  
+---------------------------------------------------------------------------------------------- 
+ 
+CREATE TABLE MNS_RECEIVER 
+(	
+	CONTENTS_SEQ BIGINT COMMENT '발송순서', 
+	RECEIVER_ID VARCHAR(255) NOT NULL COMMENT '수신자 아이디',
+	CONSTRAINT FK_RC_CONTENTS_SEQ FOREIGN KEY (CONTENTS_SEQ) REFERENCES MNS_CONTENTS (CONTENTS_SEQ), 
+	CONSTRAINT UQ_RC_CONTENTS_SEQ_RECEIVER_ID UNIQUE (CONTENTS_SEQ, RECEIVER_ID)
+) CHARSET=utf8;
+
+---------------------------------------------------------------------------------------------- 
+
+CREATE TABLE MNS_RECEIVER_RESULT 
+(	
+	CONTENTS_SEQ BIGINT COMMENT '발송순서', 
+	RECEIVER_ID VARCHAR(255) COMMENT '수신자 아이디', 
+	DEVICE_TOKEN_ID VARCHAR(255) COMMENT '토큰', 
+	PLATFORM_TYPE VARCHAR(50) COMMENT '플랫폼 구분', 
+	SEND_DT DATE NOT NULL COMMENT '발송일시', 
+	SUCCESS_YN CHAR(1) NOT NULL COMMENT '발송 성공여부', 
+	ERROR_TYPE VARCHAR(50) COMMENT '발송실패 에러응답코드', 
+	DELETE_YN CHAR(1) COMMENT '메시지 삭제여부 (삭제예정필드)', 
+	READ_YN CHAR(1) COMMENT '메시지 읽음여부 (삭제예정필드)',
+	CONSTRAINT FK_CONTENTS_SEQ_RECEIVER_ID FOREIGN KEY (CONTENTS_SEQ, RECEIVER_ID)
+          REFERENCES MNS_RECEIVER (CONTENTS_SEQ, RECEIVER_ID)
+) CHARSET=utf8;
+
+---------------------------------------------------------------------------------------------- 
+   
+CREATE TABLE MEXT_AGREEMENT 
+(	
+	AGREEMENT_SEQ BIGINT NOT NULL AUTO_INCREMENT  COMMENT '시퀀스', 
+	AGREEMENT_ORDER INT  COMMENT '동의서 순서', 
+	AGREEMENT_NAME VARCHAR(255) NOT NULL COMMENT '동의서 이름', 
+	AGREEMENT_CONTENTS VARCHAR(4000) NOT NULL COMMENT '동의서 내용',
+	REQUIRED_YN CHAR(1) DEFAULT 'N' COMMENT '필수 여부', 
+	UNIQUE KEY UX_AGREEMENT_SEQ (AGREEMENT_SEQ)
+) CHARSET=utf8;
+
+---------------------------------------------------------------------------------------------- 
+
+CREATE TABLE MEXT_TELNO 
+(	
+	TELNO_SEQ BIGINT NOT NULL AUTO_INCREMENT  COMMENT '시퀀스', 
+	BUILDING_DESC VARCHAR(500) COMMENT '건물', 
+	ROOM_DESC VARCHAR(500) COMMENT '건물내의 방', 
+	TEL_VALUE VARCHAR(255) COMMENT '전화번호', 
+	TELNO_ORDER INT DEFAULT 1  COMMENT '표시순서',
+	UNIQUE KEY UX_TELNO_SEQ (TELNO_SEQ)
+) CHARSET=utf8;
+
+---------------------------------------------------------------------------------------------- 

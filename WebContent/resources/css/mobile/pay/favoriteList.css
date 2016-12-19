@@ -1,0 +1,17 @@
+@CHARSET "UTF-8";
+.container{margin:10px 0;}
+.cardNum{padding:5px;}
+.cardValiDt {width: 35%;display: inline-block;}
+.cardValiDt.sec{width:10%;}
+.cardValiDt.sec>div{margin:.5em 0;}
+.cardValiDt.sec>div label{min-height:2.2em;text-align:center;line-height:2.2em;}
+.ui-mobile fieldset{border: 2px groove #ddd;}
+.eachCard{overflow:hidden;height:2.5em;margin:10px;border:1px solid #bbb; background: #ffffff;}
+.eachCard .cardContent{float:left;line-height:2.5em;}
+.eachCard .cardName{width:60%;}
+.eachCard .cardName>div{padding-left:10px;}
+.eachCard .cardName>div span{font-weight: bold;}
+.eachCard .cardEdit{width:20%;text-align: center;}
+.eachCard .cardEdit>div{padding:0 5px;background: #FFA000;border: 1px solid #ddd;border-width: 0 1px 0 1px;}
+.eachCard .cardRemove{width:20%;text-align: center;}
+.eachCard .cardRemove>div{padding:0 5px;background: #FFA000;}

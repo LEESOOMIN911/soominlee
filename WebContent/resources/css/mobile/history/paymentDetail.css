@@ -1,0 +1,59 @@
+@CHARSET "UTF-8";
+.flow_auto{overflow:auto;}
+.f_left{float:left;}
+/*.paymentTable{border: 1px solid #ccc;}
+.paymentHeader,.paymentBody{text-align: center;}*/
+.paymentBody .txt{ text-align:right;padding-right: 5px;}
+.paymentHeader .f ,.paymentBody .f{width:20%;}
+.paymentHeader .s ,.paymentBody .s{width:45%;}
+.paymentHeader .t ,.paymentBody .t{width:35%;}
+.f_c{padding:20px 0;}
+.s_c{width:33.3%;}
+.t_c{width:50%;}
+.txt, .paymentBody .f_c{padding:5px 0;}
+.b_right{border-right:1px solid #ccc;}
+.b_bottom{border-bottom:1px solid #ccc;}
+.line{border-top:1px solid #ccc;}
+
+.paymentTable {
+		border-collapse:collapse;
+		margin: 1em auto;
+		min-width:280px;
+		width: 100%;
+		max-width:640px;
+		overflow: hidden;
+		 background: #FFF;
+		color: #022;
+		border-radius:5px;
+		border: 1px solid rgba(0,0,0,1);
+		border-bottom: 1px solid rgba(0,0,0,0.3);
+		box-shadow: 0 1px 1px rgba(0,0,0,0.15);}
+
+.paymentTable tr {
+  border: 1px solid #ebebeb;
+}
+.paymentTable tr:nth-child(odd) {
+  background-color: #F8F8F8;
+}
+.paymentTable th {
+  border: 1px solid #ddd;
+  background-color: #efefef;
+  color: #005fa4;
+  padding: 8px 5px;
+  font-weight: initial;
+}
+
+.paymentTable tr:first-child th {
+  background-color:#009fd9;
+  color:#fff
+}
+
+.paymentTable th:first-child {
+  text-align: center;
+}
+
+.paymentTable td{
+padding:8px 5px;
+text-align: right;
+ border-right: 1px solid #d9e4e6;
+ }

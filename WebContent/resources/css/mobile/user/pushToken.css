@@ -1,0 +1,14 @@
+@CHARSET "UTF-8";
+
+/* pushToken*/
+h4.for_history{padding-bottom:0.5em;color:#282828;}
+.msgBox{border:1px solid #dadade;border-top:3px solid #767678;margin-bottom:10px;border-bottom:0;}
+.item{background-color:#FFF;border-bottom:1px solid #dadade;padding:0 0.6em ;overflow: auto;}
+.item>span{display:inline-block;padding:0.7em 0;text-indent:0.2em;vertical-align:top;}
+.item>i{margin-top:12px;}
+.for_time,.for_notice,.for_current{color:#000;font-weight:600;}
+.infotxt:after{content:'';display:block;clear:both}
+.infotxt>span:first-child{width:35%;}
+.infotxt>span:last-child{width:65%;}
+.item_ul {margin-top:10px;padding-left:20px;}
+.item_ul li { padding: 5px 0;font-size:.9em;}

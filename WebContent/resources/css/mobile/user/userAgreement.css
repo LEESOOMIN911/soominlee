@@ -1,0 +1,11 @@
+@CHARSET "UTF-8";
+.contents{height:200px;border: 1px solid #ccc; border-radius:5px; padding:10px; margin-top:5px;overflow:scroll;}
+.agreement{margin:10px 0;}
+.agreement_collapse{margin:0;}
+.agreement_collapse h3 a.ui-collapsible-heading-toggle.ui-btn {background-color:#6c6c6c; color: #fff;}
+.agreement .ui-checkbox{margin:0;}
+
+div.msgBox{border:1px solid #dadade;}
+div.item{background-color: #fff; padding:.6em;}
+
+div.under14{padding: 10px;background: #999;color: #fff;border-radius: .3125em;}

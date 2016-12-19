@@ -1,0 +1,9 @@
+@CHARSET "UTF-8";
+.mainContainer{
+	background : #fff;   
+	border-radius: 5px;
+    padding: 10px 0;
+}
+.fir_con{padding: 10px;}
+.fir_con ul{padding-left:20px; font-weight: bold;line-height: 1.5em;}
+.sec_con{padding:5px;}

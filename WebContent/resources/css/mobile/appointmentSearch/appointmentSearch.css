@@ -1,0 +1,21 @@
+@CHARSET "UTF-8";
+.form_div{overflow:hidden; margin:.5em 0;}
+.form_div > .form_label,
+.form_div > .form_input{margin: 0;padding: 0;border: 0;float: left;min-height: 1px;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;}
+.form_label{width:25%;height:100%;}
+.form_input{width:75%;}
+.form_input > * {margin:0;}
+.form_label.result{width:50%;height:100%;text-align: center;}
+.form_input.result{width:50%;text-align: center;}
+
+div.resultContainer ul.resultData li span.link_span{
+	width: 70%;
+    text-align: right;
+    font-weight: 600;
+    color: #333;
+}
+.resultContainer .resultData a.cancelLink span {
+    color: #38c;
+    float: right;
+    width: inherit;
+}

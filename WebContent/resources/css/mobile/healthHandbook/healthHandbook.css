@@ -1,0 +1,95 @@
+@CHARSET "UTF-8";
+/*테스트용 조회 테이블 스타일*/
+
+.retreive_table{
+	width: 100%;
+	text-align: center;
+	border-radius: 4px;
+    border: 1px solid rgba(0,0,0,0.15);
+    border-bottom: 1px solid rgba(0,0,0,0.3);
+    box-shadow: 0 1px 1px rgba(0,0,0,0.15);
+	margin-bottom:1em;
+	font-size:15px;
+}
+.retreive_table .resultHeader{
+	color: #045087;
+    font-weight:bold;
+    background: #f5f5f5;
+    font-family: 'cartogothic_stdregular';
+    border-radius: 4px 4px 0px 0px;
+	padding:5px 0;
+
+	/*background: #ccc;*/
+}
+.retreive_table .resultBody{
+	background: #fff;
+	border-top: 1px solid #ddd;
+	overflow:hidden;
+	padding:5px 2px;
+	transition: background 0.3s
+}
+
+.retreive_table .resultBody:hover,.retreive_table .resultBody:focus{
+	background:#f0f6f8;
+	color:#c34a48
+}
+.retreive_table .resultHeader{
+	float:left;
+	width: 25%;
+	height: 35px;
+	line-height: 35px;
+}
+.retreive_table .resultHeader.num_5{
+	width: 19%;
+}
+.retreive_table .resultHeader.num_5:first-child{
+	width: 24%;
+}
+.retreive_table .resultBody div{
+	box-sizing:border-box;
+	float:left;
+	height: 35px;
+	line-height: 35px;
+	width: 25%;
+	border-left: 1px dashed #ddd;
+}
+
+
+.retreive_table .resultBody.num_5 div{
+	box-sizing:border-box;
+	width: 19%;
+}
+
+.retreive_table .resultBody div span{display:inline-block;line-height:1.5em;}
+
+.retreive_table .resultBody div:first-child{border:0;}
+.retreive_table .resultBody.num_5 div:first-child{border:0;width:24%;}
+.chart_legend{}
+.chart_legend ul{
+	display: inline-block;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+.chart_legend li{display: inline-block;padding-left: 10px;}
+.chart_legend li span{
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin-right: 5px;
+}
+
+.form_div{overflow:hidden; margin:.5em 0;}
+.form_div > .form_label,
+.form_div > .form_input{margin: 0;padding: 0;border: 0;float: left;min-height: 1px;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;}
+.form_label{width:25%;height:100%;}
+.form_input{width:75%;}
+.form_input > * {margin:0;}
+.form_label.result{width:40%;height:100%;text-align: center;}
+.form_input.result{width:60%;text-align: center;}
+
+@media all and (max-width:320px) {
+	.retreive_table{font-size:13px;}
+
+}

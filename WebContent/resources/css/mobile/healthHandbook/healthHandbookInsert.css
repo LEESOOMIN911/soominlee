@@ -1,0 +1,57 @@
+@CHARSET "UTF-8";
+/*테스트용 조회 테이블 스타일*/
+.formTable {
+	 /*width:100%;
+	background:#fff;
+	border-spacing: 0;
+    border-collapse: collapse;
+   border-top:1px solid #aaa;
+}
+.formTable th{background:#ddd;border-bottom:1px solid #aaa;}
+.formTable td{background:#fff;border-bottom:1px solid #aaa;}
+.formInputDiv{
+	padding: .5em;*/
+}
+.formDiv{
+	display: inline-block;
+	width:100%;
+}
+.formDiv.w70{
+	width: 70%;
+}
+.formDiv.w25{
+	width:25%;
+}
+.formInputDiv{
+	position:relative;
+}
+.sec_con{
+	margin-top: 15px;
+}
+div.formDiv .form_inline {
+	display: inline-block;
+}
+.formDiv div.ui-input-text{
+	display: inline-block;
+}
+
+.row{margin-bottom:1em;
+	background-color:#FFF;
+	border:1px solid #d7d7d7;
+	border-radius:8px;
+	box-shadow:0px 0px 1px rgba(0,0,0,0.1);
+}
+
+.item{border-bottom:1px solid #d7d7d7;padding:5px 12px;}
+.item:last-child{border-bottom:0;}
+
+.row .item:after{content:'';display:block;clear:both;}
+
+.itemtitle{float:left;width:25%;padding-top:18px;font-weight:bold;color:#282828;}
+.itemtitle.max{padding-top:46px;}
+.itemvalue{float:left;width:75%;}
+
+.formDiv>.ui-input-text{display:inline-block;width:70%;}
+.formDiv.for_bmi{width:100%;}
+.formDiv.for_bmi>.ui-input-text{width:100%;}
+.formDiv>span{display:inline-block;width:20%;text-align:right;}

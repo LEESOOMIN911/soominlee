@@ -1,0 +1,6 @@
+@CHARSET "UTF-8";
+* {
+    outline: none !important;
+}
+.notice{padding:10px;border:2px solid #acacac; border-radius:4px;}
+.titleDiv{margin-top:15px;}

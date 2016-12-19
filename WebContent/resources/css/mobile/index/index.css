@@ -1,0 +1,235 @@
+@CHARSET "UTF-8";
+*{margin:0;padding:0;box-sizing:border-box;outline:none}
+.ui-content{padding:0;padding-top:1em;margin-top:60px;margin-bottom:80px;overflow:visible;}
+
+.menuwrap{position:absolute;right:15px;top:12px;width:36px;height:36px;
+background-color:#a0a0a0;border-radius:5px;text-align:center;}
+
+
+#menuBars_btn{color:#fff;font-size:28px;background-color:transparent;padding:0;
+position:relative;top:2px;left:-1px;background-image:none;}
+
+#menuBars_btn:hover,#menuBars_btn:active{-webkit-filter:brightness(1);
+filter:brightness(1)}
+
+#menuBars_btn>i{display:inline-block;}
+
+.menuwrap:hover,.menuwrap:active{background-color:#333;}
+
+#logo{display:block;
+margin:0 auto;
+width:98px;height:50px;
+background:url(../../images/mobile/main/logo.png);
+background-size:98px 50px;
+margin:10px auto;
+text-indent:-9999em;
+display:none;}
+
+#menuList{margin:0 auto;padding:0 10px}
+
+.helper_wrap{position:relative;padding:5px;min-width:300px;max-width:480px;margin:0 auto;}
+
+#menuList .helper_wrapper{
+	
+	border:5px solid #00a751;
+	border-radius:8px;
+	width:100%;
+	height:65px;
+	background:url(../../images/mobile/main/gpattern.png) 0 0;
+	background-size:188px 178px;
+	box-shadow:1px 2px 3px rgba(0,0,0,0.2);
+	overflow:hidden;
+	/*background-image:url(../../images/mobile/main/helper_v3.png);
+	background-position:center;
+	background-repeat:no-repeat;
+	background-size:100% 85px;
+	text-align:center;*/
+	text-align:center;
+}
+
+/*#menuList .helper_wrapper:before{content:'';display:block;width:64px;height:64px;
+position:absolute;left:20px;top:50%;margin-top:-30px;
+background:url(../../images/mobile/main/kimy.png) 0 0 no-repeat;
+background-size:64px 64px;}*/
+
+#menuList .helper_wrapper:after{content:'';display:block;width:41px;height:40px;
+background:url(../../images/mobile/main/go.png) 0 0 no-repeat;
+background-size:41px 40px;
+position:absolute;right:5px;top:5px;}
+
+/*버튼 선택시 색상 변경과 이미지 변경 */
+#menuList .helper_wrapper.active{border-color:#007438;background-image:url(../../images/mobile/main/gpattern_on.png);}
+#menuList .helper_wrapper.active:after{background-image:url(../../images/mobile/main/go_on.png);}
+.hidden_go {background-image:url(../../images/mobile/main/go_on.png);}
+.hidden_gpattern{background-image:url(../../images/mobile/main/gpattern_on.png);}
+#menuList .helper_wrapper:hover{border-color:#007438;background-image:url(../../images/mobile/main/gpattern_on.png);}
+#menuList .helper_wrapper:active{border-color:#007438;background-image:url(../../images/mobile/main/gpattern_on.png);}
+/*#menuList .helper_wrapper:hover:after{background-image:url(../../images/mobile/main/go_on.png)}
+#menuList .helper_wrapper:active:after{background-image:url(../../images/mobile/main/go_on.png)}*/
+
+
+.helper_wrapper .helper_icon{
+	/*position:absolute;
+	top:30px;
+	margin-left:-20px;
+	color:#777;
+	font-size:0;*/
+	display:block;
+	width:100%;
+	height:100%;
+	text-indent:-999em;
+	overflow:hidden;
+	font-size:0;	
+}
+.msg{position:relative;top:-55px;
+padding:5px 10px;
+font-size:16px;
+color:#555;
+font-weight:bold;
+text-align:center;
+line-height:24px;
+width:86%;height:55px;
+margin:0 auto;
+overflow: hidden; 
+text-overflow: ellipsis; 
+display: -webkit-box;
+-webkit-line-clamp: 2; 
+-webkit-box-orient: vertical; 
+word-wrap:break-word;
+ -webkit-box-pack: center;
+ text-decoration:none !important;
+}
+
+.msg>span{display:inline-block;}
+.userid{font-size:17px;color:#323232;letter-spacing:-2px}
+.time{color:#f47b1e;}
+
+.menu_wrapper{min-width:300px;max-width:480px;margin:5px auto;}
+
+.menu_wrapper .menu_left, .menu_wrapper .menu_right{
+	padding:5px;
+}
+
+.menu_btn_wrapper{
+	padding-top:10px;
+	text-align: center;
+	border-radius:8px;
+	transition:all 0.1s
+}
+
+.menu_btn_wrapper.active{
+background-color:#01477A;
+transition:all 0.1s
+}
+.menu_btn_wrapper:hover,.menu_btn_wrapper:active{
+background-color:#01477A;
+transition:all 0.1s
+}
+.menu_btn_wrapper a.menu_link{
+	text-decoration: none;
+}
+.menu_btn_wrapper img.menu_icon{
+	width:50px;
+	height:50px;
+	display:block;
+	margin:0 auto 0 auto;
+}
+
+.menu_btn_wrapper img.menu_icon[alt='건강수첩']{
+	width:50px;
+	height:50px;
+	position:relative;
+	/*left:5px;*/
+}
+
+.menu_btn_wrapper img.menu_icon[alt='진료예약']{
+	width:50px;
+	height:50px;
+}
+
+.menu_btn_wrapper img.menu_icon[alt='검사결과']{
+	width:50px;
+	height:50px;
+	position:relative;
+	/*left:5px;*/
+}
+
+.menu_btn_wrapper img.menu_icon[alt~='비밀번호']{
+	width:50px;
+	height:50px;
+}
+
+.menu_btn_wrapper img.menu_icon[alt='진료도착확인']{
+	width:50px;
+	height:50px;
+}
+
+.menu_btn_wrapper span.menu_name{
+	color: #fff;
+	padding-bottom:10px;
+	font-size: 1.2em;
+	line-height: 2;
+}
+
+/*.menu_wrapper .menu_left:nth-child(2n+1){margin-right:5px;}*/
+
+
+/*.menu_wrapper .menu_left:nth-child(1){background-color:#009fd9}
+.menu_wrapper .menu_left:nth-child(2){background-color:#6cd7f4}
+.menu_wrapper .menu_left:nth-child(3){background-color:#016cba}*/
+
+.bgColorL0{background-color:#009fd9}
+.bgColorL1{background-color:#016cba}
+.bgColorL2{background-color:#009fd9}
+.bgColorL3{background-color:#016cba}
+.bgColorL4{background-color:#009fd9}
+.bgColorL5{background-color:#016cba}
+.bgColorL6{background-color:#009fd9}
+.bgColorL7{background-color:#016cba}
+.bgColorL8{background-color:#009fd9}
+
+
+/*.menu_wrapper .menu_right:nth-child(1){background-color:#016cba;}
+.menu_wrapper .menu_right:nth-child(2){background-color:#009fd9;}
+.menu_wrapper .menu_right:nth-child(3){background-color:#009fd9;}*/
+
+.bgColorR0{background-color:#016cba;}
+.bgColorR1{background-color:#009fd9;}
+.bgColorR2{background-color:#016cba;}
+.bgColorR3{background-color:#009fd9;}
+.bgColorR4{background-color:#016cba;}
+.bgColorR5{background-color:#009fd9;}
+.bgColorR6{background-color:#016cba;}
+.bgColorR7{background-color:#009fd9;}
+.bgColorR8{background-color:#016cba;}
+
+.mainheader{position:absolute;left:0;top:0;width:100%;height:60px;background-color:#FFF;box-shadow:inset 0 -1px 1px #a2a2a2;}
+
+
+
+#toplogo{position:absolute;left:50%;width:250px;height:40px;margin-left:-130px;top:11px;background-image:url(../../images/mobile/main/toplogo.png);background-size:250px 40px;
+	background-position:center;
+	text-indent:-999em;overflow:hidden;}
+
+.ui-panel-wrapper{
+background-color:#f3f3f7 !important;
+background-image:url(../../images/mobile/main/back1.png), url(../../images/mobile/main/back2.png);
+background-position:center bottom,left bottom;
+background-repeat:no-repeat,repeat-x;
+background-size:320px 80px,23px 80px;
+overflow-x:hidden;
+}
+
+.slick-slider{margin-bottom:20px !important;}
+.slick-slide{box-sizing:border-box;}
+.slick-dots{bottom:-40px !important;}
+.slick-dots li button:before{font-size:12px;}
+
+/*타블릿*/
+@media all and (min-width:641px) and (max-width:1024px){
+	/*#menuList .helper_wrapper{width:490px;margin:0}*/
+	.helper_wrap{min-width:600px;max-width:720px;}
+	.menu_wrapper{min-width:600px;max-width:720px;}
+	a#menuBars_btn{left:-19px;width:72px;display:block;}
+
+}

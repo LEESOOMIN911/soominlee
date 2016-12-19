@@ -1,0 +1,77 @@
+@CHARSET "UTF-8";
+/* 바코드 */ 
+.mainContainer{
+	position: relative;
+}
+.cardContainer {
+	overflow:hidden;
+	height:100%;
+
+}
+.fir_con{
+	height: 150px;
+	overflow:hidden;
+	padding-top: 20px;
+	margin-top : 20px;
+}
+.sec_con{
+	/*height:150px;*/
+	overflow:hidden;
+	/*position: absolute;
+	top:30px;
+	left: 50%;
+	width: 200px;
+	margin-left:-100px;*/
+}
+.sec_con table{
+	text-align: center;
+}
+
+/* 90도 회전 */ 
+/* transform-origin: left top;  */ 
+.transform90 {
+	-webkit-transform: rotate(0deg); 
+	-moz-transform: rotate(0deg); 
+	-o-transform: rotate(0deg); 
+	-ms-transform: rotate(0deg); 
+	transform: rotate(0deg); 	
+	white-space: nowrap; 
+	/*height : 200px; */
+	background-color: transparent;
+	margin-top: 0;
+	margin:0 auto;
+}
+
+.moveBottom {
+	position: absolute;
+	bottom: 0px; 	
+}
+.sec_con.moveBottom{top:0;}
+.ui-content{padding:0;}
+
+.mobilecard{min-width:280px; min-height:250px;
+width:98%;margin:0 auto;
+background-color:#FFF;
+/*border-radius:1em;
+padding:1em;*/
+box-shadow:0 1px 4px rgba(0,0,0,0.5);
+border-bottom-left-radius:10px;
+border-bottom-right-radius:10px;
+border-top-left-radius:10px;
+border-top-right-radius:10px;
+/*margin-top:1.5em;*/}
+
+.mobilecard .sec_con{padding: 1em 0 0 0;
+margin-bottom:10px;
+text-align:center;}
+
+.mobilecard .mh{font-size:1.3em;font-weight:600;display:none;}
+.mobilecard .mdata{font-weight:600;color:#00506d;letter-spacing:-2px;white-space:normal;
+background:#eee;/*margin-bottom:1em;*/;padding:3px 0;
+}
+
+.mobilecard .mdata:last-child{border-bottom-left-radius:10px;
+border-bottom-right-radius:10px;}
+.patientName{font-size:3.5em;color:#000;}
+.patientNum{font-size:2.5em;color:#222}
+

@@ -1,0 +1,87 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
+<div data-role="header" data-position="fixed" data-tap-toggle="false">
+	<h2>${menuInfo.menuName}</h2>
+	<a href="#sidebar"  id="menuBars_btn" class="ui-btn-right"><i class="fa fa-bars"></i></a>
+	<c:choose>
+		<c:when test="${menuInfo.parentMenuId eq null}">
+			<a href="#"  data-direction="reverse" class="ui-btn-left" id="headerArrowLeft_btn"><i class="fa fa-arrow-left"></i></a>
+		</c:when>
+		<c:otherwise>
+			<a href="#"  data-direction="reverse" class="ui-btn-left" id="headerArrowLeft_btn"><i class="fa fa-arrow-left"></i></a>
+		</c:otherwise>
+	</c:choose>
+
+</div>
+
+<script type="text/javascript">
+//메뉴 param obj	
+var menuParamObj = new Object();
+
+//서버에서 가져온 메뉴 param 설정 
+<c:forEach var="menuParam" items="${menuInfo.menuParam }" varStatus="status">
+	menuParamObj['${menuParam.paramName}'] = {"type":'${menuParam.dataType}',"value" :'${menuParam.paramValue}'}
+</c:forEach>
+	
+$(document).one("pagebeforeshow", function(e, ui) {
+	var $t = $(e.target);
+	
+	var header = $(':jqmData(role=header)', $t),
+		/* a = $('a:eq(0)', header), */
+		a2 = $('a:eq(1)', header),
+		parentMenuId = '${menuInfo.parentMenuId}'; 
+		
+	var paramObj = new Object();
+	//url get 방식으로 넘어온 param 설정
+	var query = window.location.search.substring(1),
+		vars = query.split("&");	
+	for( var i=0; i < vars.length; i++ ){
+	     var pair = vars[i].split("=");
+
+	     paramObj[ pair[0] ] = pair[1];
+	}
+	
+	if (parentMenuId == '') {
+		if ('${menuInfo.enabledYn}' == 'N' && '${menuInfo.authYn}' == 'N' ) {
+				//부모가 없고 권한 없는 메뉴는 index로
+				a2.attr({'href': contextPath + '/index.page', 'data-ajax' : false });
+		} else {
+			if( '${menuInfo.menuId}' === 'userRegister' ){
+				//사용등록이면 별도 함수를 만든다.
+				a2.attr({'href':'javascript:exitRegister();'});
+			} else if( paramObj["info"] !== undefined && paramObj["info"] === "helper" ){
+				a2.attr({'href': contextPath + '/mobile/helper/helper.page?menuId=helper', 'data-ajax' : false });
+			} else {			
+				a2.attr({'href': contextPath + '/index.page', 'data-ajax' : false });
+			}
+		}
+	} else {
+		a2.attr({'href': "javascript:history.back();", 'data-ajax': false});
+		
+// 		if (parentMenuType == 'NAVI') {
+// 			a2.attr({'href': a2.attr('href') + '?menuId=' + parentMenuId });
+// 		}
+	}
+	//본인인증 헤더 버튼 없앰
+	if( '${menuInfo.menuId}' === "certification" || '${menuInfo.parentMenuId}' === "certification" 
+			|| '${menuInfo.menuId}'=== "registerPWD"|| '${menuInfo.menuId}'=== "userAgreement" || '${menuInfo.menuId}'=== "under14"){
+		$("#menuBars_btn,#headerArrowLeft_btn").hide();
+	}
+	if( '${menuInfo.menuId}' === "searchPNumber" || '${menuInfo.menuId}' === "searchPWD"){
+		a2.attr({'href': contextPath + '/login.page', 'data-ajax' : false });
+	}
+});
+function exitRegister(){
+	var mcare = new mcare_mobile();
+	
+	var options = {
+			content : "정말 좋은 서비스인데 가입을 중단하시겠습니까?",
+			callback : function(e){
+				mcare.changePage(contextPath + '/index.page');
+			}
+	};
+	mcare.popup( options );
+};
+</script>
+

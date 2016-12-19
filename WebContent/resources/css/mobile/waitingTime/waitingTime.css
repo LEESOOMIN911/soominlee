@@ -1,0 +1,65 @@
+@CHARSET "UTF-8";
+/*announceArrival*/
+.msgBox{border:1px solid #dadade;border-top:3px solid #767678;margin-top:10px;border-bottom:0;}
+.msgBox:first-child{margin:0;}
+
+h2.for_dept{font-size:1.3em;
+padding-bottom:0.5em;color:#282828;
+border-bottom:3px solid #767678;}
+
+h2.for_next_dept{padding-bottom:0.2em;
+padding-left:0.4em;
+border-bottom:0}
+
+.fir_con .item{background-color:#FFF;
+border-bottom:1px solid #dadade;
+padding:0 0.5em ;}
+
+.item>span{
+display:inline-block;
+padding:0.7em 0;
+text-indent:0.2em;
+vertical-align:top;}
+
+.item>i{margin-top:12px;}
+
+.for_time,.for_notice,.for_next_time,.for_next_notice{
+color:#000;
+font-weight:600;}
+
+.btnArea{margin:2em 0;}
+
+.next_reservation{
+border:1px solid #dadade; 
+background-color:#fff;
+padding:1em;}
+
+.for_next_deptwrap{font-size:1.1em;font-weight:600;
+padding-bottom:0.3em;
+padding-top:0.5em;}
+
+.next_r{display:inline-block;
+color:#d26b19;
+font-size:1.2em;
+font-weight:600;}
+
+.sec_con .item{
+background-color:transparent;
+border-bottom:0;
+line-height:1.6em;}
+
+.next_reservation .item>span{padding:0;line-height:1.6em;}
+.infotxt:after{content:'';display:block;clear:both}
+.infotxt>span:first-child{width:35%;}
+.infotxt>span:last-child{width:65%;line-height:1.5em;}
+
+/*
+@media all and (max-width:320px){
+	.infotxt>span:first-child{width:100%;float:none;}
+	.infotxt>span:last-child{width:94%;float:none;padding-left:2%;padding-right:2%}
+	.item>span{padding:0.4em 0;}
+
+}*/
+.zero_con{
+	padding: 10px 0;
+}

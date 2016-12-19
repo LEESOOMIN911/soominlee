@@ -1,0 +1,8 @@
+@CHARSET "UTF-8";
+.described {
+	font-size: 9pt;
+	font-weight: 100;
+}
+.gray {
+	color: gray;
+}

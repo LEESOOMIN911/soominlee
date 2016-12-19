@@ -1,0 +1,48 @@
+/*common header*/
+#menuBars_btn{color:#fff;font-size:28px;background-color:transparent;padding:0 .5em ;}
+#headerArrowLeft_btn{color:#fff;font-size:28px;background-color:transparent;padding:0 .5em ;}
+
+/* 모든 페이지에 적용 ---------------------------------------------*/
+.ui-noboxshadow.pnuh .ui-btn{ text-shadow: 0 0px 0 #111;border-width:0;border-radius:0.325em;}
+.ui-noboxshadow.pnuh .ui-focus, .ui-noboxshadow.pnuh .ui-btn:focus,.ui-noboxshadow.pnuh input:focus{border-color:transparent;}
+.ui-noboxshadow.pnuh .login-thumbs label{font-size:.75em;}
+.ui-noboxshadow.pnuh .login-thumbs .ui-bar-a{text-align:center;background-color:transparent;border-color:transparent;}
+.ui-noboxshadow.pnuh .login-thumbs .ui-bar-a a{border-color:transparent;padding-left:0;padding-right:0;background-color:transparent;}
+.ui-noboxshadow.pnuh .login-thumbs .ui-bar i.fa{font-size:60px;display:block;color:#929292;}
+.ui-noboxshadow.pnuh .login-thumbs .ui-bar-a span{font-size:.75em;}
+
+.ui-noboxshadow.pnuh .ui-navbar ul .ui-btn{background-color:#a2a2a2;color:#fff;border-radius:0;border-bottom:3px solid #a2a2a2;}
+.ui-noboxshadow.pnuh .ui-navbar ul .ui-btn.ui-btn-active{background-color:#016cba;border-bottom:3px solid #284776;}
+
+/* login page */
+#login_btn{background-color:#4fa32c;border:1px solid #439322;height:50px;background:-webkit-linear-gradient(top,  #69bd46 0%,#4fa32c 100%);font-size:1.15em;}
+#guest_btn,#searchId,#resetPWD,.sendSMS{background-color:#6c6c6c !important;}
+
+/* helper page */
+.status-breadcrumb{list-style:none;}
+.status-breadcrumb:after{clear:both;display:block;content:'';}
+.status-breadcrumb li{float: left;width:25%;height:40px;line-height:40px;}
+.status-breadcrumb li.last{background-image:none;}
+.status-breadcrumb li a{position:relative;display:block;height:100%;text-align:center;text-decoration:none;text-shadow:0 0 0 #111;color:#6c6c6c;background-color:#fff;}
+.status-breadcrumb li.current a{background-color:#00b4e2;color:#fff;}
+.status-breadcrumb li a span.bc-ar-btn{position:absolute;top:0;right:-20px;display:block;width:20px;height:40px;z-index:100;background:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAoCAYAAAD+MdrbAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYxIDY0LjE0MDk0OSwgMjAxMC8xMi8wNy0xMDo1NzowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNS4xIFdpbmRvd3MiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6RUQwODk4MTY1QTEwMTFFNTlBRDg4NTc0M0MyODhCNzEiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6RUQwODk4MTc1QTEwMTFFNTlBRDg4NTc0M0MyODhCNzEiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpFRDA4OTgxNDVBMTAxMUU1OUFEODg1NzQzQzI4OEI3MSIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpFRDA4OTgxNTVBMTAxMUU1OUFEODg1NzQzQzI4OEI3MSIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PiBJ1YcAAAHUSURBVHjarFdNSwJBGB63bCtLpahTl26C0KVLf6AF/0D9kLrUoUN0EUHokkF08D94CQSv4jHptLJXUbDADzDddnonRhm23Zl3ZB54FJf18Xn3fWbmlfi+7xUKhQNCyC5wG7gJ3ACuA9eAFjDBKQWl9O+F9vv9G/icBu4At4A2MMlFLUEUJxgEwWepVDrmLlOCy6SOy6Ugw3g8foVrGe5SVjpOEOA3Go0zXnoqVDrKZViQTqfTN7ieXbVB/wQZOp3OpaJBeoIQIzeXy+1HNEjpMlKQodvtXocahIpRrKAQo7ROjGIFGYbD4YtujKSCgO9arXaqEyOV4CJGGUSMloKWLPm2bTuu654LThZfDjckIdYtxXw+f8/n83uSji9/SFnyAr1e7wqRS7wgi1GxWDyKWD2rCfIYlY0Kshg1m80T2XPUFaSTyeRJJWgRPGbtdvuZIM4BFEaj0SPmGaIcwo1f1Wq1TJA3Y3OYNpJDWCkfRleKcCQodxzsbpM1tdvM6vX6LbwHnDSGuKascvDHOmQxqVQqD4KLOJe42Bg99dh45zjOobFz2ejkYGK2EZvy02q17pExocq1bHQ+ND7BDgaDO2MztvF/AZ7nXQilasUkSvBXgAEAXafUyF1Mq5AAAAAASUVORK5CYII=') no-repeat;}
+.status-breadcrumb li.current a span.bc-ar-btn{position:absolute;top:0;right:-10px;display:block;width:0;height:0;z-index:100;border-left:10px solid #00b4e2;border-top:20px solid transparent;border-bottom:20px solid transparent;}
+.ui-noboxshadow.pnuh .message_body{background-color:#09c856;color:#fff;text-shadow: 0 0 0 #fff;border-radius:0.75em;position:relative;top:10px}
+.ui-noboxshadow.pnuh .message_body .bArrow{position:absolute;top:10px;left:-10px;display:block;width:0;height:0;border-style: solid;border-width: 0 10px 10px 0;border-color: transparent #09c856 transparent transparent;}
+
+.message_wrapper{position:relative;width:100%;}
+.message_wrapper:after{display:inline-block;width:46px;height:46px;content:'';position:absolute;left:0;top:5px;background-size:100%;
+background-repeat:no-repeat;}
+.nurse:after{background-image:url(../images/nurse.png);}
+.doctor:after{background-image:url(../images/doctor.png)}
+
+.message_main{margin-left:50px;}
+
+/* -----------------------------------
+* {font-family:'나눔고딕',NanumGothic,'돋움',Dotum,'굴림',Gulim,Helvetica,sans-serif !important}
+body,button,h1,h2,h3,h4,h5,input,select,table,textarea{font-size:14px;line-height:1.267em}
+-------------------------------------- */
+
+
+/*건강수첩*/
+.bring.ui-btn{background-color:#58b531 !important;}

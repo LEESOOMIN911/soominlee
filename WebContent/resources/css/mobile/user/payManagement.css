@@ -1,0 +1,19 @@
+@CHARSET "UTF-8";
+
+.wrap-header{text-align: center;background: #ddd;border-top-left-radius: 4px;border-top-right-radius: 4px;padding: 10px;}
+.wrap-body{background:#fff;}
+div#pay1Cont{margin-top:15px;}
+div#pay1Cont.active div.wrap-header{background-color:#aaa;color:#fff;}
+div#pay2Cont{margin-top:15px;}
+div#pay2Cont.active div.wrap-header{background-color:#aaa;color:#fff;}
+
+.resultContainer{overflow:auto;}
+.resultContainer .resultData{width:100%;border-top:3px solid #767678;border-collapse:collapse;margin:0;padding:0;margin-top:-1px;}
+.resultContainer .resultData li{padding:7px 5px;border-bottom:1px solid #9c9c9c;list-style:none}
+.resultContainer .resultData li:after{content:'';display:block;clear:both}
+.resultContainer .resultData li span{display: inline-block;width: 25%;vertical-align: top;float:none;}
+.resultContainer .resultData li span:first-child{width:30%;}
+.resultContainer .resultData li span:last-child{width: 65%;text-align: inherit;color:#000;font-weight:600;}
+.resulttitle{padding-left:10px;margin:30px 0 5px 0;}
+.resultContainer .ui-link{color:#ec8a3b;text-decoration:none;}
+div.no_result{text-align:center; padding: 10px 0;}

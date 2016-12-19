@@ -1,0 +1,7 @@
+@CHARSET "UTF-8";
+.form_div{overflow:hidden; margin:.5em 0;}
+.form_div > .form_label,
+.form_div > .form_input{margin: 0;padding: 0;border: 0;float: left;min-height: 1px;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;}
+.form_label{width:25%;height:100%;}
+.form_input{width:75%;}
+.form_input > * {margin:0;}
