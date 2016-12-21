@@ -34,6 +34,14 @@ public class MCareUserMCareQuery extends MCareQuery {
 		return "SELECT COUNT(1) FROM MCARE_USER";
 	}
 	
+	@Override 
+	public String getQueryForObject() {
+		return "SELECT " + 
+			"USER_SEQ, P_ID, PASSWORD_VALUE, PASSWORD_UPDATE_DT, LOGIN_FAIL_CNT, LOCAL_CIPHER_KEY_VALUE, REGISTER_DT " +  
+			"FROM MCARE_USER  " + 
+			"WHERE P_ID=:pId";
+	}
+	
 	/**
 	 * 사용자의 디바이스 토큰 지우기 
 	 * @return

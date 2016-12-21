@@ -9,6 +9,8 @@ var mcare_admin_user = function(){
 	//변수
 	var $grid = $("#grid"),
 		$userDelBtn = $(".userDelBtn"),
+		$searchPId = $("#searchPId"),
+		$search = $("#search"),
 		$newUserBtn = $(".newUserBtn"),
 		$newForm = $("#newForm"),
 		$newPId = $("#newPId"),
@@ -96,6 +98,10 @@ var mcare_admin_user = function(){
 				}
 			}
 		});
+		// 검색 이벤트
+		$search.on("click", function(e){
+			dataSource.read();
+		});
 	};
 	/**
 	 * 사용등록 유효성 검사 
@@ -165,6 +171,7 @@ var mcare_admin_user = function(){
 				//성공하고 결과
 				if( data.result !== undefined && data.result.success ){
 					alert( "사용자가 등록되었습니다." );
+					$searchPId.val("");
 					$grid.data("kendoGrid").dataSource.page(1); 
 				//실패 결과
 				} else if( data.result !== undefined && !data.result.success ){
@@ -219,6 +226,11 @@ var mcare_admin_user = function(){
 					}else if( operation !== "destroy" && operation !== "read" && options.models ) {
 						return self.util.stringifyJson( options.models[0] );
 					} else if( operation === "read" ){
+						if( $searchPId.val() !== "" ){
+							options["searchPId"] = $searchPId.val();
+						} else {
+							delete options["searchPId"];
+						}
 						return self.util.stringifyJson( options );
 					}
 				}
@@ -324,14 +336,7 @@ var mcare_admin_user = function(){
                 ,{ field: "withdrawalYn", title: "탈퇴대상여부",sortable:false, width: 50, attributes: {style: "text-align: center;"}}
 //                ,{ command: [/*{name:"edit",text:"Block 해제"},*/{name:"destroy",text:"탈퇴처리"}], title: "&nbsp;", width: 100, attributes: {style: "text-align: center;"}}
             ],
-    		filterable:  {
-    			extra : false, 
-    			operators : {
-    				string : {
-    					contains : " 포함 "
-    				}
-    			}
-    		}, 
+            filterable:false,
             editable: {
             	mode:"popup",
             	confirmation:"정말 삭제하시겠습니까?"
@@ -435,6 +440,7 @@ var mcare_admin_user = function(){
 				if( data.result !== undefined && data.result.type === "success" ){
 					alert( data.result.msg );
 					checkedIds= {};
+					$searchPId.val("");
 					$grid.data("kendoGrid").dataSource.page(1); 
 				//실패 결과
 				} else if( data.result !== undefined && data.result.type === "fail" ){
@@ -452,3 +458,4 @@ var mcare_admin_user = function(){
     	self.ajaxAdmin( option, sFn, eFn );
     };
 };
+

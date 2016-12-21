@@ -40,16 +40,17 @@ public class AdminUserController {
 	
 	@Autowired 
 	private MCareUserService userService; 
-	@Autowired
-	private MCareApiCallService apiCallService;
-	@Autowired
-	private PnuhConfigureService configureService;
-	@Autowired
-	private UserRegisterService userRegisterService;
-	@Autowired
-	private SendSmsService smsService;
+//	@Autowired
+//	private MCareApiCallService apiCallService;
+//	@Autowired
+//	private PnuhConfigureService configureService;
+//	@Autowired
+//	private UserRegisterService userRegisterService;
+//	@Autowired
+//	private SendSmsService smsService;
 	@Autowired
 	private AdminUserService adminUserService;
+	
 	
 	@RequestMapping(value = "/view.page", method = RequestMethod.GET)
 	public Model user(Model model) throws AdminControllerException {
@@ -87,6 +88,7 @@ public class AdminUserController {
 		
 		return user; 
 	}
+	
 	// 탈퇴처리
 	@RequestMapping(value="/remove.json", method = RequestMethod.POST)
 	@Transactional
@@ -116,13 +118,14 @@ public class AdminUserController {
 	}
 	
 	/**
-	 * 유효한 PID 인지 확인
+	 * 사용자 등록 가능 여부 확인
 	 * @param request
 	 * @param response
 	 * @param user
 	 * @return
 	 * @throws AdminControllerException
 	 */
+	// 유효한 PID 인지 확인
 	@RequestMapping(value="/checkUserPid.json", method = RequestMethod.POST)
 	@ResponseBody 
 	public Map<String, Object> checkUserPid(HttpServletRequest request, HttpServletResponse response,
@@ -143,14 +146,16 @@ public class AdminUserController {
 	}
 	
 	/**
-	 * 사용자를 등록함 
-	 * @param payload
+	 * 관리자의 사용자 등록
+	 * @param request
+	 * @param response
+	 * @param user
 	 * @return
 	 * @throws AdminControllerException
 	 */
 	@RequestMapping(value = "/registerUser.json", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> registerUser(HttpServletRequest request, HttpServletResponse response,
+	public Map<String, Object> registerUser(HttpServletRequest request, HttpServletResponse response, 
 			@RequestBody MCareUser user) throws AdminControllerException {
 		final String pId = user.getpId();
 
