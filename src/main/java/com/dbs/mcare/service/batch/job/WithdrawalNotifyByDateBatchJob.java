@@ -189,7 +189,7 @@ public class WithdrawalNotifyByDateBatchJob extends BatchJob {
 		
 		// 로그남기기 
 		if(this.logger.isDebugEnabled()) {
-			this.logger.debug("탈퇴안내 전송. pId=" + pId + ", " + smsMsg);
+			this.logger.debug("탈퇴안내 전송. pId=" + pId + ", " + smsMsg + " (SMS메시지)");
 		}
 	}
 }
