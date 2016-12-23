@@ -8,9 +8,15 @@
     	<span class="k-icon k-i-group"></span><span class="title">사용자 관리</span>
     	<span class="category"></span>
     </div>
-    <div class="btnWrap" style="text-align:right;">
-    	<a class="k-button newUserBtn"><span>사용등록</span></a>
-    	<a class="k-button userDelBtn"><span>선택된 사용자 탈퇴처리</span></a>
+    <div class="btnWrap" style="overflow:auto;">
+    	<div style="width:50%;text-align:left;float:left;">
+    		<input type="text" class="k-textbox" value="" id="searchPId" placeholder="환자번호"/>
+        	<a class="k-button"><span class="k-icon k-i-search" id="search"></span></a>
+    	</div>
+    	<div style="width:50%;text-align:right;float:left;">
+    		<a class="k-button newUserBtn"><span>사용등록</span></a>
+	    	<a class="k-button userDelBtn"><span>선택된 사용자 탈퇴처리</span></a>
+    	</div>
     </div>
     <div class="gridContainer" style="clear:both;">
     	<div id="grid"></div>

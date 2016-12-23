@@ -181,7 +181,17 @@ public class MCareUserService extends GenericService<MCareUser, MCareUserReposit
 	 */
 	public Map<String, Object> selectUserAccessDay(Map<String, Object> params) throws MCareServiceException {
 		// 결과를 받아서 전달 
-		return this.userRepository.queryForPaging("selectUserAccessDay", "selectUserAccessDayCount", params, false); 
+		// 관리자 사용자 관리에서 사용자 검색기능을 사용하면 다른 쿼리를 호출하도록 추가함
+				
+		String pId = (String) params.get("searchPId"); 
+				
+		if(!StringUtils.isEmpty(pId)){
+		// 특정환자에 대한 것이므로 사실 paging이 필요없으나 리턴값을 맞추기 위함 
+				return this.userRepository.queryForPaging("selectOneUserAccessDay", "selectOneUserAccessDayCount", params, false); 
+		} 
+		else {
+			return this.userRepository.queryForPaging("selectUserAccessDay", "selectUserAccessDayCount", params, false); 
+		}
 	}	
 	
 	/**

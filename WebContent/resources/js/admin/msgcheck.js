@@ -15,6 +15,8 @@ var mcare_admin_msgcheck = function(){
 		$crudServiceBaseUrl = contextPath + "/admin/msgcheck";
 	
 	var gridDataSource = null;
+	this.page = 1;
+	this.skip = 13;
 	
 	this.init = function(){
 		initDropDownList();
@@ -79,6 +81,10 @@ var mcare_admin_msgcheck = function(){
 				endDate : new Date( +self.getEndDatePickerValue()).setHours(0, 0, 0, 0),
 				pId : $searchText.val(),
             }, null);
+			if( self.page != 1 ){
+				param.page = self.page;
+				param.skip = self.skip;
+			}
         	return self.util.stringifyJson( param );
 		}
 		/**
@@ -87,7 +93,8 @@ var mcare_admin_msgcheck = function(){
 		 */
 		function gridActionComplete( e ){
 			kendo.ui.progress($(".main-wrapper"), false);
-			var result = self.util.parseJson( e.responseText );
+			var result = self.util.parseJson( e.responseText ),
+				current = self.util.parseJson( this.data );
 			if( result.msg ){
 				alert( result.msg );
 				if( result.type == "AuthException" ){
@@ -95,6 +102,8 @@ var mcare_admin_msgcheck = function(){
 					return;
 				}	
 			}
+			self.page = current.page;
+			self.skip =  current.skip;
 		};
 		return dataSource;
 	};
@@ -108,16 +117,17 @@ var mcare_admin_msgcheck = function(){
 		        resizable: true,
 		        autoBind: false,
 		        selectable: true,
-		        filterable: {
-                    extra: false,
-                    operators: {
-                        string: {
-                            eq: "일치",
-                            neq: "불일치",
-                            contains:"포함"
-                        }
-                    }
-                },
+//		        filterable: {
+//                    extra: false,
+//                    operators: {
+//                        string: {
+//                            eq: "일치",
+//                            neq: "불일치",
+//                            contains:"포함"
+//                        }
+//                    }
+//                },
+		        filterable:false,
 		        detailInit: detailInit,
 		        dataBound: function() {
                     //this.expandRow(this.tbody.find("tr.k-master-row").first());

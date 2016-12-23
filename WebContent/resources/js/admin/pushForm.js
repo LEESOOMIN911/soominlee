@@ -159,14 +159,15 @@ var mcare_admin_pushForm = function(){
             		 $("div[data-container-for=menuId]").hide();
             	}
             },
-            filterable:  {
-    			extra : false, 
-    			operators : {
-    				string : {
-    					contains : " 포함 "
-    				}
-    			}
-    		}, 
+//            filterable:  {
+//    			extra : false, 
+//    			operators : {
+//    				string : {
+//    					contains : " 포함 "
+//    				}
+//    			}
+//    		}, 
+            filterable:false,
             dataBound: function () {
                 var rowCount = $grid.find( ".k-grid-content tbody tr" ).length;
                 if( rowCount < dataSource._take ) {

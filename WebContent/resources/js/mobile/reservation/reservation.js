@@ -121,7 +121,7 @@ var mcare_mobile_reservation = function(){
 	var initDate = function( date ){
 		//3개월 뒤로
 		var today = new Date(),
-			nextYear = new Date( new Date().setMonth(today.getMonth() + 3) );
+			nextYear = new Date( new Date().setMonth(today.getMonth() + 2) );
 		var param = {
 				departmentCd : $gubun.val(),
 				doctorId:$doctor.val(),
