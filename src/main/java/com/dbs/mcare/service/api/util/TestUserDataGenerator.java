@@ -253,7 +253,8 @@ public class TestUserDataGenerator {
 		list.add(resultMap); 
 		
 		return ResponseUtil.wrapResultMap(list); 
-	}	
+	}
+
 	
 	/**
 	 * 진료이력 (진료비합계) 
@@ -376,4 +377,39 @@ public class TestUserDataGenerator {
 //		
 //		return ResponseUtil.getResultMap(list); 
 //	}
+	
+	
+	/**
+	 * 창구접수 예약리스트 
+	 * @param map
+	 * @return
+	 */
+	public static Map<String, Object> _reserva_getRevList(Map<String, Object> map) { 
+		final List<Map<String, Object>> list = new ArrayList<Map<String, Object>>(); 
+		Map<String, Object> resultMap = null; 
+		
+		resultMap = new HashMap<>(); 
+		// 접수번호 
+		resultMap.put("receiptNo", "106699601"); 
+		// 접수 및 예약종류 코드 
+		resultMap.put("receiptGubunKindCd", "1"); 
+		// 접수 및 예약종류명 
+		resultMap.put("receiptGubunKindNm", "창구"); 
+		// 진료일자 
+		resultMap.put("date", DateUtil.convertYYYYMMDD(new Date())); 
+		// 진료시간 
+		resultMap.put("time", "----"); 
+		// 진료과 코드 
+		resultMap.put("departmentCd", "D0600"); 
+		// 진료의사명 
+		resultMap.put("doctorNm", "홍길동"); 
+		// 진료과명 
+		resultMap.put("departmentNm", "신경외과"); 
+		// 상태 
+		resultMap.put("status", "접수");
+		// 추가 
+		list.add(resultMap); 
+		
+		return ResponseUtil.wrapResultMap(list); 
+	}	
 }
