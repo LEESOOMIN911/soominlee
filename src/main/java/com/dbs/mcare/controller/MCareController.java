@@ -169,11 +169,8 @@ public class MCareController {
 			throw new MobileControllerException(ex); 
 		}
 		
-
-		final UserAgentParser m = new UserAgentParser(HttpRequestUtil.getUserAgent(request)); 
-		
 		// token 갱신 실패하면 예외처리  
-		if(!this.tokenService.processDeviceToken(pId, tokenId, certType, m.getPlatform())) { 
+		if(!this.tokenService.processDeviceToken(request, pId, tokenId, certType)) { 
 			// 이전에 로그인 처리를 했으니까 세션 비활성화 처리해주고 
 			this.invalidateSession(request);
 			// TODO 여기 보완해야함.
