@@ -117,16 +117,17 @@ var mcare_admin_msgcheck = function(){
 		        resizable: true,
 		        autoBind: false,
 		        selectable: true,
-		        filterable: {
-                    extra: false,
-                    operators: {
-                        string: {
-                            eq: "일치",
-                            neq: "불일치",
-                            contains:"포함"
-                        }
-                    }
-                },
+//		        filterable: {
+//                    extra: false,
+//                    operators: {
+//                        string: {
+//                            eq: "일치",
+//                            neq: "불일치",
+//                            contains:"포함"
+//                        }
+//                    }
+//                },
+		        filterable:false,
 		        detailInit: detailInit,
 		        dataBound: function() {
                     //this.expandRow(this.tbody.find("tr.k-master-row").first());

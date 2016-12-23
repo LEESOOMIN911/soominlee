@@ -133,14 +133,15 @@ var mcare_admin_poiMapping = function(){
             		
             	}
             },
-            filterable:  {
-    			extra : false, 
-    			operators : {
-    				string : {
-    					contains : " 포함 "
-    				}
-    			}
-    		}, 
+//            filterable:  {
+//    			extra : false, 
+//    			operators : {
+//    				string : {
+//    					contains : " 포함 "
+//    				}
+//    			}
+//    		}, 
+            filterable:false,
             dataBound: function () {
                 var rowCount = $grid.find( ".k-grid-content tbody tr" ).length;
                 if( rowCount < dataSource._take ) {
