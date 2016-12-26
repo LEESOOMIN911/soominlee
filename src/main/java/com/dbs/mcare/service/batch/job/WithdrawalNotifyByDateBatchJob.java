@@ -143,17 +143,17 @@ public class WithdrawalNotifyByDateBatchJob extends BatchJob {
 				// 로그인한적이 없는 사용자인 경우, 가입일 기준으로 검사 
 				if(lastAccessDay == null && registerDay == baseDay) { 
 					// 탈퇴 안내메시지 보내기 
-					this.notifyWithdrawlMessage(pId, String.format(this.smsFormat, pId, baseDay), String.format(this.pushFormat, pId, baseDay)); 										
+					this.notifyWithdrawlMessage(pId, String.format(this.smsFormat, pId), String.format(this.pushFormat, pId)); 										
 				}
 				// 로그인한적이 있는 사용자인 경우 
 				else { 
 					// 가입기간과 비접속기간 중에서 더 작은 수치(즉, 더 최근수치)를 기준으로 체크되어야 함 
-					int targetDay = (lastAccessDay < registerDay) ? lastAccessDay : registerDay; 
-					
-					// 로그인 했던 사람은 지정된 날짜만큼 로그인 안한 사람만 뽑아야함 
-					if(targetDay == baseDay) { 
+					// 그러나 가입일자에도 걸려서 메시지를 받고, access 기준으로 또 걸려서 메시지를 받고 하는 경우가 생기기 때문에 
+					// 로그인 한적이 있는 사용자는 시스템 접근에 대한 정보만으로 판단한다. 
+					// 회원가입 후 탈퇴하는 경우, 기본 사용자 정보만 지워지고 history성 데이터는 유지 되므로 가입/탈퇴 반복 시 예상외의 데이터가 쌓이는 경우가 있다. 
+					if(lastAccessDay == baseDay) { 
 						// 탈퇴 안내메시지 보내기 
-						this.notifyWithdrawlMessage(pId, String.format(this.smsFormat, pId, baseDay), String.format(this.pushFormat, pId, baseDay)); 
+						this.notifyWithdrawlMessage(pId, String.format(this.smsFormat, pId), String.format(this.pushFormat, pId)); 
 					} 	
 				}
 			}

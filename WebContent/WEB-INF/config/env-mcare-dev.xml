@@ -135,9 +135,9 @@
 	<!-- 탈퇴 언제 알려줄 것인지. 30, 10, 1이면 30일전, 10일전, 1일전 알림 -->
 	<entry key="withdrawal.notify.date">30, 10, 1</entry>	
 	<!-- 사용자에게 보내줄 안내문 페이지 (SMS 40글자) -->
-	<entry key="withdrawal.notify.sms.format">%s님은 %s일간 앱을 이용하지 않으셔서 탈퇴처리예정입니다.</entry>	
+	<entry key="withdrawal.notify.sms.format">%s님은 장기미사용자로 탈퇴처리예정이니 부산대병원 앱에 로그인해주세요.</entry>	
 	<!-- 사용자에게 보내줄 안내문 페이지 (Push용) -->
-	<entry key="withdrawal.notify.push.format">%s님은 %s일간 앱을 이용하지 않으셔서 탈퇴처리예정이니 원하지 않으시면 로그인 해주세요.</entry>	
+	<entry key="withdrawal.notify.push.format">%s님은 장기미사용자로 탈퇴처리예정이니 원하지 않으시면 로그인해주세요.</entry>	
 		
 
 	<!-- ========================================================================
