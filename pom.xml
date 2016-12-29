@@ -7,7 +7,7 @@
 	<packaging>war</packaging>
 
 	<properties>
-		<com.dbs.mcare.framework.version>1.3.11.1</com.dbs.mcare.framework.version>
+		<com.dbs.mcare.framework.version>1.3.11.2</com.dbs.mcare.framework.version>
 		<findbugs.maven.plugin.version>3.0.1</findbugs.maven.plugin.version>
 		<maven.ant.run.plugin.version>1.7</maven.ant.run.plugin.version>
 		<maven.compiler.plugin.version>3.1</maven.compiler.plugin.version>
