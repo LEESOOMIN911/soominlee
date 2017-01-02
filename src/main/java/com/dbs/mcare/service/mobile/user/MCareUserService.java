@@ -159,10 +159,10 @@ public class MCareUserService extends GenericService<MCareUser, MCareUserReposit
 		return false;
 	}
 	/**
-	 * 
+	 * 사용자 block 해제
 	 * @param user
 	 * @throws MCareServiceException
-	 * 사용자 block 해제
+	 * 
 	 */
 	public void clear(MCareUser user) throws MCareServiceException{
 		try {
@@ -186,13 +186,27 @@ public class MCareUserService extends GenericService<MCareUser, MCareUserReposit
 		String pId = (String) params.get("searchPId"); 
 				
 		if(!StringUtils.isEmpty(pId)){
-		// 특정환자에 대한 것이므로 사실 paging이 필요없으나 리턴값을 맞추기 위함 
+			// 특정환자에 대한 것이므로 사실 paging이 필요없으나 리턴값을 맞추기 위함 
 				return this.userRepository.queryForPaging("selectOneUserAccessDay", "selectOneUserAccessDayCount", params, false); 
 		} 
 		else {
 			return this.userRepository.queryForPaging("selectUserAccessDay", "selectUserAccessDayCount", params, false); 
 		}
-	}	
+	}
+	
+	/**
+	 * 사용자 정보 가져오기 
+	 * @param pId 환자번호 
+	 * @return 사용자 정보 
+	 * @throws MCareServiceException
+	 */
+	public MCareUser get(String pId) throws MCareServiceException { 
+		MCareUser user = new MCareUser(); 
+		user.setpId(pId);
+		
+		
+		return super.get(user); 
+	}
 	
 	/**
 	 * 사용자 삭제 
