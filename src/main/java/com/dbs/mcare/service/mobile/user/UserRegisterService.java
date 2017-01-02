@@ -24,6 +24,7 @@ import com.dbs.mcare.exception.mobile.ApiCallException;
 import com.dbs.mcare.exception.mobile.MobileControllerException;
 import com.dbs.mcare.framework.FrameworkConstants;
 import com.dbs.mcare.framework.service.ConfigureService;
+import com.dbs.mcare.framework.service.MessageService;
 import com.dbs.mcare.framework.util.Base64ConvertUtil;
 import com.dbs.mcare.framework.util.ConvertUtil;
 import com.dbs.mcare.framework.util.ResponseUtil;
@@ -50,6 +51,9 @@ public class UserRegisterService {
 	private ConfigureService configureService;
 	@Autowired
 	private SendSmsService smsService;
+	@Autowired 
+	private MessageService messageService; 
+	// 
 	protected static final String SESSION_AUTH = FrameworkConstants.SESSION_PREFIX + "AUTH"; // NICE로부터 부여받은 사이트 패스워드
 	
 	/**

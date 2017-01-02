@@ -30,7 +30,7 @@ public abstract class MCareConstants {
 		
 		public enum INFO { 
 			USER1("000000002", "권혜은", "19770125", "01020125023", "11111"), 
-			USER4("000000004", "서영일", "19830628", "01033661397", "11111"); 
+			USER4("000000006", "서영일", "19830628", "01033661397", "11111"); 
 			
 			private String pId; 
 			private String pName; 
