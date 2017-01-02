@@ -16,7 +16,6 @@ import com.dbs.mcare.framework.FrameworkConstants;
 import com.dbs.mcare.framework.util.ConvertUtil;
 import com.dbs.mcare.framework.util.HttpRequestUtil;
 import com.dbs.mcare.framework.util.UserAgentParser;
-import com.dbs.mcare.framework.util.UserAgentParser.PLATFORM;
 import com.dbs.mcare.service.PnuhConfigureService;
 import com.dbs.mcare.service.api.MCareApiCallService;
 import com.dbs.mcare.service.api.PnuhApi;
