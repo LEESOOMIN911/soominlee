@@ -33,7 +33,7 @@
 	</bean>
 
 	<!-- M-Care 서비스용 데이터 소스 -->
-	<bean id="mcareDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+	<bean id="mcareDataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
 		<property name="driverClassName" value="#{mcareConfig['mcare.db.driverClassName']}" />
 		<property name="url" value="#{mcareConfig['mcare.db.url']}" />
 		<property name="username" value="#{mcareConfig['mcare.db.username']}" />
@@ -41,7 +41,7 @@
 	</bean>
 	
 	<!-- M-Care 서비스를 위한 중간 테이블에 접근하기 위한 데이터 소스 -->
-	<bean id="mcareExtDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+	<bean id="mcareExtDataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
 		<property name="driverClassName" value="#{mcareConfig['mcare.ext.db.driverClassName']}" />
 		<property name="url" value="#{mcareConfig['mcare.ext.db.url']}" />
 		<property name="username" value="#{mcareConfig['mcare.ext.db.username']}" />
@@ -49,7 +49,7 @@
 	</bean>	
 	
 	<!-- 기간계 SMS 전송을 전달하기 위해 필요한 데이터 소스 -->
-	<bean id="mcsSmsDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+	<bean id="mcsSmsDataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
 		<property name="driverClassName" value="#{mcareConfig['mcs.sms.db.driverClassName']}" />
 		<property name="url" value="#{mcareConfig['mcs.sms.db.url']}" />
 		<property name="username" value="#{mcareConfig['mcs.sms.db.username']}" />
@@ -57,7 +57,7 @@
 	</bean>	
 	
 	<!-- 예약저장용 -->
-	<bean id="mcareExtReservationDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+	<bean id="mcareExtReservationDataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
 		<property name="driverClassName" value="#{mcareConfig['mcare.ext.reservation.db.driverClassName']}" />
 		<property name="url" value="#{mcareConfig['mcare.ext.reservation.db.url']}" />
 		<property name="username" value="#{mcareConfig['mcare.ext.reservation.db.username']}" />
