@@ -15,6 +15,18 @@
 			</ul>
 		</div>
 		<div class="sec_con">
+			<select id="forReason" >
+				<option value=""><s:message code="mobile.view.withdrawal011"/></option>
+				<option value="<s:message code="mobile.view.withdrawal012"/>"><s:message code="mobile.view.withdrawal012"/></option>
+				<option value="<s:message code="mobile.view.withdrawal013"/>"><s:message code="mobile.view.withdrawal013"/></option>
+				<option value="<s:message code="mobile.view.withdrawal014"/>"><s:message code="mobile.view.withdrawal014"/></option>
+				<option value="<s:message code="mobile.view.withdrawal015"/>"><s:message code="mobile.view.withdrawal015"/></option>
+				<option value="<s:message code="mobile.view.withdrawal016"/>"><s:message code="mobile.view.withdrawal016"/></option>
+				<option value="etc"><s:message code="mobile.view.withdrawal017"/></option>
+			</select>
+			<div class="reasonInputWrap">			
+				<input type="text" id="reasonInput" placeholder="<s:message code="mobile.view.withdrawal018"/>" />
+			</div>
 			<input type="password" id="pwdInput" placeholder="<s:message code="mobile.view.withdrawal003"/>" />
 			<button id="withdrawalBtn" class=" ui-btn ui-btn-b"><span><s:message code="mobile.view.withdrawal004"/></span></button>
 		</div>
@@ -28,7 +40,10 @@ var i18n = function(){
 		"withdrawal005" : "<s:message code='mobile.message.withdrawal005'/>",
 		"withdrawal006" : "<s:message code='mobile.message.withdrawal006'/>",
 		"withdrawal007" : "<s:message code='mobile.message.withdrawal007'/>",
-		"withdrawal010" : "<s:message code='mobile.message.withdrawal010'/>"
+		"withdrawal010" : "<s:message code='mobile.message.withdrawal010'/>",
+		"withdrawal019" : "<s:message code='mobile.message.withdrawal019'/>",
+		"withdrawal020" : "<s:message code='mobile.message.withdrawal020'/>",
+		"withdrawal021" : "<s:message code='mobile.message.withdrawal021'/>"
 	};
 	this.getMessage = function( code ){
 		return message[code];
