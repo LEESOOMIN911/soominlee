@@ -8,6 +8,7 @@
 
 	<properties>
 		<com.dbs.mcare.framework.version>2.0.2</com.dbs.mcare.framework.version>
+		<com.oracl.version>11.2.0.3</com.oracl.version>
 		<findbugs.maven.plugin.version>3.0.1</findbugs.maven.plugin.version>
 		<maven.ant.run.plugin.version>1.7</maven.ant.run.plugin.version>
 		<maven.compiler.plugin.version>3.1</maven.compiler.plugin.version>
@@ -213,6 +214,13 @@
 			<groupId>org.apache.tiles</groupId>
 			<artifactId>tiles-extras</artifactId>
 			<version>${tiles.version}</version>
+		</dependency>
+		
+		<!-- ojdbc -->
+		<dependency>
+			<groupId>com.oracl</groupId>
+			<artifactId>ojdbc7</artifactId>
+			<version>${com.oracl.version}</version>
 		</dependency>
 				
 		<!-- 본인인증 -->
