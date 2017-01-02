@@ -5,5 +5,6 @@
     padding: 10px 0;
 }
 .fir_con{padding: 10px;}
-.fir_con ul{padding-left:20px; font-weight: bold;line-height: 1.5em;}
+.fir_con ul{padding-left:20px;line-height: 1.5em;}
 .sec_con{padding:5px;}
+.reasonInputWrap{display:none;}
