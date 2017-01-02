@@ -35,7 +35,6 @@ import com.dbs.mcare.framework.util.AESUtil;
 import com.dbs.mcare.framework.util.HashUtil;
 import com.dbs.mcare.framework.util.HttpRequestUtil;
 import com.dbs.mcare.framework.util.SessionUtil;
-import com.dbs.mcare.framework.util.UserAgentParser;
 import com.dbs.mcare.service.AuthenticationDelegator;
 import com.dbs.mcare.service.PnuhConfigureService;
 import com.dbs.mcare.service.RememberMeCookieBaker;
