@@ -3,11 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.dbs.mcare</groupId>
 	<artifactId>mcare</artifactId>
-	<version>1.6</version>
+	<version>2.0</version>
 	<packaging>war</packaging>
 
 	<properties>
-		<com.dbs.mcare.framework.version>1.3.11.2</com.dbs.mcare.framework.version>
+		<com.dbs.mcare.framework.version>2.0.1</com.dbs.mcare.framework.version>
 		<findbugs.maven.plugin.version>3.0.1</findbugs.maven.plugin.version>
 		<maven.ant.run.plugin.version>1.7</maven.ant.run.plugin.version>
 		<maven.compiler.plugin.version>3.1</maven.compiler.plugin.version>
@@ -15,14 +15,15 @@
 		<maven.pmd.plugin.version>3.5</maven.pmd.plugin.version>
 		<maven.resources.plugin.version>2.7</maven.resources.plugin.version>
 		<maven.war.plugin.version>2.6</maven.war.plugin.version>
+		<maven.clean.plugin.version>2.4.1</maven.clean.plugin.version>
 		<!-- tomcat7은 servlet 3.0, jsp 2.2 기준임 -->
 		<javax.servlet.version>3.0.1</javax.servlet.version>
 		<javax.servlet.jsp.version>2.2</javax.servlet.jsp.version>
 		<jstl.version>1.2</jstl.version>
-		<tiles.version>3.0.1</tiles.version>
+		<tiles.version>3.0.5</tiles.version>		
+		
 		<nice.id.version>1.1</nice.id.version>
-		<ipin.client.version>1.0.0</ipin.client.version>		
-		<commons.dbcp.version>1.4</commons.dbcp.version>
+		<ipin.client.version>1.0.0</ipin.client.version>	
 		
 		<!-- 컴파일 옵션 -->
 		<maven.compiler.source.version>1.7</maven.compiler.source.version>
@@ -207,48 +208,13 @@
 			<artifactId>jstl</artifactId>
 			<version>${jstl.version}</version>
 		</dependency>
-		<!-- tiles -->
+		<!-- tiles : https://tiles.apache.org/download.html#Tiles_3_as_a_Maven_dependency -->
 		<dependency>
 			<groupId>org.apache.tiles</groupId>
-			<artifactId>tiles-core</artifactId>
-			<version>${tiles.version}</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>slf4j-api</artifactId>
-					<groupId>org.slf4j</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>jcl-over-slf4j</artifactId>
-					<groupId>org.slf4j</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.tiles</groupId>
-			<artifactId>tiles-jsp</artifactId>
+			<artifactId>tiles-extras</artifactId>
 			<version>${tiles.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.tiles</groupId>
-			<artifactId>tiles-servlet</artifactId>
-			<version>${tiles.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.tiles</groupId>
-			<artifactId>tiles-template</artifactId>
-			<version>${tiles.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.tiles</groupId>
-			<artifactId>tiles-el</artifactId>
-			<version>${tiles.version}</version>
-		</dependency>
-		<!-- DB connection pool -->
-		<dependency>
-			<groupId>commons-dbcp</groupId>
-			<artifactId>commons-dbcp</artifactId>
-			<version>${commons.dbcp.version}</version>
-		</dependency>		
+				
 		<!-- 본인인증 -->
 		<dependency>
 			<groupId>com.dbs.mcare</groupId>
@@ -263,16 +229,4 @@
 		</dependency>				
 	</dependencies>
 
-	<repositories>
-		<repository>
-			<id>mcare_release</id>
-			<name>mcare_release</name>
-			<url>http://sa.idatabank.com/nexus/content/repositories/mcare_release</url>
-		</repository>
-		<repository>
-			<id>3rd_party</id>
-			<name>3rd_party</name>
-			<url>http://sa.idatabank.com/nexus/content/repositories/thirdparty/</url>
-		</repository>		
-	</repositories>
 </project>

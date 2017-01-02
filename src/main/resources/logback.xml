@@ -12,7 +12,7 @@
 	<appender name="fileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
 	    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 	    	<fileNamePattern>../logs/mcare.%d{yyyy-MM-dd}.log</fileNamePattern>
-	    	<maxHistory>3</maxHistory>
+	    	<maxHistory>10</maxHistory>
 	    </rollingPolicy>
 		<encoder>
 			<pattern>@@ %date{MM-dd HH:mm:ss.SSS}|%-5level|%throwable{4}%logger{0}.%M\(%line\)::%msg | ${application-name:-mcare} %thread %n</pattern>
@@ -23,7 +23,7 @@
 	<appender name="errorFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
 	    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 	    	<fileNamePattern>../logs/mcare_error.%d{yyyy-MM-dd}.log</fileNamePattern>
-	    	<maxHistory>30</maxHistory>
+	    	<maxHistory>10</maxHistory>
 	    </rollingPolicy>
 		<filter class="ch.qos.logback.classic.filter.LevelFilter">
 			<level>ERROR</level>

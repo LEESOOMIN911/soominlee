@@ -100,16 +100,20 @@
       		<bean class="com.dbs.mcare.framework.interceptor.RequestLoggingInterceptor"/>		
     	</mvc:interceptor>
 	</mvc:interceptors>
-
-	<bean
-		class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+	
+	<bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
 		<property name="order" value="1" />
-		  
-		<property name="mediaTypes">
-		    <map>
-				<entry key="page" value="text/html" />
-				<entry key="json" value="application/json" />
-		    </map>
+		
+		<property name="contentNegotiationManager">
+			<bean class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+				<property name="mediaTypes">
+				    <map>
+						<entry key="page" value="text/html" />
+						<entry key="json" value="application/json" />
+						<entry key="ext" value="text/plain" />
+				    </map>
+				</property>
+			</bean>
 		</property>
 
 		<property name="viewResolvers">
@@ -127,6 +131,8 @@
 			</list>
 		</property>
 	</bean>
+	 
+	
 	 
 	<bean id="tilesConfigurer"
 		class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
