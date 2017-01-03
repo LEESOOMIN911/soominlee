@@ -25,7 +25,7 @@
 				<option value="etc"><s:message code="mobile.view.withdrawal017"/></option>
 			</select>
 			<div class="reasonInputWrap">			
-				<input type="text" id="reasonInput" placeholder="<s:message code="mobile.view.withdrawal018"/>" />
+				<input type="text" id="reasonInput" data-clear-btn="true" placeholder="<s:message code="mobile.view.withdrawal018"/>" />
 			</div>
 			<input type="password" id="pwdInput" placeholder="<s:message code="mobile.view.withdrawal003"/>" />
 			<button id="withdrawalBtn" class=" ui-btn ui-btn-b"><span><s:message code="mobile.view.withdrawal004"/></span></button>
