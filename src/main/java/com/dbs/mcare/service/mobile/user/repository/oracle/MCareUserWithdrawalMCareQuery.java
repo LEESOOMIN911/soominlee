@@ -11,6 +11,6 @@ public class MCareUserWithdrawalMCareQuery extends MCareQuery {
 	@Override 
 	public String getQueryForInsert() {
 		return "INSERT INTO MCARE_USER_WITHDRAWAL (P_ID, REGISTER_DT, WITHDRAWAL_DT, REASON_VALUE) " + 
-				" VALUES(:pId, :registerDt, :withdrawalDt, SUBSTR(:reasonValue, 255) ) ";
+				" VALUES(:pId, :registerDt, :withdrawalDt, SUBSTR(:reasonValue, 0, 255) ) ";
 	}
 }
