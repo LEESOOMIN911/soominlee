@@ -3,19 +3,17 @@ package com.dbs.mcare;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.StringUtils;
-import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.support.RequestContextUtils;
 
 import com.dbs.mcare.framework.FrameworkConstants;
 import com.dbs.mcare.framework.FrameworkHandlerExceptionResolver;
 import com.dbs.mcare.framework.exception.MCareAuthException;
 import com.dbs.mcare.framework.exception.MCareRuntimeException;
+import com.dbs.mcare.framework.service.MessageService;
 import com.dbs.mcare.framework.util.HttpRequestUtil;
 
 /**
@@ -27,6 +25,8 @@ import com.dbs.mcare.framework.util.HttpRequestUtil;
 @Component
 public class MCareHandlerExceptionResolver extends FrameworkHandlerExceptionResolver {
 	private AntPathMatcher matcher; 
+	@Autowired 
+	private MessageService messageService; 
 	
 	public MCareHandlerExceptionResolver() { 
 		this.matcher = new AntPathMatcher();
@@ -57,15 +57,15 @@ public class MCareHandlerExceptionResolver extends FrameworkHandlerExceptionReso
 			this.logger.debug(builder.toString(), ex);
 		}
 		
-		final WebApplicationContext webAppContext = RequestContextUtils.getWebApplicationContext(request);
-		final MessageSource messageSource = (MessageSource) webAppContext.getBean("messageSource");
+//		final WebApplicationContext webAppContext = RequestContextUtils.getWebApplicationContext(request);
+//		final MessageSource messageSource = (MessageSource) webAppContext.getBean("messageSource");
 		String code = null; 
 
 		String requestUri = HttpRequestUtil.getRequestURIExcludeContextPath(request); 
 		
 		// 관리자 요청인가? 
 		if(this.matcher.match(FrameworkConstants.URI_REQUEST_PATTERN.ADMIN.getPattern(), requestUri)) {
-			return "[예외] " + this.getExcepitonMessage(ex, messageSource); 
+			return "[예외] " + this.getExcepitonMessage(request, ex); 
 		}
 		
 		// 일반 사용자의 요청의 예외인 경우 (다국어 고려 필요) 
@@ -79,9 +79,8 @@ public class MCareHandlerExceptionResolver extends FrameworkHandlerExceptionReso
 			code = "mcare.error.500"; 
 		}
 		
-		// 메시지 처리 
-		return messageSource.getMessage(code, new Object[0], ex.getMessage(), LocaleContextHolder.getLocale());
-		
+		// 메시지 꺼내주기 
+		return this.messageService.getMessage(code, request); 
 
 		
 		// Controller단에서 들어온 예외에서 resource code를 보고 text로 바꿔서 ui에 전달 
@@ -101,14 +100,15 @@ public class MCareHandlerExceptionResolver extends FrameworkHandlerExceptionReso
 
 	/**
 	 * 관리자용 에러메시지 생성  
-	 * @param ex
-	 * @return
+	 * @param request 요청객체 
+	 * @param ex 발생된 예외 
+	 * @return 정리된 문자열 
 	 */
-	private String getExcepitonMessage(Exception ex, MessageSource messageSource) { 
+	private String getExcepitonMessage(HttpServletRequest request, Exception ex) { 
 		// 우리 시스템에서 명시적으로 생성한 예외가 아닌 경우 
 		if(!(ex instanceof MCareRuntimeException)) {
 			// 기본 메시지 처리 
-			return messageSource.getMessage("mcare.error.500", new Object[0], ex.getMessage(), LocaleContextHolder.getLocale());
+			return this.messageService.getMessage("mcare.error.500", request); 
 		}
 		
 		
