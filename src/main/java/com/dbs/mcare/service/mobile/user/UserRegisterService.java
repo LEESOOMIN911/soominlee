@@ -11,12 +11,8 @@ import org.apache.commons.lang.math.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.servlet.support.RequestContextUtils;
 
 import com.dbs.mcare.MCareConstants;
 import com.dbs.mcare.MCareConstants.MCARE_TEST_USER.INFO;
@@ -644,10 +640,7 @@ public class UserRegisterService {
 	 * @throws MobileControllerException
 	 */
 	public String reqSmsCode(MCareUser user, HttpServletRequest request, String cellPhoneNo) throws MobileControllerException {
-		//Message Resource
-		final WebApplicationContext webAppContext = RequestContextUtils.getWebApplicationContext(request);
-		final MessageSource messageSource = (MessageSource) webAppContext.getBean("messageSource");
-		
+
 		//만약 SMS 인정번호 재전송 요청이 들어와서 기존 certificationCode가 남아있는 경우 기존 값을 제거
 		if(request.getSession().getAttribute("smsCode") != null) {
 			request.getSession().removeAttribute("smsCode");
@@ -675,8 +668,9 @@ public class UserRegisterService {
 					certiCode = testUser.getTempPassword(); 
 				}
 			}
+			
 			//SMS 전송 API를 위한 파라미터 설정
-			smsMessage = messageSource.getMessage("mobile.message.smsCertification012", new String[]{certiCode}, LocaleContextHolder.getLocale());
+			smsMessage = messageService.getMessage("mobile.message.smsCertification012", request, new String[]{certiCode});
 			//sms전송 요청 
 			this.smsService.sendSms(user.getpName(), cellPhoneNo, smsMessage);
 			request.getSession().setAttribute("smsCode", certiCode);
