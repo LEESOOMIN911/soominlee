@@ -51,6 +51,11 @@
     	<put-attribute name="title" value="에러안내" />
         <put-attribute name="content" value="/WEB-INF/template/error409.jsp" />
     </definition>
+    <!-- 500 에러 페이지 -->
+    <definition name="error500" extends="mobileEmptyTemplate">
+    	<put-attribute name="title" value="에러안내" />
+        <put-attribute name="content" value="/WEB-INF/template/error500.jsp" />
+    </definition>
     <!-- 관리자 패턴 -->
     <definition name="admin/*" extends="adminTemplate">
         <put-attribute name="content" expression="/WEB-INF/view/admin/{1}.jsp" />
