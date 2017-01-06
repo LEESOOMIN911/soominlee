@@ -105,7 +105,7 @@ public class UserController {
 		
 		//등록된 사용자인지 확인한다.
 		if(userInfo != null) {
-			throw new MobileControllerException("register005", "이미 등록된 환자번호입니다.");
+			throw new MobileControllerException("mobile.message.register005", "이미 등록된 환자번호입니다.");
 		}
 		
 		Map<String, Object> resultMap = null;
@@ -117,7 +117,7 @@ public class UserController {
 			
 			//기간계에 환자 번호가 존재하지 않는 경우
 			if(resultMap == null || resultMap.isEmpty()) {
-				throw new MobileControllerException("register022", "환자번호가 없습니다. 원무과로 가서 환자번호를 확인하세요.");
+				throw new MobileControllerException("mobile.message.register022", "환자번호가 없습니다. 원무과로 가서 환자번호를 확인하세요.");
 			}
 			
 			birthDay = (String)resultMap.get("birthDt");
@@ -129,7 +129,7 @@ public class UserController {
 			if(bUnder14) {
 				//14세 미만 가입 가능인 경우
 				if(!this.configureService.getAllowJoinUnder14()) {
-					throw new MobileControllerException("register007", "14세 미만 사용자는 가입할 수 없습니다.");
+					throw new MobileControllerException("mobile.message.register007", "14세 미만 사용자는 가입할 수 없습니다.");
 				}
 			}
 		}
@@ -747,7 +747,7 @@ public class UserController {
 		
 		//pId 로 조회된 사용자 정보의 이름과 파라미터로 입력된 이름이 다른경우
 		if(!pName.equals(resultMap.get("pNm"))) {
-			throw new MobileControllerException("authUserInfo016", "환자번호의 환자명과 입력하신 환자명이 같지 않습니다.");
+			throw new MobileControllerException("mobile.message.authUserInfo016", "환자번호의 환자명과 입력하신 환자명이 같지 않습니다.");
 		}
 		
 		//mcareUser로 등록된 사용자인지 확인한다.
@@ -755,7 +755,7 @@ public class UserController {
 		
 		//등록된 사용자 정보가 없는 경우
 		if(userInfo == null) {
-			throw new MobileControllerException("authUserInfo010", "등록되지 않았습니다.");
+			throw new MobileControllerException("mobile.message.authUserInfo010", "등록되지 않았습니다.");
 		}
 		
 		final String birthDt = (String)resultMap.get("birthDt");
