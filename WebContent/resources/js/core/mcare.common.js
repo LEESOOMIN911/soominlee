@@ -9,12 +9,16 @@ $(document).ready(function(){
 		
 		if( $("[data-type=409]", data ).length > 0 ){
 			window.location.href = contextPath + "/error409.page";
+		} else if ( $("[data-type=500]", data ).length > 0 ){
+			window.location.href = contextPath + "/error500.page";
 		}
 	});
 	$(document).ajaxError(function(event,xhr,opts,e){
 		
 		if( $("[data-type=409]", xhr.responseText ).length > 0 ){
 			window.location.href = contextPath + "/error409.page";
+		} else if ( $("[data-type=500]", xhr.responseText ).length > 0 ){
+			window.location.href = contextPath + "/error500.page";
 		}
 	});
 });
