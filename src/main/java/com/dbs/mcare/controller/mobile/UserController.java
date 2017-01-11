@@ -670,7 +670,7 @@ public class UserController {
 		try {
 			bUnder14 = DateUtil.checkUnder14(birthDay);
 
-			
+			//14세이상 환자가 본인인증페이지로 가지 않고 로그인페이지로 바로 전이되는 문제는 화면단에서 수정해야되는 부분입니다.
 			//14세 미만인 경우 SMS로 환자번호 전송
 			if(bUnder14) {
 				
