@@ -626,11 +626,11 @@ public class UserController {
 		}
 		
 		// 필수항목 확인 
-		if(reqMap == null || StringUtils.isEmpty(reqMap.get("pNm")) || StringUtils.isEmpty(reqMap.get("cellphoneNo"))) {
+		if(reqMap == null || StringUtils.isEmpty(reqMap.get("pName")) || StringUtils.isEmpty(reqMap.get("cellphoneNo"))) {
 			throw new MobileControllerException("mcare.error.param", "파라미터를 확인해주세요"); 
 		}
 		// 요청 파라미터는 client에서 넘어오는 것을 그대로 사용한다. 
-		Map<String, Object> resultMap = null;
+		Map<String, Object> resultMap = null; 
 		
 		try{
 			resultMap = (Map<String, Object>) this.apiCallService.execute(PnuhApi.USER_USERINFO_FINDPID, reqMap); 
@@ -661,7 +661,7 @@ public class UserController {
 				resultMap.put("cellphoneNo", testUser.getCellPhoneNumber());
 			}
 		}
-		
+
 		final String birthDay = (String)resultMap.get("birthDt");
 		final String sendPhoneNo = ConvertUtil.convertSecretPhoneNo((String)resultMap.get("cellphoneNo"));
 		Map<String, Object> resMap = new HashMap<String, Object>();
@@ -669,23 +669,23 @@ public class UserController {
 		
 		try {
 			bUnder14 = DateUtil.checkUnder14(birthDay);
-// TODO 2016-01-06, kh2un. 긴급패치. 14세 미만인 경우에만 SMS가 전송되는 문제. 
-// 14세 미만은 본인인증을 못하니 SMS로 환자번호를 보내주고, 성인은 본인인증 후 로그인 페이지에 환자번호를 꼽아줘야 하는데...... 
-// 아래 조건문 때문에 14세 이상인 경우에는 아무런 액션 없이 로그인 페이지로 전이되어 일단 주석처리함. 조치필요. 
-//			//14세 미만인 경우 SMS로 환자번호 전송
-//			if(bUnder14) {
+
+			
+			//14세 미만인 경우 SMS로 환자번호 전송
+			if(bUnder14) {
+				
 				//홍길동님의 환자번호는 01012345678입니다.
-				String smsMessage = this.messageService.getMessage("mobile.message.searchPId010", request, new String[]{(String)resultMap.get("pNm"), findPid});
+				String smsMessage = this.messageService.getMessage("mobile.message.searchPId010", request, new String[]{(String)resultMap.get("pName"), findPid});
 				if(this.logger.isDebugEnabled()) { 
 					this.logger.debug("smsMessage : " + smsMessage);
 				}
 				
 				// 찾았으면, SMS 전송
-				this.smsService.sendSms((String) resultMap.get("pNm"), (String) resultMap.get("cellphoneNo"), smsMessage);
+				this.smsService.sendSms((String) resultMap.get("pName"), (String) resultMap.get("cellphoneNo"), smsMessage);
 				
 				resMap.put("sendPhoneNo", sendPhoneNo);
 				resMap.put("msg", this.messageService.getMessage("mobile.message.searchPId013", request, new String[]{sendPhoneNo}));
-//			}
+			}
 		} 
 		catch (ApiCallException ex) {
 			if(this.logger.isDebugEnabled()) {
@@ -698,6 +698,7 @@ public class UserController {
 		}
 		
 		resMap.put("bUnder14", bUnder14);
+		resMap.put("pId", findPid);
 		return ResponseUtil.wrapResultMap(resMap);
 	}
 	
