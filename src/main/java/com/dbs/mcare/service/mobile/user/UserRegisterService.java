@@ -569,7 +569,7 @@ public class UserRegisterService {
 		
 		//responseMap에서 결과를 추출해서 userMap에 담
 		userMap = (Map<String, Object>) responseMap.get(FrameworkConstants.UIRESPONSE.RESULT.getKey());
-		String userName = (String)userMap.get("pNm");
+		String userName = (String)userMap.get("pName");
 		String userBrith = (String)userMap.get("birthDt");
 		String userPhoneNo = (String)userMap.get("cellphoneNo");
 		
@@ -618,7 +618,7 @@ public class UserRegisterService {
 		} 
 
 		//입력된 이름하고 조회된 정보의 환자이름 하고 같나?? 
-		if(user.getpName() != null && !user.getpName().equals(resultMap.get("pNm"))) {
+		if(user.getpName() != null && !user.getpName().equals(resultMap.get("pName"))) {
 			throw new MobileControllerException("mobile.message.smsCertification011", "환자번호의 환자명과 입력하신 환자명이 같지 않습니다.");
 		}
 

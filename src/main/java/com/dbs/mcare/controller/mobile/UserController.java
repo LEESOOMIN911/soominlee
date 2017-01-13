@@ -747,7 +747,7 @@ public class UserController {
 		}
 		
 		//pId 로 조회된 사용자 정보의 이름과 파라미터로 입력된 이름이 다른경우
-		if(!pName.equals(resultMap.get("pNm"))) {
+		if(!pName.equals(resultMap.get("pName"))) {
 			throw new MobileControllerException("mobile.message.authUserInfo016", "환자번호의 환자명과 입력하신 환자명이 같지 않습니다.");
 		}
 		
