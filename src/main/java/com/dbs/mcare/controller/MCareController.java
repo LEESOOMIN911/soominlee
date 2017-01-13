@@ -123,7 +123,7 @@ public class MCareController {
 			
 			
 			// 로그확인 
-			StringBuilder builder = new StringBuilder(); 
+			StringBuilder builder = new StringBuilder(FrameworkConstants.NEW_LINE); 
 			
 			Enumeration<String> names = request.getAttributeNames(); 
 			String key = null; 
