@@ -36,6 +36,7 @@
 	  </div>
 	</div>
 </div>
+<input type="hidden" id="hPid" value="${pId}"/>
 <script type="text/javascript">	
 //다국어
 var i18n = function(){

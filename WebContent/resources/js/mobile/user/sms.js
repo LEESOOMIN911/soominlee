@@ -153,7 +153,7 @@ var mcare_mobile_sms = function(){
 	var callNative = function() {
 		
 		var reqUrl = "";
-		var urlParam = "?pNm=" + $encodePname.val();
+		var urlParam = "&pNm=" + $encodePname.val();
 //		var reqUrl = "/mobile/user/registerPWD.page";
 		urlParam = urlParam + "&reservedParam3=" + $encodePid.val();
 		urlParam = urlParam + "&chartNoValue=" + $pid.val();

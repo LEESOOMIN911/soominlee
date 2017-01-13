@@ -15,6 +15,7 @@ var mcare_mobile_login = function(){
 		$password = $("#password"),
 		$rememberMe = $("#rememberMe"),
 		$findId = $("#login_btn1"),
+		$hPid = $("#hPid"),
 		$findPWD = $("#login_btn2"),
 		$regBtn = $("#reg_btn");
 	
