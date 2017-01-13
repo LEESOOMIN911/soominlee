@@ -27,6 +27,7 @@ var mcare_mobile_login = function(){
 		setParameterMap();
 		initDeviceToken();
 		addEvent();
+		checkSearchPid();
 	};
 	/**
 	 * 파라미터 맵 초기화
@@ -161,5 +162,14 @@ var mcare_mobile_login = function(){
 		    	$loginBtn.removeClass("active");
 		    }
 		});
-	}
+	};
+	/**
+	 * 환자번호 찾기에서 온것인지 확인
+	 */
+	var checkSearchPid = function(){
+		//loginType이 serarchPId인 경우 환자번호 필드에 pId 넣어주기
+		if(parameterMap["loginType"] == "searchPId") {
+			$pId.val( $hPid.val() );
+		}
+	};
 };

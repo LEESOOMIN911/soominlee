@@ -30,7 +30,12 @@ var mcare_mobile_certification_result = function() {
 		//		reservedParam1=iPin&reservedParam2=registerPWD&reservedParam3=MTIzNA==
 		var reqUrl = "";
 		
-		reqUrl = "/mobile/user/" + reservedParam2 + ".page?menuId=" + reservedParam2;
+		if(reservedParam2 == "searchPId") {
+			reqUrl = "/login.page?loginType=" + reservedParam2;
+		}else{
+			reqUrl = "/mobile/user/" + reservedParam2 + ".page?menuId=" + reservedParam2;
+		}
+		
 		var urlParam = "&pNm=" + pNm;
 		urlParam = urlParam + "&userBirthDate=" + userBirthDate;
 		urlParam = urlParam + "&userGenderCode=" + userGenderCode;

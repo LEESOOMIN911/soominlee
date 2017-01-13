@@ -39,6 +39,7 @@ import com.dbs.mcare.service.AuthenticationDelegator;
 import com.dbs.mcare.service.PnuhConfigureService;
 import com.dbs.mcare.service.RememberMeCookieBaker;
 import com.dbs.mcare.service.mobile.user.TokenService;
+import com.dbs.mcare.service.mobile.user.UserRegisterService;
 import com.dbs.mcare.service.mobile.user.repository.dao.MCareUser;
 
 @Controller
@@ -65,6 +66,9 @@ public class MCareController {
 	private TokenService tokenService; 
 	@Autowired 
 	private PnuhConfigureService configureService; 
+	
+	@Autowired
+	private UserRegisterService registerService;
 	
 	private HashUtil hashUtils; 
 	
@@ -119,7 +123,15 @@ public class MCareController {
 		
 		// 세션 비활성화 처리 
 		this.invalidateSession(request);
+		final String loginType = request.getParameter("loginType");
 		
+		if(this.logger.isDebugEnabled()) { 
+			this.logger.debug("loginType = " + loginType);
+		} 
+		
+		if(!StringUtils.isEmpty(loginType) && loginType.equals("searchPId")) {
+			return this.registerService.getCertiUserInfo(request, model);
+		}
 			
 		return model;
 	}

@@ -729,7 +729,34 @@ public class UserRegisterService {
 		return model;
 	}
 	
-
+	/**
+	 * 인증된 사용자 정보를 Base64Decode하여 반환
+	 * @param request
+	 * @param model
+	 * @return
+	 */
+	public Model getCertiUserInfo(HttpServletRequest request, Model model) {
+		//이름을 Base64로 인코딩한 결과에 +가 포함될수 있는데 (예:홍길동)이 경우 +는 http get을 이용해서 전달할 수 없다. 
+		//그래서 +가 공백으로 넘어오는데 이를 다시 복원해주기 위함이다.
+		final String pNm = Base64ConvertUtil.base64Decode(request.getParameter("pNm").replace(" ", "+"));
+		final String pId = Base64ConvertUtil.base64Decode(request.getParameter("reservedParam3"));
+		model.addAttribute("pNm", pNm);
+		model.addAttribute("pId", pId);
+		
+		//SMS인증에서는 사용되지 않는 파라미터
+		if(request.getParameter("userBirthDate") != null) {
+			final String userBirthDate = Base64ConvertUtil.base64Decode(request.getParameter("userBirthDate"));
+			model.addAttribute("userBirthDate", userBirthDate);
+		}
+		
+		//SMS인증에서는 사용되지 않는 파라미터
+		if(request.getParameter("userGenderCode") != null) {
+			final String userGenderCode = Base64ConvertUtil.base64Decode(request.getParameter("userGenderCode"));
+			model.addAttribute("userGenderCode", userGenderCode);
+		}
+		
+		return model;
+	}
 	
 	/**
 	 * SMS인증번호를 생성해서 반환한다.
