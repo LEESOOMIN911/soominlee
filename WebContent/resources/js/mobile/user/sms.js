@@ -151,12 +151,19 @@ var mcare_mobile_sms = function(){
 	};
 	
 	var callNative = function() {
-		var reqUrl = "/mobile/user/" + $certReqType.val() + ".page";
-//		var reqUrl = "/mobile/user/registerPWD.page";
+		
+		var reqUrl = "";
 		var urlParam = "?pNm=" + $encodePname.val();
+//		var reqUrl = "/mobile/user/registerPWD.page";
 		urlParam = urlParam + "&reservedParam3=" + $encodePid.val();
-		urlParam = urlParam + "&menuId=" + $certReqType.val();
 		urlParam = urlParam + "&chartNoValue=" + $pid.val();
+		
+		if($certReqType.val() === "searchPId"){
+			reqUrl = "/login.page?loginType=" + $certReqType.val();
+		}else{
+			reqUrl = "/mobile/user/" + $certReqType.val() + ".page?menuId=" + $certReqType.val();
+		}
+		
 		reqUrl = reqUrl + urlParam;
 		
 		var domain = self.getDomain();
