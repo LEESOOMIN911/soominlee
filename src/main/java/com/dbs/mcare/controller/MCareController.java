@@ -1,6 +1,7 @@
 package com.dbs.mcare.controller;
 
 import java.io.IOException;
+import java.util.Enumeration;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -119,6 +120,19 @@ public class MCareController {
 	public Model login(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 		if(this.logger.isDebugEnabled()) { 
 			this.logger.debug("request : " + request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE));
+			
+			
+			StringBuilder builder = new StringBuilder(); 
+			
+			Enumeration<String> names = request.getAttributeNames(); 
+			String key = null; 
+			
+			while(names.hasMoreElements()) {
+				key = names.nextElement(); 
+				builder.append("- ").append(key).append(" = ").append(request.getAttribute(key)).append(FrameworkConstants.NEW_LINE); 
+			}
+			
+			this.logger.debug(builder.toString());
 		}
 		
 		// 세션 비활성화 처리 
