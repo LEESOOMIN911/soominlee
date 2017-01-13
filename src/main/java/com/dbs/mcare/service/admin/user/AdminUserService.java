@@ -93,7 +93,7 @@ public class AdminUserService {
 		
 		try {
 			//문자 전송에 필요한 데이터
-			String pName = (String) userMap.get("pNm");
+			String pName = (String) userMap.get("pName");
 			String cellphoneNo = (String) userMap.get("cellphoneNo");
 			String birthDt = (String) userMap.get("birthDt");
 			
