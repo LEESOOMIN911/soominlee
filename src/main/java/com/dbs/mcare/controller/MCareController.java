@@ -122,6 +122,7 @@ public class MCareController {
 			this.logger.debug("request : " + request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE));
 			
 			
+			// 로그확인 
 			StringBuilder builder = new StringBuilder(); 
 			
 			Enumeration<String> names = request.getAttributeNames(); 
@@ -129,6 +130,11 @@ public class MCareController {
 			
 			while(names.hasMoreElements()) {
 				key = names.nextElement(); 
+				
+				if(key.startsWith("org.springframework") || key.startsWith("java.")) {
+					continue; 
+				}
+				
 				builder.append("- ").append(key).append(" = ").append(request.getAttribute(key)).append(FrameworkConstants.NEW_LINE); 
 			}
 			
