@@ -329,7 +329,7 @@ public class ParamMappingUtil {
 		// 생일 
 		resultMap.put("birthDt", map.get("dobr")); 
 		// 이름 
-		resultMap.put("pNm", map.get("pt_nm")); 
+		resultMap.put("pName", map.get("pt_nm")); 
 		// 전화번호  
 		if(map.get("clph_no") instanceof String) { 
 			// 정상적으로 값이 있을때만 String 형태로 넘어옴 
