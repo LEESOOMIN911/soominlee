@@ -96,9 +96,9 @@ var mcare_mobile_searchPId = function(){
 		var base64EPname = window.btoa(encodeURIComponent($pName.val()));
 //		SMS인증을 사용하지 않아 한글 파라미터 전송하는 부분 주석 처리 SMS인증이 살아나게 되면 변경 필요
 		if(contextPath == "" || contextPath == null){
-			domain = domain + "/mobile/user/certification.page?menuId=certification&pId=&certReqType=" + parameterMap["searchPIdType"] + "&phoneNo="+$pCellphone.val()+"&pName="+base64EPname;
+			domain = domain + "/mobile/user/certification.page?menuId=certification&pId=" + arguments[0]  + "&certReqType=" + parameterMap["searchPIdType"] + "&phoneNo="+$pCellphone.val()+"&pName="+base64EPname;
 		} else {
-			domain = domain + contextPath + "/mobile/user/certification.page?menuId=certification&pId=&certReqType=" + parameterMap["searchPIdType"] + "&phoneNo="+$pCellphone.val()+"&pName="+base64EPname;
+			domain = domain + contextPath + "/mobile/user/certification.page?menuId=certification&pId=" + arguments[0]  + "&certReqType=" + parameterMap["searchPIdType"] + "&phoneNo="+$pCellphone.val()+"&pName="+base64EPname;
 		}
 //		if(contextPath == "" || contextPath == null){
 //			domain = domain + "/mobile/user/certification.page?menuId=certification&pId=&certReqType=" + parameterMap["searchPIdType"] + "&phoneNo="+$pCellphone.val();
