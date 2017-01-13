@@ -51,7 +51,7 @@ var mcare_mobile_login = function(){
 		});
 		//환자번호 찾기 버튼 클릭 이벤트
 		$findId.on( "click", function(e){
-			self.changePage( contextPath + "/mobile/user/searchPId.page?menuId=searchPNumber" );
+			self.changePage( contextPath + "/mobile/user/searchPId.page?menuId=searchPNumber&searchPIdType=searchPId" );
 		});
 		//비밀번호 설정 버튼 클릭 이벤트
 		$findPWD.on( "click", function(e){
