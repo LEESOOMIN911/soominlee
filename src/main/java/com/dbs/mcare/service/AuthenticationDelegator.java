@@ -181,7 +181,7 @@ public class AuthenticationDelegator {
 		}
 		
 		// 환자번호와 비번을 올바르게 작성했고, 로그인 실패 횟수도 초기화 되었다면 세션에 사용자 정보 심기 
-		this.authService.saveSession(request, pId, (String) legacyUserMap.get("pNm"), user.getLocalCipherKeyValue(), birthDay);		
+		this.authService.saveSession(request, pId, (String) legacyUserMap.get("pName"), user.getLocalCipherKeyValue(), birthDay);		
 
 		// 사용자가 자기 손으로 순순히 로그인 하는 경우에는 대부분 index page로 가야 하지만 
 		// 로그인하지 않은 상태에서 push를 받고, 로그인 한 다음에 어디로 가는 경우라던지 (2016.2.2.현재. 아직 고려되지 않고 있는 서비스 경로임) 
