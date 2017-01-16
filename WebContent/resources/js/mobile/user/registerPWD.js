@@ -35,13 +35,17 @@ var mcare_mobile_registerPWD = function(){
                 var userData  = {
                     pId : $pId.val(), 
                     pName : $pNm.val(), 
-                    passWordValue : $pass2.val(), 
+                    passWordValue : $pass2.val() 
                 };
                 
                 $.ajax({
                     url : contextPath + "/mobile/user/registerCertifiedUser.json", 
                     contentType: "application/json; charset=UTF-8",
-                    data : userData, 
+                    data : {
+                        pId : $pId.val(), 
+                        pName : $pNm.val(), 
+                        passWordValue : $pass2.val() 
+                    }, 
                     method : "POST", 
                     success : function(data) {
                     	try{
