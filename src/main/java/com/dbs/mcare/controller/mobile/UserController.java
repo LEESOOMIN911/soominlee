@@ -247,6 +247,10 @@ public class UserController {
 			@RequestParam(value = "phoneNo", required = false) String phoneNo,
 			@RequestParam(value = "certReqType", required = false) String certReqType) throws MobileControllerException {
 		
+		if(this.logger.isDebugEnabled()) { 
+			this.logger.debug("@@@request : " + request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE));
+		}
+		
 		//인증 코드를 전송한 사용자 폰 번호
 		String sendPhoneNo = this.userRegisterService.reqSmsCertionfication(pId, pName, request, model);
 		
