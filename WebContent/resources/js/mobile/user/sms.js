@@ -58,7 +58,6 @@ var mcare_mobile_sms = function(){
                     pId : $pid.val(), 
                     pName : $pNm.val()
                 },
-                dataType: "json",
                 success : function(data) {
                 	try{
                 		if( data.msg !== undefined ){

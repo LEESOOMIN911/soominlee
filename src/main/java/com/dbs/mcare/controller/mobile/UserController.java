@@ -239,7 +239,7 @@ public class UserController {
 	 * @return
 	 * @throws MobileControllerException
 	 */
-	@RequestMapping(value = "/reqSMSCode.json", method = RequestMethod.POST)
+	@RequestMapping(value = "/reqSMSCode.json", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public Model reqSMSCode (HttpServletRequest request, HttpServletResponse response, Model model, 
 			@RequestParam(value = "pId", required = true) String pId,
