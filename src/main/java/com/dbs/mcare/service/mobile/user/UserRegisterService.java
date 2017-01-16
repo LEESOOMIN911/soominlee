@@ -623,7 +623,7 @@ public class UserRegisterService {
 		} 
 		
 		//입력된 이름하고 조회된 정보의 환자이름 하고 같나?? 
-		if(StringUtils.isEmpty(pName) || resultMap.get("pName").toString().equals(pName)) {
+		if(StringUtils.isEmpty(pName) || !resultMap.get("pName").toString().equals(pName)) {
 			throw new MobileControllerException("mobile.message.smsCertification011", "환자번호의 환자명과 입력하신 환자명이 같지 않습니다.");
 		}
 		
