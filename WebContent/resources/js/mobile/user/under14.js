@@ -66,8 +66,6 @@ var mcare_mobile_under14 = function(){
 			var item  = {
                 pId : $pId.val(),
                 pName : $pNm.val(),
-                phoneNo : $phoneNo.val(),
-                certReqType : $certReqType.val()
             };
 			$.ajax({
                 url : contextPath + "/mobile/user/reqSMSCode.json", 
