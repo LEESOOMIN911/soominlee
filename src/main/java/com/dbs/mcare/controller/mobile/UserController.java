@@ -580,7 +580,7 @@ public class UserController {
 	 * @return
 	 * @throws MobileControllerException
 	 */
-	@RequestMapping(value = "/registerCertifiedUser.json", method = RequestMethod.POST)
+	@RequestMapping(value = "/registerCertifiedUser.json", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public Map<String, Object> registerCertifiedUser(HttpServletRequest request, 
 			@RequestParam(value = "pId", required = true) String pId,

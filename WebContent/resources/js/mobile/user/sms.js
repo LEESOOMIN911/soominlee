@@ -49,20 +49,18 @@ var mcare_mobile_sms = function(){
 		if(validatePname()) {
 			var item  = {
                 pId : $pid.val(), 
-                pName : $pNm.val(),
-                phoneNo : $phoneNo.val(),
-                certReqType : $certReqType.val()
+                pName : $pNm.val()
             };
 			$.ajax({
+				type: "POST",
                 url : contextPath + "/mobile/user/reqSMSCode.json", 
                 contentType: "application/json; charset=UTF-8",
                 data : {
                     pId : $pid.val(), 
-                    pName : $pNm.val(),
-                    phoneNo : $phoneNo.val(),
-                    certReqType : $certReqType.val()
-                }, 
-                method : "POST", 
+                    pName : $pNm.val()
+                },
+                dataType: "json",
+                contentType : "application/json",
                 success : function(data) {
                 	try{
                 		if( data.msg !== undefined ){
