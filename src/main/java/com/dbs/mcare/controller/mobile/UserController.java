@@ -243,9 +243,7 @@ public class UserController {
 	@ResponseBody
 	public Model reqSMSCode (HttpServletRequest request, HttpServletResponse response, Model model, 
 			@RequestParam(value = "pId", required = true) String pId,
-			@RequestParam(value = "pName", required = true) String pName,
-			@RequestParam(value = "phoneNo", required = false) String phoneNo,
-			@RequestParam(value = "certReqType", required = false) String certReqType) throws MobileControllerException {
+			@RequestParam(value = "pName", required = true) String pName) throws MobileControllerException {
 		
 		//인증 코드를 전송한 사용자 폰 번호
 		String sendPhoneNo = this.userRegisterService.reqSmsCertionfication(pId, pName, request, model);
