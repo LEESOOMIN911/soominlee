@@ -57,7 +57,6 @@ var mcare_mobile_sms = function(){
                 contentType: "application/json; charset=UTF-8",
                 data : self.util.stringifyJson(item),
                 dataType: "json",
-                contentType : "application/json",
                 success : function(data) {
                 	try{
                 		if( data.msg !== undefined ){
