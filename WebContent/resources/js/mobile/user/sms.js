@@ -54,8 +54,10 @@ var mcare_mobile_sms = function(){
 			$.ajax({
 				type: "POST",
                 url : contextPath + "/mobile/user/reqSMSCode.json", 
-                contentType: "application/json; charset=UTF-8",
-                data : self.util.stringifyJson(item),
+                data : {
+                    pId : $pid.val(), 
+                    pName : $pNm.val()
+                },
                 dataType: "json",
                 success : function(data) {
                 	try{
