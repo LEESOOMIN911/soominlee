@@ -112,7 +112,7 @@ public class AdminUserService {
 			//패스워드 생성
 			final String hashPwd = new HashUtil(this.configureService.getHashSalt()).sha256(tmpPWDbuilder.toString());
 			//SMS전송을 위한 요건이 되나 판단해서 보내자
-			this.userService.insertUser(pId, pName, hashPwd);
+			this.userService.insertUser(pId, hashPwd);
 			
 			//SMS 전송 문자 ex) 홍길동님의 임시패스워드는 ab20160101!@입니다.
 			String tmpPWDMessage = this.messageService.getMessage("admin.user.register.message", request, new String[]{pName, tmpPWDbuilder.toString()});

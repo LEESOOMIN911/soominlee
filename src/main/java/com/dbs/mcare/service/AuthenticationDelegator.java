@@ -97,7 +97,10 @@ public class AuthenticationDelegator {
 		
 		// block된 사용자인가? 
 		if(user.getLoginFailCnt() != null && user.getLoginFailCnt() >= this.configureService.getPasswordTryCount()) {
-			this.logger.error("block된 사용자 : " + user.getpId() + ", " + user.getpName()); 
+			if(this.logger.isDebugEnabled()) {
+				this.logger.debug("block된 사용자 : " + user.getpId());
+			}
+			
 			throw new UserBlockException("mcare.auth.blockaccount", "비밀번호 입력회수 실패 초과로 계정이 잠겼습니다. 비밀번호 재설정이 필요합니다.", FrameworkConstants.URI_SPECIAL_PAGE.AUTH_USER_INFO); 
 		}
 		

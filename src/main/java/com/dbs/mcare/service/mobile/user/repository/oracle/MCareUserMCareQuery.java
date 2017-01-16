@@ -1,47 +1,21 @@
 package com.dbs.mcare.service.mobile.user.repository.oracle;
 
-import com.dbs.mcare.framework.template.MCareQuery;
+import com.dbs.mcare.framework.service.user.repository.oracle.GeneralUserMCareQuery;
 
 /**
  * 사용자 관리 
  * @author hyeeun
+ * @version 2017-01-16, framework 2.1.x에 따라 수정 
  *
  */
-public class MCareUserMCareQuery extends MCareQuery {
-	@Override
-	public String getQueryForList(){
-		return "SELECT USER_SEQ, P_ID, LOGIN_FAIL_CNT, REGISTER_DT FROM MCARE_USER";
-	}
-	@Override 
-	public String getQueryForInsert() {
-		return "INSERT INTO MCARE_USER (USER_SEQ, P_ID, PASSWORD_VALUE, PASSWORD_UPDATE_DT, " + 
-				" LOGIN_FAIL_CNT, LOCAL_CIPHER_KEY_VALUE, REGISTER_DT) " + 
-				" VALUES(SEQ_MCARE_USER_US.NEXTVAL, :pId, :passWordValue, SYSDATE, " +
-				" 0, :localCipherKeyValue, SYSDATE)"; 
-	}
+public class MCareUserMCareQuery extends GeneralUserMCareQuery {
+
 	@Override
 	public String getQueryForUpdate() {	
 		return "UPDATE MCARE_USER SET LOGIN_FAIL_CNT = 0 " +
 				"WHERE USER_SEQ=:userSeq"; 
 	}
-	@Override
-	public String getQueryForDelete() {	
-		return "DELETE FROM MCARE_USER WHERE P_ID=:pId"; 
-	}
-	
-	@Override
-	public String getQueryForCount() {
-		return "SELECT COUNT(1) FROM MCARE_USER";
-	}
-	
-	@Override 
-	public String getQueryForObject() {
-		return "SELECT " + 
-			"USER_SEQ, P_ID, PASSWORD_VALUE, PASSWORD_UPDATE_DT, LOGIN_FAIL_CNT, LOCAL_CIPHER_KEY_VALUE, REGISTER_DT " +  
-			"FROM MCARE_USER  " + 
-			"WHERE P_ID=:pId";
-	}
-	
+
 	/**
 	 * 사용자의 디바이스 토큰 지우기 
 	 * @return

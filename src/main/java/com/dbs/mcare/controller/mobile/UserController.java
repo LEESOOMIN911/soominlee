@@ -20,6 +20,7 @@ import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.HandlerMapping;
 
@@ -241,14 +242,17 @@ public class UserController {
 	@RequestMapping(value = "/reqSMSCode.json", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public Model reqSMSCode (HttpServletRequest request, HttpServletResponse response, Model model, 
-			@RequestBody(required = false) MCareUser user) throws MobileControllerException {
+			@RequestParam(value = "pId", required = true) String pId,
+			@RequestParam(value = "pName", required = true) String pName,
+			@RequestParam(value = "phoneNo", required = false) String phoneNo,
+			@RequestParam(value = "certReqType", required = false) String certReqType) throws MobileControllerException {
 		
 		//인증 코드를 전송한 사용자 폰 번호
-		String sendPhoneNo = this.userRegisterService.reqSmsCertionfication(user, request, model);
+		String sendPhoneNo = this.userRegisterService.reqSmsCertionfication(pId, pName, request, model);
 		
 		//iPin인증, SMS인증과 같은 프로세스를 위한 파라미터를 설정한다.
-		model.addAttribute("pNm", Base64ConvertUtil.base64Encode(user.getpName()));
-		model.addAttribute("reservedParam3", Base64ConvertUtil.base64Encode(user.getpId()));
+		model.addAttribute("pNm", Base64ConvertUtil.base64Encode(pName));
+		model.addAttribute("reservedParam3", Base64ConvertUtil.base64Encode(pId));
 		model.addAttribute("sendPhoneNo", sendPhoneNo);
 
 		return model;
@@ -382,7 +386,7 @@ public class UserController {
 		
 		if(resetPWDType.equals("changeMyPwd")) {
 			final String hashOldPwd = hashUtils.sha256(oldPassWordValue);
-			final boolean validPwd = this.userService.checkUserPWD(chartNoValue, hashOldPwd);
+			final boolean validPwd = this.userService.checkUserPassword(chartNoValue, hashOldPwd);
 			
 			if(!validPwd) {
 				if(this.logger.isDebugEnabled()) {
@@ -411,7 +415,7 @@ public class UserController {
 		try {
 			//SHA256변환 수행..  
 			final String hashNewPwd = hashUtils.sha256(newPassWordValue); 
-			this.userService.updateUserPWD(chartNoValue, chartName, hashNewPwd);
+			this.userService.updateUserPassword(chartNoValue, hashNewPwd);
 		} catch (final Exception e) {
 			this.logger.error("패스워드 변경 실퍠", e);
 			throw new MobileControllerException(e); 
@@ -566,21 +570,28 @@ public class UserController {
 		return model;
 	}
 	
+	
 	/**
 	 * 인증된 사용자를 등록함 
-	 * @param payload
+	 * @param request
+	 * @param pId
+	 * @param pName
+	 * @param passWordValue
 	 * @return
 	 * @throws MobileControllerException
 	 */
 	@RequestMapping(value = "/registerCertifiedUser.json", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public Map<String, Object> registerCertifiedUser(HttpServletRequest request, @RequestBody(required = false) MCareUser user, Model model) throws MobileControllerException {
+	public Map<String, Object> registerCertifiedUser(HttpServletRequest request, 
+			@RequestParam(value = "pId", required = true) String pId,
+			@RequestParam(value = "pName", required = false) String pName,  // 이제 필요없음 
+			@RequestParam(value = "passWordValue", required = true) String passWordValue) throws MobileControllerException {
 
 		if(this.logger.isDebugEnabled()) { 
-			this.logger.debug("등록할 사용자 : " + user.toString());	
+			this.logger.debug("등록할 사용자 : " + pId + ", " + pName);	
 		}
-
-		Map<String, Object> validPwdMap = this.userService.validatePWD(user.getPassWordValue());
+		
+		Map<String, Object> validPwdMap = this.userService.validatePWD(passWordValue);
 		
 		//패스워드 유효성 검사 결과가 False이면
 		if(!(Boolean)validPwdMap.get("result")) {
@@ -592,16 +603,16 @@ public class UserController {
 		}
 		
 		// Client 에서 파라미터 검사는 했을테니 SHA256변환만 수행..  
-		final String hashPwd = new HashUtil(this.configureService.getHashSalt()).sha256(user.getPassWordValue()); 
-		final String key = this.userService.insertUser(user.getpId(), user.getpName(), hashPwd); 
+		final String hashPwd = new HashUtil(this.configureService.getHashSalt()).sha256(passWordValue); 
+		final String key = this.userService.insertUser(pId, hashPwd); 
 		
 		// 결과 맵 
 		final Map<String, String> resultMap = new HashMap<String, String>(); 
 		resultMap.put("localCipherKeyValue", key); 
-		resultMap.put("pId", user.getpId());
+		resultMap.put("pId", pId);
 		
 		if(this.logger.isInfoEnabled()) { 
-			this.logger.info("등록된 사용자 : " + user.getpId() + ", " + user.getpName());
+			this.logger.info("등록된 사용자 : " + pId); 
 		} 
 		
 		return ResponseUtil.wrapResultMap(resultMap); 
@@ -926,7 +937,7 @@ public class UserController {
 		
 		// 비번확인 
 		final HashUtil hashUtils = new HashUtil(this.configureService.getHashSalt()); 
-		final boolean checkedPwd = this.userService.checkUserPWD(pId, hashUtils.sha256(plainPassword)); 
+		final boolean checkedPwd = this.userService.checkUserPassword(pId, hashUtils.sha256(plainPassword)); 
 		if(!checkedPwd) { 
 			throw new MobileControllerException("admin.auth.checkaccount", "비밀번호를 다시 확인하세요"); 
 		}
