@@ -63,17 +63,14 @@ var mcare_mobile_under14 = function(){
 	 */
 	var reqSMSCode = function() {
 		if(validatePname()) {
-			var item  = {
-                pId : $pId.val(),
-                pName : $pNm.val(),
-                phoneNo : $phoneNo.val(),
-                certReqType : $certReqType.val()
-            };
+			
 			$.ajax({
+				type: "POST",
                 url : contextPath + "/mobile/user/reqSMSCode.json", 
-                contentType: "application/json; charset=UTF-8",
-                data : self.util.stringifyJson(item), 
-                method : "POST", 
+                data : {
+                    pId : $pid.val(), 
+                    pName : $pNm.val()
+                }, 
                 success : function(data) {
                 	try{
                 		if( data.msg !== undefined ){

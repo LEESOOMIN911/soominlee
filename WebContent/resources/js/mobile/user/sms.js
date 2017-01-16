@@ -47,10 +47,7 @@ var mcare_mobile_sms = function(){
 	 */
 	var reqSMSCode = function() {
 		if(validatePname()) {
-			var item  = {
-                pId : $pid.val(), 
-                pName : $pNm.val()
-            };
+			
 			$.ajax({
 				type: "POST",
                 url : contextPath + "/mobile/user/reqSMSCode.json", 
