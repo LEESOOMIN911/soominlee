@@ -271,11 +271,17 @@ var mcare_mobile_healthHandbookUpdate = function(){
 			if( $heightValue.val() === "" || $weightValue.val() === "" ){
 				return;
 			}
+			
+			bmi = bmi === undefined?0:bmi;
+			
 			// 수치 보여주고 
 			var str = bmi;
 			
 			// 결과 보여주기 
-			if(bmi < 18.5) {
+			if(bmi <= 0) {
+				str = str;
+			}
+			else if(bmi < 18.5) {
 				str = str + " (" + self.getI18n("healthHandbookInsert011") +")";
 			}
 			else if(bmi < 23) { 
