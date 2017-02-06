@@ -16,3 +16,19 @@ overflow-x:hidden;
 .ui-content{
 	margin-bottom: 80px;
 }
+/**
+* 로그인 영문페이지의 경우, 버튼 텍스트가 안나와서 스타일을 수정했음. 
+**/
+div.login-thumbs a.ui-btn{white-space: pre-wrap;line-height: 1; }
+/**
+* 비밀번호 연장 컨펌창
+**/
+#confirmDialog-screen{background-color:#000;opacity:0.5}
+#confirmDialog-popup{min-width:300px;max-width:480px;width:90%;/*top:70px !important;*/}
+#confirmDialog{width:100%;/*min-height:200px;*/}
+#confirmDialog .confirmtitle{position:relative;border-bottom:2px solid #777;color:#006c3b;height:45px;line-height:48px;
+margin:0 1em;font-size:1.2em;font-weight:bold;padding-left:22px;}
+#confirmDialog .confirmtitle:before{content:"\f0a2";display:inline-block;width:45px;height:45px;
+position:absolute;left:0;top:0;font-family:FontAwesome; text-rendering: auto; -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;}
+#confirmDialog .confirmcontent{line-height:1.5em;margin:0 1em;border-bottom:1px solid #ddd;padding:1em 0;color:#222;}

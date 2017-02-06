@@ -21,7 +21,7 @@
 			</div>
 		</div>
 		<div class="thi_con">
-			<label><input type="checkbox" id="rememberMe" checked="checked"/>로그인 상태 유지</label>
+			<label><input type="checkbox" id="rememberMe" checked="checked"/><s:message code="mobile.view.login008"/></label>
 			<button id="login_btn" data-theme="b"><s:message code="mobile.view.login001"/></button>
 		</div>
 		<div class="fif_con">
@@ -30,20 +30,48 @@
 	</div>
 	<div class="login-thumbs">
 	  <div class="ui-grid-b">
-			<div class="ui-block-a"><div class="ui-bar ui-bar-a" ><a href="#" id="login_btn1"><i class="fa fa-user"></i><span class="">환자번호 찾기</span></a></div></div>
-			<div class="ui-block-b"><div class="ui-bar ui-bar-a" ><a href="#" id="login_btn2"><i class="fa fa-unlock-alt"></i><span class="">비밀번호 설정</span></a></div></div>
-			<div class="ui-block-c"><div class="ui-bar ui-bar-a" ><a href="#" id="reg_btn"><i class="fa fa-pencil"></i><span class="">사용등록</span></a></div></div>
+			<div class="ui-block-a"><div class="ui-bar ui-bar-a" ><a href="#" id="login_btn1"><i class="fa fa-user"></i><span class=""><s:message code="mobile.view.login009"/></span></a></div></div>
+			<div class="ui-block-b"><div class="ui-bar ui-bar-a" ><a href="#" id="login_btn2"><i class="fa fa-unlock-alt"></i><span class=""><s:message code="mobile.view.login010"/></span></a></div></div>
+			<div class="ui-block-c"><div class="ui-bar ui-bar-a" ><a href="#" id="reg_btn"><i class="fa fa-pencil"></i><span class=""><s:message code="mobile.view.login011"/></span></a></div></div>
 	  </div>
+	</div>
+	<div class="noticeWrap">
+		<ul style="padding:0 15px;font-size:13px;">
+			<li>
+				<span><s:message code="mobile.view.login012"/></span>
+				<button class="noticeIcon ui-btn ui-shadow ui-corner-all ui-icon-user ui-btn-icon-notext ui-btn-inline" style="margin:0;outline: none;"></button> 
+				<span><s:message code="mobile.view.login013"/></span>
+			</li>
+		</ul>
+	</div>
+</div>
+<!-- 컨펌 -->
+<div data-role="popup" id="confirmDialog" data-dismissible="false" class="ui-corner-all">
+	<div role="content" >
+		<div class="confirmtitle"><s:message code="mobile.view.login012" /></div>
+		<div class="confirmcontent">
+	
+		</div>
+		<div class="ui-grid-a">
+			<div class="ui-block-a">
+				<a href="#" class="pwdChange ui-btn ui-btn-b"><s:message code="mobile.view.login013" /></a>
+			</div>
+			<div class="ui-block-b">
+				<a href="#" class="laterChange ui-btn ui-btn-b ui-shadow"><s:message code="mobile.view.login014" /></a>
+			</div>
+		</div>				
 	</div>
 </div>
 <input type="hidden" id="hPid" value="${pId}"/>
+
 <script type="text/javascript">	
 //다국어
 var i18n = function(){
 	var message = {
 		"common006" : "<s:message code='mobile.message.common006'/>",
 		"login005" : "<s:message code='mobile.message.login005'/>",
-		"login006" : "<s:message code='mobile.message.login006'/>"
+		"login006" : "<s:message code='mobile.message.login006'/>",
+		"login015" : "<s:message code='mobile.message.login015'/>"
 	};
 	this.getMessage = function( code ){
 		return message[code];

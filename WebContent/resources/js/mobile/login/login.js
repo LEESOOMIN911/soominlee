@@ -125,17 +125,29 @@ var mcare_mobile_login = function(){
 		    	try{
 		    		if (data.msg) {
 		    			if( data.type !== undefined ){
-		    				if( data.type === "UserBlockException" ){ 
+		    				if( data.type === "UserBlockException" || data.type === "PwdForcedChangeException"){ 
 		    					self.alert( data.msg, function(){
 		    						self.changePage( contextPath + data.nextPage );
 		    					});
+		    				//비밀번호 기한 만료일 경우, 예외처리 
 		    				} else if( data.type === "PwdOverDueException" ){
-		    					self.alert( data.msg, function(){
-		    						self.changePage( contextPath + data.nextPage );
-		    					});
-		    				} else{
+		    					var options = {
+		    							content : data.msg,
+		    							pwdChange : function(e){
+		    								self.changePage( contextPath + data.nextPage );
+		    							},
+		    							laterChange : function(e){
+		    								pwdLaterChange();
+		    							}
+		    					};
+		    					// 지금 변경, 나중에 변경 컨펌창 띄우기 
+		    					confirm( options );
+		    				}else{
 		    					self.alert(data.msg);
 		    				}
+		    			} else if( data.extraMsg !== undefined ){
+		    				self.alert( data.extraMsg );
+		    				return;
 		    			} else {						
 		    				self.alert(data.msg);
 		    			}
@@ -172,5 +184,83 @@ var mcare_mobile_login = function(){
 		if(parameterMap["loginType"] == "searchPId") {
 			$pId.val( $hPid.val() );
 		}
+	};
+	/**
+	 * 비밀번호 변경여부 컨펌창 
+	 */
+	var confirm = function( options ){
+		try{			
+			var confirmDialog = $("#confirmDialog"),
+				content = confirmDialog.find(".confirmcontent"),
+				pwdChange = confirmDialog.find(".pwdChange"),
+				laterChange = confirmDialog.find(".laterChange");		
+			
+			if( options["content"] === "" || options["content"] === undefined ){
+				console.log( "text empty or undefined" );
+			}
+			content.html( options["content"] );
+			
+			pwdChange.on("click",function(e){
+				e.preventDefault();
+				options["pwdChange"]();
+				confirmDialog.popup("close");
+			});
+			laterChange.on("click",function(e){
+				e.preventDefault();
+				options["laterChange"]();
+				confirmDialog.popup("close");
+				
+			});
+			setTimeout(function(){				
+				confirmDialog.popup("open",{});
+				self.loading("hide");
+			},300);
+		} catch(e) {
+			self.log(e,"pwd confirm");
+		}
+	};
+	/**
+	 * 비밀번호 나중에 변경 처리 
+	 */
+	var pwdLaterChange = function(){
+		self.loading("show");
+		$.ajax({
+		    type: "POST",
+		    url: contextPath + "/mobile/user/renewalPasswordUpdateTime.json",
+		    cache: false,
+		    data: {},
+		    dataType: "json",
+		    success: function(data) {
+		    	try{
+		    		if (data.msg) {
+		    			if( data.extraMsg !== undefined ){
+		    				self.alert( data.extraMsg );
+		    				return;
+		    			} else {						
+		    				self.alert(data.msg);
+		    			}
+		    			return;
+		    		//비밀번호 기한 연장 성공하면 다시 로그인 처리 
+		    		} else if( data["success"] === "true" ){
+		    			//다시 로그인 요청 - 필요한 정보는 이미 입력되어 있으므로 버튼 이벤트 트리거 
+		    			$loginBtn.trigger("click");
+		    		} else if( data["success"] === "false" ){
+		    			self.alert(self.getI18n("login015"), function(){
+		    				
+		    			});
+		    		}
+		    	} catch(e) {
+		    		
+		    	}
+		    },
+		    error:function(xhr){
+		    	console.log(xhr);
+		    },
+		    complete:function(){
+		    	self.loading("hide");
+		    	//버튼 클릭 배경제거
+		    	$loginBtn.removeClass("active");
+		    }
+		});
 	};
 };
