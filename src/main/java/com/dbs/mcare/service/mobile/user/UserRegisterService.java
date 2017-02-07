@@ -589,22 +589,13 @@ public class UserRegisterService {
 	 */
 	@SuppressWarnings("unchecked")
 	private boolean comparePatientInfo(String pId, String pName, String birthDt) {
-		final Map<String, Object> responseMap = this.getPatientInfo(pId);	//ResponseUtil에 의해 result키에 결과가 담겨서 반환
-		Map<String, Object> userMap = null;									//ResponseUtil에서 결과를 추출해서 담을 userMap;
-		
-		//여기까지 왔다는건 환자가 존재한다는 것이지만 혹시 모르니까 다시 검사
-		if(ResponseUtil.isEmptyResult(responseMap)) {
-			this.logger.debug("기간계에 환자정보가 존재하지 않습니다.");
-			return false; 
-		}
+		Map<String, Object> userMap = this.getPatientInfo(pId);							//ResponseUtil에서 결과를 추출해서 담을 userMap;
 		
 		// API 호출 결과 확인
 		if (this.logger.isDebugEnabled()) {
-			this.logger.debug("responseMap = " + responseMap.toString());
+			this.logger.debug("responseMap = " + userMap.toString());
 		}
 		
-		//responseMap에서 결과를 추출해서 userMap에 담
-		userMap = (Map<String, Object>) responseMap.get(FrameworkConstants.UIRESPONSE.RESULT.getKey());
 		String userName = (String)userMap.get("pName");
 		String userBrith = (String)userMap.get("birthDt");
 		String userPhoneNo = (String)userMap.get("cellphoneNo");
