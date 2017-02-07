@@ -241,6 +241,7 @@ public class UserController {
 			@RequestBody Map<String, Object> paramMap) throws MobileControllerException {
 		if(this.logger.isDebugEnabled()) { 
 			this.logger.debug("request : " + request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE));
+			this.logger.debug("파라미터 ---" + FrameworkConstants.NEW_LINE + ConvertUtil.convertStringForDebug(paramMap));
 		}
 		
 		String pId = (String)paramMap.get("pId");
@@ -250,7 +251,7 @@ public class UserController {
 		Map<String, Object> patientMap = null;
 		
 		//본인인증 타입이 환자번호 찾기인 경우
-		if(certReqType.equals("searchPId") || certReqType.equals("registerPId")) {
+		if("searchPId".equals(certReqType) || "registerPId".equals(certReqType)) {
 			//phoneNo, pName을 파라미터로 사용자를 찾고 pId를 대입한다. 
 			if(StringUtils.isEmpty(phoneNo) || StringUtils.isEmpty(pName)) {
 				throw new MobileControllerException("mcare.error.param", "파라미터를 확인해주세요"); 
@@ -267,8 +268,16 @@ public class UserController {
 			patientMap = this.userRegisterService.getPatientInfo(pId);
 		}
 		
+		if(this.logger.isDebugEnabled()) {
+			this.logger.debug("검색된 환자 : " + FrameworkConstants.NEW_LINE + ConvertUtil.convertStringForDebug(patientMap));
+		}
+		
 		//입력된 이름하고 조회된 정보의 환자이름 하고 같나?? 
 		if(pName != null && !pName.equals(patientMap.get("pName"))) {
+			if(this.logger.isDebugEnabled()) {
+				this.logger.debug("입력된 이름 : " + pName + ", 등록된 이름 : " + patientMap.get("pName"));
+			}
+			
 			throw new MobileControllerException("mobile.message.smsCertification011", "환자번호의 환자명과 입력하신 환자명이 같지 않습니다.");
 		}
 
