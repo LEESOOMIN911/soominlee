@@ -247,6 +247,8 @@ public class UserRegisterService {
 			sDupInfo =  (String) mapresult.get("DI");
 			sConnInfo = (String) mapresult.get("CI");
 			
+			this.logger.debug("환자번호 : " + sReserved3);
+			
 			if(this.comparePatientInfo(sReserved3, sName, sBirthDate)) {
 				sMessage = "정상 처리되었습니다.";
 				result = "success";
