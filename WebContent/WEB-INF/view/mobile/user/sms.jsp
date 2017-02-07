@@ -40,6 +40,7 @@
 	<input type="hidden" name="certReqType" id="certReqType" value="${param.certReqType}">
 	<input type="hidden" name="encodePid" id="encodePid">
 	<input type="hidden" name="encodePname" id="encodePname">
+	<input type="hidden" name="phoneNo" id="phoneNo" value="${param.phoneNo}">
 </div>
 
 <script type="text/javascript"> 

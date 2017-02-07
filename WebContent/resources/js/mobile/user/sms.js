@@ -15,6 +15,7 @@ var mcare_mobile_sms = function(){
 		$encodePname = $("#encodePname"),
 		$btn = $("#btn"),
 		$btn2 = $("#btn2"),
+		$phoneNo = $("#phoneNo"),
 		$certReqType = $('#certReqType');
 	/**	
 	 * 초기화
@@ -49,7 +50,9 @@ var mcare_mobile_sms = function(){
 		if(validatePname()) {
 			var item  = {
                 pId : $pid.val(), 
-                pName : $pNm.val()
+                pName : $pNm.val(),
+                phoneNo : $phoneNo.val(),
+                certReqType : $certReqType.val()
             };
 			$.ajax({
                 url : contextPath + "/mobile/user/reqSMSCode.json", 

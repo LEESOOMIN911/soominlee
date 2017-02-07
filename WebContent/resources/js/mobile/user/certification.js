@@ -16,6 +16,7 @@ var mcare_mobile_certification = function() {
 		$certType = $("#certType"),
 		$iPin = $("#iPin"),
 		$encData = $("#enc_data"),
+		$phoneNo = $("#phoneNo"),
 		$sms = $("#sms");
 
 	/**
@@ -40,7 +41,8 @@ var mcare_mobile_certification = function() {
 		$sms.on("click",function(e){
 			var patientId = $("#pid").val();
 			var certReqType = $("#certReqType").val();
-			location.href = contextPath + "/mobile/user/sms.page?pid="+patientId+"&certReqType="+certReqType;
+			var phoneNo = $phoneNo.val();
+			location.href = contextPath + "/mobile/user/sms.page?pid="+patientId+"&certReqType="+certReqType+"&phoneNo="+phoneNo;
 		});
 	};
 
