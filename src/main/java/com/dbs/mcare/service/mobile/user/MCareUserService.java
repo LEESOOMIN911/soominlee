@@ -217,4 +217,37 @@ public class MCareUserService extends GenericService<MCareUser, MCareUserReposit
 	public void updatePasswordUpdateTime(String pId) throws MCareServiceException {
 		this.generalUserService.updatePasswordUpdateTime(pId);
 	}
+	
+	/**
+	 * 임시비밀번호 생성(14세미만 비밀번호찾기, 관리자 콘솔의 사용자 등록시 사용됨)
+	 * 레벨 1 알파벳(2) + 숫자(4) + 특수문자(2)
+	 * 레벨 2 알파벳(alphaCount) + 숫자(numCount)
+	 * 레벨 3 숫자(numCount)
+	 * @param level 임시비밀번호의 레벨
+	 * @throw MCareServiceException
+	 */
+	public String getTemporaryPwd(int level) throws MCareServiceException {
+		//임시비밀번호
+		String tmpPwd = "";
+		
+		//임시비밀번호 길이조정을 환경설정에 따로 만들어서 조절하면 좋겠습니다.
+		//레벨값에 따른 분기
+		if(level == 1){
+			tmpPwd = this.generalUserService.getDefaultTemporaryPassword();
+		}else if(level == 2){
+			tmpPwd = this.generalUserService.getAlphaNumericTemporaryPassword(3, 3);
+		}else if(level == 3){
+			tmpPwd = this.generalUserService.getNumericTemporaryPassword(4);
+		}else{
+			logger.error("레벨값이 올바르지 않음(현재 1~3까지) 일단 1번 레벨로 임시비번 생성");
+			//레벨이 1~3 이 아니면 기본 1번으로 임시비밀번호 생성되게 함
+			tmpPwd = this.generalUserService.getDefaultTemporaryPassword();
+		}
+		
+		if(logger.isDebugEnabled()) {
+			logger.debug("임시비번 레벨 : " + level + " , 임시비번 : " + tmpPwd);
+		}
+		
+		return tmpPwd;
+	}
 }

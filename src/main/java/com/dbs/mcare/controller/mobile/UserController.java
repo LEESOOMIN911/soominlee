@@ -822,9 +822,15 @@ public class UserController {
 		//14세 미만인가
 		try {
 			if(bUnder14) {
-				final String hashNewPwd = hashUtils.sha256(birthDt); 
+				//레벨값에 따른 임시 비번 생성
+				final String tmpPwd = this.userService.getTemporaryPwd(this.configureService.getTemporaryPasswordLevel());
+				
+				final String hashNewPwd = hashUtils.sha256(tmpPwd); 
 				resultMap.put("passwordValue", hashNewPwd);
-				this.apiCallService.call(PnuhApi.USER_PASSWORD_TEMPRESETPWD, resultMap); 
+				this.apiCallService.call(PnuhApi.USER_PASSWORD_TEMPRESETPWD, resultMap);
+				
+				//메세지 프로퍼티를 이용하여 생성한 임시비밀번호를 결과에 추가
+				resMap.put("tmpPwdMessage", this.messageService.getMessage("mobile.message.authUserInfo018", request, new Object[]{tmpPwd}));
 			}
 		}
 		catch(ApiCallException ex) { 

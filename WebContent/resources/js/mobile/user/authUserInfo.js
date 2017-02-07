@@ -52,7 +52,7 @@ var mcare_mobile_authUserInfo = function(){
 							//14세 미만일 때는 따로 비밀번호를 설정해서 보냄. 인증을 안탐
 							if( data.result !== undefined ){
 								if( data.result.bUnder14 ){
-									self.alert( self.getI18n("authUserInfo017") , function(){
+									self.alert( data.result.tmpPwdMessage , function(){
 										location.href = contextPath + "/login.page";
 									});
 								} else {								
