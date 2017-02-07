@@ -17,7 +17,7 @@ var mcare_mobile_under14 = function(){
 		$phoneNo = $("#phoneNo"),
 		$encodePid = $("#encodePid"),
 		$encodePname = $("#encodePname"),
-		$pNm = $("#pNm");
+		$pName = $("#pName");
 		
 	/**	
 	 * 초기화
@@ -49,9 +49,9 @@ var mcare_mobile_under14 = function(){
 	 * 환자이름 입력체크
 	 */
 	var validatePname = function() {
-		if( $pNm.val() === "" ) {
+		if( $pName.val() === "" ) {
 			self.alert( self.getI18n("under14013"),function(){				
-				$pNm.focus();
+				$pName.focus();
 			} );
 			return false;
 		}
@@ -65,7 +65,7 @@ var mcare_mobile_under14 = function(){
 		if(validatePname()) {
 			var item  = {
                 pId : $pId.val(),
-                pName : $pNm.val(),
+                pName : $pName.val(),
             };
 			$.ajax({
                 url : contextPath + "/mobile/user/reqSMSCode.json", 
@@ -87,7 +87,7 @@ var mcare_mobile_under14 = function(){
                 				$checkCode.parent().css({"padding":"0","outline":"none"});
                 			});
                 			$encodePid.val(data.reservedParam3);
-                			$encodePname.val(data.pNm);
+                			$encodePname.val(data.pName);
                 		}
                 		
                 	} catch(e) {
@@ -172,7 +172,7 @@ var mcare_mobile_under14 = function(){
 			reqUrl = "/mobile/user/" + $certReqType.val() + ".page?menuId=" + $certReqType.val();
 		}
 
-		var urlParam = "&pNm=" + $encodePname.val();
+		var urlParam = "&pName=" + $encodePname.val();
 		urlParam = urlParam + "&reservedParam3=" + $encodePid.val();
 		urlParam = urlParam + "&chartNoValue=" + $pId.val();
 		reqUrl = reqUrl + urlParam;

@@ -777,7 +777,7 @@ public class UserController {
 		}
 
 		final String pId = (String)reqMap.get("pId");
-		final String pName = (String)reqMap.get("pNm");
+		final String pName = (String)reqMap.get("pName");
 		final HashUtil hashUtils = new HashUtil(this.configureService.getHashSalt());
 		
 		// 필수항목 확인 

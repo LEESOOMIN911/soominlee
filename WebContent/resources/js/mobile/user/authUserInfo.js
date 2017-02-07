@@ -31,7 +31,7 @@ var mcare_mobile_authUserInfo = function(){
 	 */
 	var sendSMS = function(){
 		if( validateData() ){
-			var param = {pId:$pId.val(),pNm:$pName.val()};
+			var param = {pId:$pId.val(),pName:$pName.val()};
 			self.loading("show");
 			$.ajax({
 				url: contextPath + "/mobile/user/checkUserInfo.json",
