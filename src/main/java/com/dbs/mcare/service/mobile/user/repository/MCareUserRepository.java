@@ -2,10 +2,11 @@ package com.dbs.mcare.service.mobile.user.repository;
 
 import java.util.Map;
 
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.dbs.mcare.framework.exception.MCareServiceException;
+import com.dbs.mcare.framework.service.user.repository.GeneralUserRepository;
 import com.dbs.mcare.framework.template.GenericRepository;
 import com.dbs.mcare.service.mobile.user.repository.dao.MCareUser;
 /**
@@ -16,25 +17,30 @@ import com.dbs.mcare.service.mobile.user.repository.dao.MCareUser;
  */
 @Repository 
 public class MCareUserRepository extends GenericRepository<MCareUser> {
+	@Autowired 
+	private GeneralUserRepository generalUserRepository; // 프레임워크에 있는 공통연산 
+	
+	
 	/**
-	 * 신규 사용자 추가 
-	 * @param pId 차트번호 
-	 * @param pName 사용자 이름 
-	 * @param sha256PassWord 해쉬적용된 로그인 비번 
-	 * @param localCipherKey 로컬DB암호화 키 
-	 * @throws MCareServiceException 
+	 * 기존 사용자 비번 수정 
+	 * @param pId 환자번호 
+	 * @param sha256PassWord 비번 
+	 * @throws MCareServiceException
 	 */
-	public void insertUser(String pId, String pName, String sha256PassWord, String localCipherKey) throws MCareServiceException {
-		final MapSqlParameterSource param = new MapSqlParameterSource(); 
-		
-		param.addValue("pId", pId); 
-		param.addValue("pName", pName); 
-		param.addValue("passWordValue", sha256PassWord); 
-		param.addValue("localCipherKeyValue", localCipherKey); 
-		
-		// 추가 
-		super.insert(param); 
-	}
+	public void updatePassword(String pId, String sha256PassWord) throws MCareServiceException {
+		this.generalUserRepository.updatePassword(pId, sha256PassWord);
+	} 
+	
+	/**
+	 * 사용자 비번 확인 
+	 * @param pId 환자번호 
+	 * @param sha256PassWord 비번 
+	 * @throws MCareServiceException
+	 */
+	public boolean checkPassword(String pId, String sha256PassWord) throws MCareServiceException {
+		return this.generalUserRepository.checkPassword(pId, sha256PassWord); 
+	} 
+	
 	/**
 	 * 사용자의 deviceToken 지우기 
 	 * 마땅이 꼽아 둘데가 없어서 여기에 위치했음 

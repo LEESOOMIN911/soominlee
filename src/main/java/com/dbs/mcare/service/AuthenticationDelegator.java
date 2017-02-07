@@ -97,7 +97,7 @@ public class AuthenticationDelegator {
 		
 		// block된 사용자인가? 
 		if(user.getLoginFailCnt() != null && user.getLoginFailCnt() >= this.configureService.getPasswordTryCount()) {
-			this.logger.error("block된 사용자 : " + user.getpId() + ", " + user.getpName()); 
+			this.logger.error("block된 사용자 : pId=" + user.getpId()); 
 			throw new UserBlockException("mcare.auth.blockaccount", "비밀번호 입력회수 실패 초과로 계정이 잠겼습니다. 비밀번호 재설정이 필요합니다.", FrameworkConstants.URI_SPECIAL_PAGE.AUTH_USER_INFO); 
 		}
 		
@@ -119,7 +119,7 @@ public class AuthenticationDelegator {
 		
 
 		// 비밀번호가 맞나? 
-		if(hashPwd.equals(user.getPassWordValue())) {
+		if(hashPwd.equals(user.getPasswordValue())) {
 			// 로그인 실패 횟수 초기화 
 			if(user.getLoginFailCnt() > 0) {
 				try {
@@ -194,7 +194,7 @@ public class AuthenticationDelegator {
 		}
 		
 		// 로그인 비번 변경 유도가 필요한지  
-		if(this.authService.checkPasswordValidDate(user.getPassWordUpdateDt().getTime())) {
+		if(this.authService.checkPasswordValidDate(user.getPasswordUpdateDt().getTime())) {
 			// UI에서 에러메시지를 출력하고, 넘어갈 수 있도록 예외를 전달한다. 
 			throw new PwdOverDueException("mcare.auth.pwdoverdue", "비밀번호 유효기간이 만료되었습니다. 비밀번호 재설정이 필요합니다.",  FrameworkConstants.URI_SPECIAL_PAGE.CHANGE_MY_PWD); 
 		

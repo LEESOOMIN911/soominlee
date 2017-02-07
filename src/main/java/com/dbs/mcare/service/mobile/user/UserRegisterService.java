@@ -50,7 +50,7 @@ public class UserRegisterService {
 	@Autowired 
 	private MessageService messageService; 
 	// 
-	protected static final String SESSION_AUTH = FrameworkConstants.SESSION_PREFIX + "AUTH"; // NICE로부터 부여받은 사이트 패스워드
+	private static final String SESSION_AUTH = FrameworkConstants.SESSION_PREFIX + "AUTH"; // NICE로부터 부여받은 사이트 패스워드
 	
 	/**
 	 * 환자번호로 DB에 저장된 사용자 정보 가져오기 
@@ -84,11 +84,44 @@ public class UserRegisterService {
 	 * 환자번호로 기간계에 저장된 사용자 정보 찾기 
 	 * @param pId
 	 * @return
-	 * @throws ApiCallException
 	 */
-	public Map<String, Object> getPatientInfo(String pId) throws ApiCallException { 
-		return (Map<String, Object>) this.apiCallService.call(PnuhApi.USER_USERINFO_GETUSERINFO, "pId", pId); 
+	public Map<String, Object> getPatientInfo(String pId) { 
+		try { 
+			return (Map<String, Object>) this.apiCallService.call(PnuhApi.USER_USERINFO_GETUSERINFO, "pId", pId); 
+		}
+		catch(ApiCallException ex) { 
+			if(this.logger.isDebugEnabled()) {
+				this.logger.debug("예외발생", ex); 
+			}
+			
+			return null; 
+		}		
 	}
+	
+	/**
+	 * 환자이름, 핸드폰 번호로 사용자 정보 찾기
+	 * @param pName
+	 * @param phoneNo
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public Map<String, Object> getPatientInfo(String pName, String phoneNo) {
+
+		Map<String, Object> reqMap = new HashMap<String, Object>();
+		reqMap.put("pName", pName);
+		reqMap.put("cellphoneNo", phoneNo);
+		
+		try { 
+			return (Map<String, Object>) this.apiCallService.execute(PnuhApi.USER_USERINFO_FINDPID, reqMap); 
+		}
+		catch(ApiCallException ex) { 
+			if(this.logger.isDebugEnabled()) {
+				this.logger.debug("예외발생", ex); 
+			}
+			
+			return null; 
+		}
+	}	
 	
 	
 	/**
@@ -592,19 +625,24 @@ public class UserRegisterService {
 		return true;
 	}	
 	
+	
+
 	/**
 	 * SMS인증을 요청하고 인증 코드를 반환한다.
+	 * @param pId 사용자가 입력한 환자번호 
+	 * @param pName 사용자가 입력한 환자명 
 	 * @param request
 	 * @param model
 	 * @return
+	 * @throws MobileControllerException
 	 */
 	@SuppressWarnings("unchecked")
-	public String reqSmsCertionfication(MCareUser user, HttpServletRequest request, Model model) throws MobileControllerException{
+	public String reqSmsCertionfication(String pId, String pName, HttpServletRequest request, Model model) throws MobileControllerException{
 		Map<String, Object> resultMap = null; 
 			
 		try { 
 			// 환자정보 검색 
-			resultMap = (Map<String, Object>) this.apiCallService.execute(PnuhApi.USER_USERINFO_GETUSERINFO, "pId", user.getpId()); 
+			resultMap = (Map<String, Object>) this.apiCallService.execute(PnuhApi.USER_USERINFO_GETUSERINFO, "pId", pId); 
 		}
 		catch(ApiCallException ex) { 
 			if(this.logger.isDebugEnabled()) {
@@ -618,7 +656,7 @@ public class UserRegisterService {
 		} 
 
 		//입력된 이름하고 조회된 정보의 환자이름 하고 같나?? 
-		if(user.getpName() != null && !user.getpName().equals(resultMap.get("pName"))) {
+		if(pName != null && !pName.equals(resultMap.get("pName"))) {
 			throw new MobileControllerException("mobile.message.smsCertification011", "환자번호의 환자명과 입력하신 환자명이 같지 않습니다.");
 		}
 
@@ -628,7 +666,7 @@ public class UserRegisterService {
 		}
 		
 		//Sms인증코드 전송을 요청하고 전송한 폰 번호 반환
-		return this.reqSmsCode(user, request, (String) resultMap.get("cellphoneNo"));
+		return this.reqSmsCode(pId, pName, request, (String) resultMap.get("cellphoneNo"));
 	}
 
 	/**
@@ -639,8 +677,7 @@ public class UserRegisterService {
 	 * @return
 	 * @throws MobileControllerException
 	 */
-	public String reqSmsCode(MCareUser user, HttpServletRequest request, String cellPhoneNo) throws MobileControllerException {
-
+	public String reqSmsCode(String pId, String pName, HttpServletRequest request, String cellPhoneNo) throws MobileControllerException {
 		//만약 SMS 인정번호 재전송 요청이 들어와서 기존 certificationCode가 남아있는 경우 기존 값을 제거
 		if(request.getSession().getAttribute("smsCode") != null) {
 			request.getSession().removeAttribute("smsCode");
@@ -657,7 +694,7 @@ public class UserRegisterService {
 				certiCode = this.getSmsCertificationCode();
 			}
 			else {
-				INFO testUser = MCareConstants.MCARE_TEST_USER.INFO.convert(user.getpId()); 
+				INFO testUser = MCareConstants.MCARE_TEST_USER.INFO.convert(pId); 
 				
 				// 테스트 환자가 아닌 경우 
 				if(testUser == null) { 
@@ -672,7 +709,7 @@ public class UserRegisterService {
 			//SMS 전송 API를 위한 파라미터 설정
 			smsMessage = messageService.getMessage("mobile.message.smsCertification012", request, new String[]{certiCode});
 			//sms전송 요청 
-			this.smsService.sendSms(user.getpName(), cellPhoneNo, smsMessage);
+			this.smsService.sendSms(pName, cellPhoneNo, smsMessage);
 			request.getSession().setAttribute("smsCode", certiCode);
 			sendPhoneNo = ConvertUtil.convertSecretPhoneNo(cellPhoneNo);
 		} 

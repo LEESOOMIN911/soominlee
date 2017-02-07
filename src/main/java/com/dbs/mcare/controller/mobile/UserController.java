@@ -36,7 +36,6 @@ import com.dbs.mcare.framework.util.HashUtil;
 import com.dbs.mcare.framework.util.ResponseUtil;
 import com.dbs.mcare.framework.util.SessionUtil;
 import com.dbs.mcare.service.PnuhConfigureService;
-import com.dbs.mcare.service.RememberMeCookieBaker;
 import com.dbs.mcare.service.api.MCareApiCallService;
 import com.dbs.mcare.service.api.PnuhApi;
 import com.dbs.mcare.service.api.SendSmsService;
@@ -61,15 +60,13 @@ public class UserController {
 	private UserRegisterService userRegisterService; 
 	@Autowired 
 	private UserAgreementService userAgreementService;
-	
+	@Autowired
+	private SendSmsService smsService;
 	@Autowired
 	private MessageService messageService; 
-	@Autowired
-	private RememberMeCookieBaker cookieBaker;
 	@Autowired 
 	private PnuhConfigureService configureService; 
-	@Autowired 
-	private SendSmsService smsService; 
+
 	
 	/**
 	 * 본인인증 페이지
@@ -241,14 +238,54 @@ public class UserController {
 	@RequestMapping(value = "/reqSMSCode.json", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public Model reqSMSCode (HttpServletRequest request, HttpServletResponse response, Model model, 
-			@RequestBody(required = false) MCareUser user) throws MobileControllerException {
+			@RequestBody Map<String, Object> paramMap) throws MobileControllerException {
+		if(this.logger.isDebugEnabled()) { 
+			this.logger.debug("request : " + request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE));
+		}
 		
-		//인증 코드를 전송한 사용자 폰 번호
-		String sendPhoneNo = this.userRegisterService.reqSmsCertionfication(user, request, model);
+		String pId = (String)paramMap.get("pId");
+		String phoneNo = (String)paramMap.get("phoneNo");
+		final String pName = (String)paramMap.get("pName");
+		final String certReqType = (String)paramMap.get("certReqType");
+		Map<String, Object> patientMap = null;
+		
+		//본인인증 타입이 환자번호 찾기인 경우
+		if(certReqType.equals("searchPId") || certReqType.equals("registerPId")) {
+			//phoneNo, pName을 파라미터로 사용자를 찾고 pId를 대입한다. 
+			if(StringUtils.isEmpty(phoneNo) || StringUtils.isEmpty(pName)) {
+				throw new MobileControllerException("mcare.error.param", "파라미터를 확인해주세요"); 
+			}
+			
+			patientMap = this.userRegisterService.getPatientInfo(pName, phoneNo);
+			pId = (String)patientMap.get("pId");
+		}
+		else {
+			if(StringUtils.isEmpty(pId) || StringUtils.isEmpty(pName)) {
+				throw new MobileControllerException("mcare.error.param", "파라미터를 확인해주세요"); 
+			}
+			
+			patientMap = this.userRegisterService.getPatientInfo(pId);
+		}
+		
+		//입력된 이름하고 조회된 정보의 환자이름 하고 같나?? 
+		if(pName != null && !pName.equals(patientMap.get("pName"))) {
+			throw new MobileControllerException("mobile.message.smsCertification011", "환자번호의 환자명과 입력하신 환자명이 같지 않습니다.");
+		}
+
+		// SMS 전송을 위해 전화번호가 등록되었는지 여부 
+		if(patientMap.get("cellphoneNo") == null || !patientMap.containsKey("cellphoneNo")) { 
+			throw new MobileControllerException("mcare.error.no.cellphone.no", "핸드폰 번호가 등록되어 있지 않습니다. 원무과로 가서 휴대폰 번호를 확인하세요."); 
+		}
+		
+		// 조회된 사용자 폰번호 대입
+		phoneNo = (String)patientMap.get("cellphoneNo");
+		
+		//사용자 인증코드 전송을 요청하고 마스킹된 폰번호 반환
+		String sendPhoneNo = this.userRegisterService.reqSmsCode(pId, pName, request, phoneNo);
 		
 		//iPin인증, SMS인증과 같은 프로세스를 위한 파라미터를 설정한다.
-		model.addAttribute("pNm", Base64ConvertUtil.base64Encode(user.getpName()));
-		model.addAttribute("reservedParam3", Base64ConvertUtil.base64Encode(user.getpId()));
+		model.addAttribute("pName", Base64ConvertUtil.base64Encode(pName));
+		model.addAttribute("reservedParam3", Base64ConvertUtil.base64Encode(pId));
 		model.addAttribute("sendPhoneNo", sendPhoneNo);
 
 		return model;
@@ -382,7 +419,7 @@ public class UserController {
 		
 		if(resetPWDType.equals("changeMyPwd")) {
 			final String hashOldPwd = hashUtils.sha256(oldPassWordValue);
-			final boolean validPwd = this.userService.checkUserPWD(chartNoValue, hashOldPwd);
+			final boolean validPwd = this.userService.checkUserPassword(chartNoValue, hashOldPwd);
 			
 			if(!validPwd) {
 				if(this.logger.isDebugEnabled()) {
@@ -411,7 +448,7 @@ public class UserController {
 		try {
 			//SHA256변환 수행..  
 			final String hashNewPwd = hashUtils.sha256(newPassWordValue); 
-			this.userService.updateUserPWD(chartNoValue, chartName, hashNewPwd);
+			this.userService.updateUserPassword(chartNoValue, hashNewPwd);
 		} catch (final Exception e) {
 			this.logger.error("패스워드 변경 실퍠", e);
 			throw new MobileControllerException(e); 
@@ -574,13 +611,25 @@ public class UserController {
 	 */
 	@RequestMapping(value = "/registerCertifiedUser.json", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public Map<String, Object> registerCertifiedUser(HttpServletRequest request, @RequestBody(required = false) MCareUser user, Model model) throws MobileControllerException {
-
+	public Map<String, Object> registerCertifiedUser(HttpServletRequest request, HttpServletResponse response, 
+			@RequestBody Map<String, Object> paramMap, Model model) throws MobileControllerException {
 		if(this.logger.isDebugEnabled()) { 
-			this.logger.debug("등록할 사용자 : " + user.toString());	
+			this.logger.debug("request : " + request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE));
+		}
+		
+		final String pName = (String)paramMap.get("pName");
+		final String pId = (String)paramMap.get("pId");
+		final String passWordValue = (String)paramMap.get("passWordValue");
+		
+		if(StringUtils.isEmpty(pId) || StringUtils.isEmpty(pName) || StringUtils.isEmpty(passWordValue)) {
+			throw new MobileControllerException("mcare.error.param", "파라미터를 확인해주세요"); 
+		}
+		
+		if(this.logger.isDebugEnabled()) { 
+			this.logger.info("등록할 사용자 : " + pId + ", " + pName);	
 		}
 
-		Map<String, Object> validPwdMap = this.userService.validatePWD(user.getPassWordValue());
+		Map<String, Object> validPwdMap = this.userService.validatePWD(passWordValue);
 		
 		//패스워드 유효성 검사 결과가 False이면
 		if(!(Boolean)validPwdMap.get("result")) {
@@ -592,18 +641,18 @@ public class UserController {
 		}
 		
 		// Client 에서 파라미터 검사는 했을테니 SHA256변환만 수행..  
-		final String hashPwd = new HashUtil(this.configureService.getHashSalt()).sha256(user.getPassWordValue()); 
-		final String key = this.userService.insertUser(user.getpId(), user.getpName(), hashPwd); 
+		final String hashPwd = new HashUtil(this.configureService.getHashSalt()).sha256(passWordValue); 
+		final String key = this.userService.insertUser(pId, hashPwd); 
 		
 		// 결과 맵 
 		final Map<String, String> resultMap = new HashMap<String, String>(); 
 		resultMap.put("localCipherKeyValue", key); 
-		resultMap.put("pId", user.getpId());
+		resultMap.put("pId", pId);
 		
 		if(this.logger.isInfoEnabled()) { 
-			this.logger.info("등록된 사용자 : " + user.getpId() + ", " + user.getpName());
+			this.logger.info("등록된 사용자 : " + pId + ", " + pName);
 		} 
-		
+
 		return ResponseUtil.wrapResultMap(resultMap); 
 	}
 
@@ -896,73 +945,6 @@ public class UserController {
 		}
 	}
 	
-	/**
-	 * 탈퇴 
-	 * @param request
-	 * @param response
-	 * @param reqMap
-	 * @return
-	 * @throws MobileControllerException
-	 */
-	@RequestMapping(value = "/withdrawal.json", method = RequestMethod.POST)
-	public Map<String, Object> withdrawalUser(HttpServletRequest request, HttpServletResponse response,
-			@RequestBody Map<String, Object> reqMap) throws MobileControllerException { 
-		if(this.logger.isDebugEnabled()) { 
-			this.logger.debug("request : " + request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE));
-		}
-		
-		
-		// 파라미터 정리 
-		reqMap = ParamMappingUtil.requestParam(request, reqMap); 
-		// 환자변호 
-		final String pId = (String) reqMap.get("pId"); 
-		// 비번 
-		final String plainPassword = (String) reqMap.get("passWord"); 
-
-		// 유효성 확인 
-		if(StringUtils.isEmpty(pId) || StringUtils.isEmpty(plainPassword)) {
-			throw new MobileControllerException("mcare.auth.unauthenticated", "인증되지 않은 사용자입니다"); 
-		}
-		
-		// 비번확인 
-		final HashUtil hashUtils = new HashUtil(this.configureService.getHashSalt()); 
-		final boolean checkedPwd = this.userService.checkUserPWD(pId, hashUtils.sha256(plainPassword)); 
-		if(!checkedPwd) { 
-			throw new MobileControllerException("admin.auth.checkaccount", "비밀번호를 다시 확인하세요"); 
-		}
-		
-		final Map<String, Object> resultMap = new HashMap<String, Object>(); 
-		
-		// 삭제 
-		try { 
-			this.userService.removeUser(pId);
-			resultMap.put("result", "success"); 
-			
-			try { 
-				// 회원정보 삭제 성공시, 자동로그인 쿠키 삭제 
-				this.cookieBaker.remove(request, response);
-			} 
-			catch(final Exception ex) {
-				this.logger.error("자동로그인 쿠키 삭제 실패. 계속진행함.", ex);
-				// 쿠키삭제실패해도, 이후처리 계속 가능함
-			}
-			//그리고 세션 날림
-			final HttpSession session = request.getSession(false);
-			if (session != null) {
-				this.logger.debug("로그아웃을 위해 세션 초기화 처리");
-				session.invalidate();
-			}
-		}
-		catch(final Exception ex) {
-			if(this.logger.isDebugEnabled()) {
-				this.logger.debug("예외발생", ex); 
-			}
-			
-			resultMap.put("result", "fail"); 
-		}
-	
-		return resultMap; 
-	}
 	
 	/**
 	 * 인증된 사용자 정보를 Base64Decode하여 반환
@@ -992,4 +974,35 @@ public class UserController {
 		
 		return model;
 	}
+	
+	
+
+	/**
+	 * 비번만료기한 연장 
+	 * @param request
+	 * @param response
+	 * @return 성공, success:true. 실패, success:false 
+	 */
+	@RequestMapping(value = "/renewalPasswordUpdateTime.json", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> renewalPasswordUpdateTime(HttpServletRequest request, HttpServletResponse response)  {
+		if(this.logger.isDebugEnabled()) { 
+			this.logger.debug("request : " + request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE));
+		}
+		
+		Map<String, Object> resultMap = new HashMap<>();
+		
+		try { 
+			// 명시적인 메뉴가 아닌관계로... 
+			this.userService.updatePasswordUpdateTime(SessionUtil.getUserId(request));
+			resultMap.put("success", "true"); 
+		} 
+		catch(Exception ex) {
+			this.logger.error("비밀번호만료기한연장실패", ex);
+			resultMap.put("success", "false"); 
+		}
+		
+		return resultMap; 
+	}
+
 }
