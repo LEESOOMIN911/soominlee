@@ -586,7 +586,7 @@ public class UserRegisterService {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	private boolean comparePatientInfo(String pId, String pNm, String birthDt) {
+	private boolean comparePatientInfo(String pId, String pName, String birthDt) {
 		final Map<String, Object> responseMap = this.getPatientInfo(pId);	//ResponseUtil에 의해 result키에 결과가 담겨서 반환
 		Map<String, Object> userMap = null;									//ResponseUtil에서 결과를 추출해서 담을 userMap;
 		
@@ -608,7 +608,7 @@ public class UserRegisterService {
 		String userPhoneNo = (String)userMap.get("cellphoneNo");
 		
 		// 이름이 다르면 땡! 
-		if(pNm == null || !pNm.equals(userName)) {
+		if(pName == null || !pName.equals(userName)) {
 			this.logger.debug("인증된 사용자 이름과 기간계에서 가져온 사용자의 이름이 다릅니다.");
 			return false; 
 		}

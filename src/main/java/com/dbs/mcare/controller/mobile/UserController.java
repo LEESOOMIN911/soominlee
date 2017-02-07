@@ -970,9 +970,9 @@ public class UserController {
 	private Model getCertiUserInfo(HttpServletRequest request, Model model) {
 		//이름을 Base64로 인코딩한 결과에 +가 포함될수 있는데 (예:홍길동)이 경우 +는 http get을 이용해서 전달할 수 없다. 
 		//그래서 +가 공백으로 넘어오는데 이를 다시 복원해주기 위함이다.
-		final String pNm = Base64ConvertUtil.base64Decode(request.getParameter("pNm").replace(" ", "+"));
+		final String pName = Base64ConvertUtil.base64Decode(request.getParameter("pName").replace(" ", "+"));
 		final String pId = Base64ConvertUtil.base64Decode(request.getParameter("reservedParam3"));
-		model.addAttribute("pNm", pNm);
+		model.addAttribute("pName", pName);
 		model.addAttribute("pId", pId);
 		
 		//SMS인증에서는 사용되지 않는 파라미터
