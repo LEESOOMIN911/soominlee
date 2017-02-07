@@ -7,7 +7,7 @@
 <div data-role="content">
 	<!-- 사용자 인증이 완료된 정보 -->
 	<input type="hidden" id="pId" value="${pId}"/>
-	<input type="hidden" id="userName" value="${userName}"/>
+	<input type="hidden" id="pName" value="${pName}"/>
 	<input type="hidden" id="userBirthDate" value="${userBirthDate}"/>
 	<input type="hidden" id="userGenderCode" value="${userGenderCode}"/>
 	<input type="hidden" id="resetPWDType" value="changeMyPwd"/>
