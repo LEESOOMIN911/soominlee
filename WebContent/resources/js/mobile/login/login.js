@@ -245,7 +245,7 @@ var mcare_mobile_login = function(){
 		    			//다시 로그인 요청 - 필요한 정보는 이미 입력되어 있으므로 버튼 이벤트 트리거 
 		    			$loginBtn.trigger("click");
 		    		} else if( data["success"] === "false" ){
-		    			self.alert(self.getI18n("login015"), function(){
+		    			self.alert(self.getI18n("login017"), function(){
 		    				
 		    			});
 		    		}

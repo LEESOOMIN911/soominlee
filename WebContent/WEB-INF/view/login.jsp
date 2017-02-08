@@ -39,16 +39,16 @@
 <!-- 컨펌 -->
 <div data-role="popup" id="confirmDialog" data-dismissible="false" class="ui-corner-all">
 	<div role="content" >
-		<div class="confirmtitle"><s:message code="mobile.view.login012" /></div>
+		<div class="confirmtitle"><s:message code="mobile.view.login014" /></div>
 		<div class="confirmcontent">
 	
 		</div>
 		<div class="ui-grid-a">
 			<div class="ui-block-a">
-				<a href="#" class="pwdChange ui-btn ui-btn-b"><s:message code="mobile.view.login013" /></a>
+				<a href="#" class="pwdChange ui-btn ui-btn-b"><s:message code="mobile.view.login015" /></a>
 			</div>
 			<div class="ui-block-b">
-				<a href="#" class="laterChange ui-btn ui-btn-b ui-shadow"><s:message code="mobile.view.login014" /></a>
+				<a href="#" class="laterChange ui-btn ui-btn-b ui-shadow"><s:message code="mobile.view.login016" /></a>
 			</div>
 		</div>				
 	</div>
@@ -62,7 +62,7 @@ var i18n = function(){
 		"common006" : "<s:message code='mobile.message.common006'/>",
 		"login005" : "<s:message code='mobile.message.login005'/>",
 		"login006" : "<s:message code='mobile.message.login006'/>",
-		"login015" : "<s:message code='mobile.message.login015'/>"
+		"login017" : "<s:message code='mobile.message.login017'/>"
 	};
 	this.getMessage = function( code ){
 		return message[code];
