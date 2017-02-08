@@ -25,7 +25,7 @@ import com.dbs.mcare.service.mobile.user.MCareUserService;
 import com.dbs.mcare.service.mobile.user.repository.dao.MCareUser;
 
 /**
- * 
+ * 관리자 화면의 사용자 관리 
  * @author 
  *
  */
@@ -36,14 +36,6 @@ public class AdminUserController {
 	
 	@Autowired 
 	private MCareUserService userService; 
-//	@Autowired
-//	private MCareApiCallService apiCallService;
-//	@Autowired
-//	private PnuhConfigureService configureService;
-//	@Autowired
-//	private UserRegisterService userRegisterService;
-//	@Autowired
-//	private SendSmsService smsService;
 	@Autowired
 	private AdminUserService adminUserService;
 	
@@ -66,24 +58,6 @@ public class AdminUserController {
 		}
 	}
 	
-	// block 된거 해제하기 
-	@RequestMapping(value="/clear.json", method = RequestMethod.POST)
-	@ResponseBody 
-	public MCareUser clear(@RequestBody MCareUser user) throws AdminControllerException {
-		
-		this.logger.debug("Update Call");
-
-		// 수정 
-		try { 
-			this.userService.clear(user);
-			this.logger.debug("user update clear : seq = " + user.getUserSeq());
-		}
-		catch(final MCareServiceException ex) { 
-			throw new AdminControllerException(ex); 
-		}
-		
-		return user; 
-	}
 	
 	// 탈퇴처리
 	@RequestMapping(value="/remove.json", method = RequestMethod.POST)

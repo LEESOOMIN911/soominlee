@@ -5,7 +5,7 @@
 <!-- 휴대폰 인증 성공-->
 <div data-role="content">
 	<div class="mainContainer">
-		<input type="hidden" name="pNm" id="pNm" value="${sName}">
+		<input type="hidden" name="pName" id="pName" value="${sName}">
 		<input type="hidden" name="userBirthDate" id="userBirthDate" value="${sBirthDate}">
 		<input type="hidden" name="userGenderCode" id="userGenderCode" value="${sGenderCode}">
 		<input type="hidden" name="reservedParam1" id="reservedParam1" value="${sReserved1}">

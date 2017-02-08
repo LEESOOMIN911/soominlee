@@ -42,6 +42,8 @@
 	<!-- param_2를 인증 요청 타입입을 사용 (ex:registerUser = 사용자 등록, searchId = 사용자 ID 찾기, resetPWD = 패스워드 재등록) -->
 	<input type="hidden" name="param_r2" id="certReqType" value="${param.certReqType}">
 	<input type="hidden" name="param_r3" id="pid" value="${param.pId}">
+	<!-- 핸드폰 번호 -->
+	<input type="hidden" name="phoneNo" id="phoneNo" value="${param.phoneNo}">
 </form>
 
 <script type="text/javascript">

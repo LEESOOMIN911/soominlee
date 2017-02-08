@@ -16,7 +16,7 @@
 				<h3 class="subTitle"> <i class="fa fa-info-circle"></i> <s:message code="mobile.view.under14012" /></h3>
 			</div>
 			<div>
-				<input type="text" id="pNm" class="for_name" placeholder="<s:message code="mobile.view.under14013" />" />
+				<input type="text" id="pName" class="for_name" placeholder="<s:message code="mobile.view.under14013" />" />
 			</div>
     		<div>
 				<a href="#" class="ui-btn ui-btn-b sendSMS">

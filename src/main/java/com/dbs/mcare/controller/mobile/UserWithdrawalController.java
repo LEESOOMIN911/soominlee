@@ -82,7 +82,7 @@ public class UserWithdrawalController  extends AbstractController {
 		
 		// 비번확인 
 		final HashUtil hashUtils = new HashUtil(this.configureService.getHashSalt()); 
-		final boolean checkedPwd = this.userService.checkUserPWD(pId, hashUtils.sha256(plainPassword)); 
+		final boolean checkedPwd = this.userService.checkUserPassword(pId, hashUtils.sha256(plainPassword)); 
 		if(!checkedPwd) { 
 			throw new MobileControllerException("admin.auth.checkaccount", "비밀번호를 다시 확인하세요"); 
 		}

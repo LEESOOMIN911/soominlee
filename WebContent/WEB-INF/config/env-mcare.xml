@@ -147,9 +147,8 @@
 	<entry key="password.valid.date">90</entry>
 	<!-- 로그인 실패 시 계정 차단 횟수. 1이면, 한번만 비번이 틀리면 계정 차단함 -->
 	<entry key="password.try.count">5</entry>
-	<!-- 임시 비밀번호 길이 -->
-	<entry key="temporary.password.length">5</entry>
-		
+	<!-- 비밀번호 레벨. 1이 기본값. GeneralUserService.getDefaultTemporaryPassword()로 생성. 나머지는 각 사이트에서 알아서 생성 -->
+	<entry key="temporary.password.level">3</entry>			
 	
 	<!-- ========================================================================
 							번호표 발급기 동작 시간 

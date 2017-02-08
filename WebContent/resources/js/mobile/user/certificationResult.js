@@ -16,7 +16,7 @@ var mcare_mobile_certification_result = function() {
 	 * 초기화
 	 */
 	this.init = function() {
-		var pNm = $("#pNm").val(),
+		var pName = $("#pName").val(),
 			userBirthDate = $("#userBirthDate").val(),
 			userGenderCode = $("#userGenderCode").val(),
 			reservedParam1 = $("#reservedParam1").val(),
@@ -36,7 +36,7 @@ var mcare_mobile_certification_result = function() {
 			reqUrl = "/mobile/user/" + reservedParam2 + ".page?menuId=" + reservedParam2;
 		}
 		
-		var urlParam = "&pNm=" + pNm;
+		var urlParam = "&pName=" + pName;
 		urlParam = urlParam + "&userBirthDate=" + userBirthDate;
 		urlParam = urlParam + "&userGenderCode=" + userGenderCode;
 		urlParam = urlParam + "&reservedParam1=" + reservedParam1;

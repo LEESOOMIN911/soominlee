@@ -106,7 +106,6 @@ var mcare_mobile_user_agreement = function(){
 				h2 = $( "<h3></h3>" );
 			div.html( div2.html( h2.html( self.getI18n("agreement010") ) ) );
 			$mainContainer.append( div );
-			$saveUserAgreement.hide();
 		} else {
 			var div = $( "<div></div>" ),
 				span = $( "<span></span>" ),

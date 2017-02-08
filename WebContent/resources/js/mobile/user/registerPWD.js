@@ -11,7 +11,7 @@ var mcare_mobile_registerPWD = function(){
 	var $pass2 = $("#pass2"),
 		$pass3 = $("#pass3"),
 		$pId = $("#pId"),
-		$pNm = $("#pNm"),
+		$pName = $("#pName"),
 		$userBirth = $("#userBirthDate"),
 		$userGender = $("#userGenderCode"),
 		$btn1 = $("#btn1");
@@ -34,7 +34,7 @@ var mcare_mobile_registerPWD = function(){
 				
                 var userData  = {
                     pId : $pId.val(), 
-                    pName : $pNm.val(), 
+                    pName : $pName.val(), 
                     passWordValue : $pass2.val(), 
                 };
                 

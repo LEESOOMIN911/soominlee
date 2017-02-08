@@ -10,7 +10,7 @@
 				<h3 class="subTitle"> <i class="fa fa-info-circle"></i> <s:message code="mobile.view.smsCertification003" /></h3>
 			</div>
 			<div>
-				<input type="text" id="pNm" class="for_name" placeholder="<s:message code="mobile.view.smsCertification001" />" />
+				<input type="text" id="pName" class="for_name" placeholder="<s:message code="mobile.view.smsCertification001" />" />
 			</div>
 		</div>
 		<div class="sec_con">
@@ -40,6 +40,7 @@
 	<input type="hidden" name="certReqType" id="certReqType" value="${param.certReqType}">
 	<input type="hidden" name="encodePid" id="encodePid">
 	<input type="hidden" name="encodePname" id="encodePname">
+	<input type="hidden" name="phoneNo" id="phoneNo" value="${param.phoneNo}">
 </div>
 
 <script type="text/javascript"> 

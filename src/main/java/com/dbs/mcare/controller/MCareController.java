@@ -2,6 +2,8 @@ package com.dbs.mcare.controller;
 
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -39,6 +41,7 @@ import com.dbs.mcare.framework.util.SessionUtil;
 import com.dbs.mcare.service.AuthenticationDelegator;
 import com.dbs.mcare.service.PnuhConfigureService;
 import com.dbs.mcare.service.RememberMeCookieBaker;
+import com.dbs.mcare.service.mobile.user.MCareUserService;
 import com.dbs.mcare.service.mobile.user.TokenService;
 import com.dbs.mcare.service.mobile.user.UserRegisterService;
 import com.dbs.mcare.service.mobile.user.repository.dao.MCareUser;
@@ -67,7 +70,8 @@ public class MCareController {
 	private TokenService tokenService; 
 	@Autowired 
 	private PnuhConfigureService configureService; 
-	
+	@Autowired 
+	private MCareUserService userService; 		
 	@Autowired
 	private UserRegisterService registerService;
 	
@@ -269,6 +273,31 @@ public class MCareController {
 		// 세션이 있는 상태에서 병원 목록 선택화면에 비명시적으로 왔다면 포워딩을 통해 인덱스로 가야함 
 		return "forward:" + FrameworkConstants.URI_SPECIAL_PAGE.INDEX.getPage(); 
 	}
+	
+	@RequestMapping(value = "/getUserExternalId.json", method = RequestMethod.POST)
+	@ResponseBody	
+	public Map<String, Object> getUserExternalId(HttpServletRequest request, HttpServletResponse response) throws MobileControllerException {
+		if(this.logger.isDebugEnabled()) { 
+			this.logger.debug("request : " + request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE));
+		}
+		
+		// 세션에 있는 id로만 가능 
+		String pId = SessionUtil.getUserId(request); 
+		if(StringUtils.isEmpty(pId)) {
+			throw new MobileControllerException("mcare.error.param", "파라미터를 확인해주세요."); 
+		}
+		
+		// 사용자 정보 수집 
+		MCareUser user = this.userService.get(pId); 
+		
+		// external id 만 꺼내서 반환 
+		Map<String, Object> map = new HashMap<>(); 
+		map.put("externalId", user.getExternalIdValue()); 
+		
+		// 
+		return map; 
+	}	
+	
 	
 	
 	@RequestMapping(value = FrameworkConstants.URI_CACHE_RELOAD, method = RequestMethod.POST, 

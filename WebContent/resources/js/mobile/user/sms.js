@@ -8,13 +8,14 @@ var mcare_mobile_sms = function(){
 	//super
 	var self = this;
 	//변수
-	var $pNm = $("#pNm"),
+	var $pName = $("#pName"),
 		$smsCode = $("#smsCode"),
 		$pid = $("#pid"),
 		$encodePid = $("#encodePid"),
 		$encodePname = $("#encodePname"),
 		$btn = $("#btn"),
 		$btn2 = $("#btn2"),
+		$phoneNo = $("#phoneNo"),
 		$certReqType = $('#certReqType');
 	/**	
 	 * 초기화
@@ -49,7 +50,9 @@ var mcare_mobile_sms = function(){
 		if(validatePname()) {
 			var item  = {
                 pId : $pid.val(), 
-                pName : $pNm.val()
+                pName : $pName.val(),
+                phoneNo : $phoneNo.val(),
+                certReqType : $certReqType.val()
             };
 			$.ajax({
                 url : contextPath + "/mobile/user/reqSMSCode.json", 
@@ -68,7 +71,7 @@ var mcare_mobile_sms = function(){
                 				$btn2.parent().css({"padding":"0","outline":"none"});
                 			});
                 			$encodePid.val(data.reservedParam3);
-                			$encodePname.val(data.pNm);
+                			$encodePname.val(data.pName);
                 		}
                 		
                 	} catch(e) {
@@ -127,7 +130,7 @@ var mcare_mobile_sms = function(){
 	 * 환자이름 입력체크
 	 */
 	var validatePname = function() {
-		if( $pNm.val() === "" ) {
+		if( $pName.val() === "" ) {
 			self.alert( self.getI18n("smsCertification006"),function(){				
 				$input1.focus();
 			} );
@@ -153,7 +156,7 @@ var mcare_mobile_sms = function(){
 	var callNative = function() {
 		
 		var reqUrl = "";
-		var urlParam = "&pNm=" + $encodePname.val();
+		var urlParam = "&pName=" + $encodePname.val();
 //		var reqUrl = "/mobile/user/registerPWD.page";
 		urlParam = urlParam + "&reservedParam3=" + $encodePid.val();
 		urlParam = urlParam + "&chartNoValue=" + $pid.val();

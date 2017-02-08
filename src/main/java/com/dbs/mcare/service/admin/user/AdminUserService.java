@@ -102,20 +102,16 @@ public class AdminUserService {
 				cellphoneNo = phoneNumber;
 			}
 			
-			final String special = "!@#$%^&*?_~";
-			final StringBuilder tmpPWDbuilder = new StringBuilder(); //임시 비밀 번호 생성
-			//님의 환자번호는. 결과는 환자이름이 pNm으로 넘어옴 
-			tmpPWDbuilder.append(RandomStringUtils.randomAlphabetic(2)); //알파뱃 문자열 두자리
-			tmpPWDbuilder.append(birthDt); 
-			tmpPWDbuilder.append(RandomStringUtils.random(2, special));  //special 문자열 두자리
-
+			//레벨값에 따른 임시 비번 생성
+			final String tmpPwd = this.userService.getTemporaryPwd(this.configureService.getTemporaryPasswordLevel());
+			
 			//패스워드 생성
-			final String hashPwd = new HashUtil(this.configureService.getHashSalt()).sha256(tmpPWDbuilder.toString());
+			final String hashPwd = new HashUtil(this.configureService.getHashSalt()).sha256(tmpPwd);
 			//SMS전송을 위한 요건이 되나 판단해서 보내자
-			this.userService.insertUser(pId, pName, hashPwd);
+			this.userService.insertUser(pId, hashPwd);
 			
 			//SMS 전송 문자 ex) 홍길동님의 임시패스워드는 ab20160101!@입니다.
-			String tmpPWDMessage = this.messageService.getMessage("admin.user.register.message", request, new String[]{pName, tmpPWDbuilder.toString()});
+			String tmpPWDMessage = this.messageService.getMessage("admin.user.register.message", request, new String[]{pName, tmpPwd});
 			
 			//문자전송
 			this.smsService.sendSms(pName, cellphoneNo, tmpPWDMessage);
