@@ -17,9 +17,12 @@ var mcare_mobile_login = function(){
 		$findId = $("#login_btn1"),
 		$hPid = $("#hPid"),
 		$findPWD = $("#login_btn2"),
-		$regBtn = $("#reg_btn");
+		$regBtn = $("#reg_btn"),
+		$currentUser = $("#currentUser");
 	
 	var parameterMap = null;
+	//
+	var rememberIdKey = "pId";
 	
 	/**
 	 * 초기화
@@ -61,6 +64,15 @@ var mcare_mobile_login = function(){
 		//사용등록 버튼 클릭 이벤트
 		$regBtn.on( "click", function(e){
 			self.changePage( contextPath + "/mobile/user/register.page?menuId=userRegister" );
+		});
+		//아이디 저장 - 무조건 마지막 접속 아이디
+		$pId.on("keyup",function(e){
+			setLocal( rememberIdKey, $(this).val() );
+		});
+		//최근 아이디 가져오기
+		$currentUser.on("click",function(e){
+			e.preventDefault();
+			$pId.val( getLocal( rememberIdKey ) );
 		});
 	};
 	/**
@@ -154,6 +166,9 @@ var mcare_mobile_login = function(){
 		    			return;
 		    		} else {
 		    			sessionStorage.removeItem("hash");
+		    			//로그인된 아이디를 저장함
+		    			setLocal( rememberIdKey, $pId.val() );
+		    			
 		    			if( parameterMap["returnUrl"] && parameterMap["returnUrl"] !== "" ){
 		    				//context 붙어와서 뺐음
 		    				self.changePage( parameterMap["returnUrl"] );
@@ -184,6 +199,24 @@ var mcare_mobile_login = function(){
 		if(parameterMap["loginType"] == "searchPId") {
 			$pId.val( $hPid.val() );
 		}
+	};
+	/**
+	 * localStorage 설정
+	 */
+	var setLocal = function(key,value){
+	   localStorage.setItem(key,value);
+	};
+	/**
+	 * localStorage 삭제
+	 */ 
+	var deleteLocal = function(key){
+	    localStorage.removeItem(key);
+	};
+	/**
+	 * localStorage 가져오기
+	 */ 
+	var getLocal = function(key) {	    
+	    return localStorage.getItem(key);
 	};
 	/**
 	 * 비밀번호 변경여부 컨펌창 

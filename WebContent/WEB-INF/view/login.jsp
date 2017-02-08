@@ -13,6 +13,7 @@
 		<div class="fir_con">
 			<div class="form_input">
 				<input type="number" pattern="\d*" id="pId" data-clear-btn="turn" placeholder="<s:message code="mobile.message.login005"/>" value="" />
+				<a href="#" id="currentUser" class="ui-btn ui-shadow ui-corner-all ui-icon-user ui-btn-icon-notext ui-btn-inline" ></a>
 			</div>
 		</div>
 		<div class="sec_con">
