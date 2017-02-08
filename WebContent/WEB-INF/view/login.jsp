@@ -36,6 +36,15 @@
 			<div class="ui-block-c"><div class="ui-bar ui-bar-a" ><a href="#" id="reg_btn"><i class="fa fa-pencil"></i><span class=""><s:message code="mobile.view.login011"/></span></a></div></div>
 	  </div>
 	</div>
+	<div class="noticeWrap">
+		<ul style="padding:0 15px;font-size:13px;">
+			<li>
+				<span><s:message code="mobile.view.login012"/></span>
+				<button class="noticeIcon ui-btn ui-shadow ui-corner-all ui-icon-user ui-btn-icon-notext ui-btn-inline" style="margin:0;outline: none;"></button> 
+				<span><s:message code="mobile.view.login013"/></span>
+			</li>
+		</ul>
+	</div>
 </div>
 <!-- 컨펌 -->
 <div data-role="popup" id="confirmDialog" data-dismissible="false" class="ui-corner-all">

@@ -16,10 +16,14 @@ overflow-x:hidden;
 .ui-content{
 	margin-bottom: 80px;
 }
+#currentUser{position:absolute;right:0px;top:-3px}
+button.noticeIcon.ui-btn-icon-notext{width:16px;height:16px;}
+.noticeIcon.ui-btn-icon-notext:after {width:16px;height:16px;margin-left: -8px;margin-top: -8px;}
 /**
 * 로그인 영문페이지의 경우, 버튼 텍스트가 안나와서 스타일을 수정했음. 
 **/
 div.login-thumbs a.ui-btn{white-space: pre-wrap;line-height: 1; }
+
 /**
 * 비밀번호 연장 컨펌창
 **/
