@@ -71,6 +71,11 @@ $(document).one("pagebeforeshow", function(e, ui) {
 	if( '${menuInfo.menuId}' === "searchPNumber" || '${menuInfo.menuId}' === "searchPWD"){
 		a2.attr({'href': contextPath + '/login.page', 'data-ajax' : false });
 	}
+	
+	//비밀번호 유도시 헤더 버튼 없앰
+	if( '${menuInfo.menuId}' === "changeMyPwd" && document.referrer.indexOf("login") > 0){
+		$("#menuBars_btn,#headerArrowLeft_btn").hide();
+	}
 });
 function exitRegister(){
 	var mcare = new mcare_mobile();

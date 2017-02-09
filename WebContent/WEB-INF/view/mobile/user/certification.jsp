@@ -27,8 +27,21 @@
 	<div id="certi">
 	</div>
 	<div class="mt">
+		<i class="fa fa-comment"></i>&nbsp;
+		<span>
+			<s:message code="mobile.view.certification005"/>&nbsp;
+		</span>
+		<span class="issueIpin">
+			<s:message code="mobile.view.certification006"/>
+		</span>
+		<span>
+			<s:message code="mobile.view.certification007"/>
+		</span>
+	</div>
+	<div class="mn">
+		<i class="fa fa-times-circle"></i>&nbsp;
 		<span class="ps">
-			<s:message code="mobile.view.certification005"/>
+			<s:message code="mobile.view.certification008"/>
 		</span>
 	</div>
 </div>
