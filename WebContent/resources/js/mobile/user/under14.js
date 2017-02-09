@@ -87,7 +87,11 @@ var mcare_mobile_under14 = function(){
                 				$checkCode.button();
                 				$checkCode.removeClass("disable").button("enable");
                 				$checkCode.parent().css({"padding":"0","outline":"none"});
+                				
+                				//인증받기 버튼 비활성화처리
+                				$sendSMS.button();
                 				$sendSMS.addClass("disable").button("disable");
+                				$sendSMS.parent().css({"padding":"0","outline":"none"});
                 			});
                 			$encodePid.val(data.reservedParam3);
                 			$encodePname.val(data.pName);
