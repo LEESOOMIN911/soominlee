@@ -69,6 +69,11 @@ var mcare_mobile_sms = function(){
                 				$btn2.button();
                 				$btn2.removeClass("disable").button("enable");
                 				$btn2.parent().css({"padding":"0","outline":"none"});
+                				
+                				//인증요청 버튼 비활성화 처리
+                				$btn.button();
+                				$btn.addClass("disable").button("disable");
+                				$btn.parent().css({"padding":"0","outline":"none"});
                 			});
                 			$encodePid.val(data.reservedParam3);
                 			$encodePname.val(data.pName);
