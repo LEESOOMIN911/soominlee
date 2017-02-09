@@ -17,7 +17,8 @@ var mcare_mobile_certification = function() {
 		$iPin = $("#iPin"),
 		$encData = $("#enc_data"),
 		$phoneNo = $("#phoneNo"),
-		$sms = $("#sms");
+		$sms = $("#sms"),
+		$issueIpin = $(".issueIpin");
 
 	/**
 	 * 초기화
@@ -43,6 +44,10 @@ var mcare_mobile_certification = function() {
 			var certReqType = $("#certReqType").val();
 			var phoneNo = $phoneNo.val();
 			location.href = contextPath + "/mobile/user/sms.page?pid="+patientId+"&certReqType="+certReqType+"&phoneNo="+phoneNo;
+		});
+		//아이핀 발급 페이지 - 모듈을 호출해서 파라미터들이 전달되어야해서 ipin 인증페이지로 이동 시킴 
+		$issueIpin.on("click",function(e){
+			iPin();
 		});
 	};
 
