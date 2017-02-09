@@ -66,6 +66,8 @@ var mcare_mobile_under14 = function(){
 			var item  = {
                 pId : $pId.val(),
                 pName : $pName.val(),
+                certReqType : $certReqType.val(),
+                phoneNo : $phoneNo.val()
             };
 			$.ajax({
                 url : contextPath + "/mobile/user/reqSMSCode.json", 
@@ -85,6 +87,7 @@ var mcare_mobile_under14 = function(){
                 				$checkCode.button();
                 				$checkCode.removeClass("disable").button("enable");
                 				$checkCode.parent().css({"padding":"0","outline":"none"});
+                				$sendSMS.addClass("disable").button("disable");
                 			});
                 			$encodePid.val(data.reservedParam3);
                 			$encodePname.val(data.pName);
