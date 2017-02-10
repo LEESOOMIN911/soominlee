@@ -50,18 +50,26 @@ $(document).one("pagebeforeshow", function(e, ui) {
 			if( '${menuInfo.menuId}' === 'userRegister' ){
 				//사용등록이면 별도 함수를 만든다.
 				a2.attr({'href':'javascript:exitRegister();'});
-			} else if( paramObj["info"] !== undefined && paramObj["info"] === "helper" ){
-				a2.attr({'href': contextPath + '/mobile/helper/helper.page?menuId=helper', 'data-ajax' : false });
+			} else if( paramObj["info"] !== undefined){
+				if( paramObj["info"] === "helper" ){
+					a2.attr({'href': contextPath + '/mobile/helper/helper.page?menuId=helper', 'data-ajax' : false });
+				//푸시로 강제로 페이지 이동했을때는 뒤로가기 했을 때 시작화면으로 가도록 
+				} else if( paramObj["info"] === "index" ){
+					a2.attr({'href': contextPath + '/index.page', 'data-ajax' : false });	
+				}
 			} else {			
 				a2.attr({'href': contextPath + '/index.page', 'data-ajax' : false });
 			}
 		}
+	} else if( paramObj["info"] !== undefined ){
+		if( paramObj["info"] === "helper" ){
+			a2.attr({'href': contextPath + '/mobile/helper/helper.page?menuId=helper', 'data-ajax' : false });		
+		//푸시로 강제로 페이지 이동했을때는 뒤로가기 했을 때 시작화면으로 가도록 
+		} else if( paramObj["info"] === "index" ){
+			a2.attr({'href': contextPath + '/index.page', 'data-ajax' : false });	
+		}
 	} else {
 		a2.attr({'href': "javascript:history.back();", 'data-ajax': false});
-		
-// 		if (parentMenuType == 'NAVI') {
-// 			a2.attr({'href': a2.attr('href') + '?menuId=' + parentMenuId });
-// 		}
 	}
 	//본인인증 헤더 버튼 없앰
 	if( '${menuInfo.menuId}' === "certification" || '${menuInfo.parentMenuId}' === "certification" 
