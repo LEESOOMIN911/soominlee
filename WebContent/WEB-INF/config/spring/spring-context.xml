@@ -25,6 +25,8 @@
 		<property name="dataSource" ref="mcareDataSource" />
 	</bean>
 	
+	<!-- 기본 데이터 소스 짝 ======================================================================== --> 
+	<!-- M-Care 기본 데이터 소스를 바라보는 JDBC Template -->
 	<bean id="mcareNamedParameterJdbcTemplate"
 		class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
 		<constructor-arg>
@@ -38,6 +40,8 @@
 		<property name="url" value="#{mcareConfig['mcare.db.url']}" />
 		<property name="username" value="#{mcareConfig['mcare.db.username']}" />
 		<property name="password" value="#{mcareConfig['mcare.db.password']}" />
+		<property name="validationQuery" value="SELECT 1 FROM DUAL" />
+		<property name="testWhileIdle" value="true" />
 	</bean>
 	
 	<!-- M-Care 서비스를 위한 중간 테이블에 접근하기 위한 데이터 소스 -->
@@ -46,6 +50,8 @@
 		<property name="url" value="#{mcareConfig['mcare.ext.db.url']}" />
 		<property name="username" value="#{mcareConfig['mcare.ext.db.username']}" />
 		<property name="password" value="#{mcareConfig['mcare.ext.db.password']}" />
+		<property name="validationQuery" value="SELECT 1 FROM DUAL" />
+		<property name="testWhileIdle" value="true" />
 	</bean>	
 	
 	<!-- 기간계 SMS 전송을 전달하기 위해 필요한 데이터 소스 -->
@@ -54,6 +60,8 @@
 		<property name="url" value="#{mcareConfig['mcs.sms.db.url']}" />
 		<property name="username" value="#{mcareConfig['mcs.sms.db.username']}" />
 		<property name="password" value="#{mcareConfig['mcs.sms.db.password']}" />
+		<property name="validationQuery" value="SELECT 1 FROM DUAL" />
+		<property name="testWhileIdle" value="true" />
 	</bean>	
 	
 	<!-- 예약저장용 -->
@@ -62,6 +70,8 @@
 		<property name="url" value="#{mcareConfig['mcare.ext.reservation.db.url']}" />
 		<property name="username" value="#{mcareConfig['mcare.ext.reservation.db.username']}" />
 		<property name="password" value="#{mcareConfig['mcare.ext.reservation.db.password']}" />
+		<property name="validationQuery" value="SELECT 1 FROM DUAL" />
+		<property name="testWhileIdle" value="true" />
 	</bean>		
 	
 	<bean id="messageSource"
@@ -88,14 +98,13 @@
 		<mvc:interceptor>
       		<mvc:mapping path="/**/*.page"/>
       		<mvc:mapping path="/**/*.json"/>
-      		<!-- 
-      		<mvc:exclude-mapping path="/**/login.page"/>
-      		--> 
+      		<mvc:mapping path="/**/*.ext"/>
       		<mvc:exclude-mapping path="/**/logout.page"/>
       		<bean class="com.dbs.mcare.interceptor.MCareAuthenticationInterceptor" />
     	</mvc:interceptor>
     	<mvc:interceptor>
       		<mvc:mapping path="/**/*.page"/>
+      		<mvc:exclude-mapping path="/login.page"/>
       		<mvc:exclude-mapping path="/admin/**"/>
       		<bean class="com.dbs.mcare.framework.interceptor.RequestLoggingInterceptor"/>		
     	</mvc:interceptor>
@@ -152,6 +161,7 @@
 				<property name="supportedMediaTypes">
 					<list>
 						<value>text/html;charset=UTF-8</value>
+						<value>text/plain; charset=UTF-8</value>
 					</list>
 				</property>
 			</bean>

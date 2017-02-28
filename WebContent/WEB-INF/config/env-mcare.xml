@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties version="1.0">
-    
+    <!-- 운영버전 -->
 	<!-- ========================================================================
 									서버 도메인 - context path이전까지 
 			https://beacon.pnuh.or.kr/index.page == https://beacon.pnuh.or.kr
@@ -69,6 +69,9 @@
 	<!-- ========================================================================
 									데이터소스 관련 
 	 ========================================================================-->
+	
+	<!-- 기본 DB타입  -->
+	<entry key="mcare.db.default.type">oracle</entry>
 	
 	<!-- MCARE 용 -->
 	<entry key="mcare.db.driverClassName">oracle.jdbc.driver.OracleDriver</entry>

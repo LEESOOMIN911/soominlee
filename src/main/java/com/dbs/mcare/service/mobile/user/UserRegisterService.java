@@ -587,7 +587,6 @@ public class UserRegisterService {
 	 * @param birthDt
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	private boolean comparePatientInfo(String pId, String pName, String birthDt) {
 		Map<String, Object> userMap = this.getPatientInfo(pId);							//ResponseUtil에서 결과를 추출해서 담을 userMap;
 		

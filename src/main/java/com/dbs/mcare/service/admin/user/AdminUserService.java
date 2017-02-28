@@ -5,7 +5,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,7 +94,7 @@ public class AdminUserService {
 			//문자 전송에 필요한 데이터
 			String pName = (String) userMap.get("pName");
 			String cellphoneNo = (String) userMap.get("cellphoneNo");
-			String birthDt = (String) userMap.get("birthDt");
+			//String birthDt = (String) userMap.get("birthDt");
 			
 			//PhoneNumber가 비어 있지 않으면 cellphoneNo에 phoneNumber 사용
 			if(!StringUtils.isEmpty(phoneNumber)) {

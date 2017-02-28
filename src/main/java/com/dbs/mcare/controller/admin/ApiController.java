@@ -57,6 +57,7 @@ import com.dbs.mcare.framework.service.admin.api.repository.dao.ReqParam;
 import com.dbs.mcare.framework.service.admin.api.repository.dao.WsHeader;
 import com.dbs.mcare.framework.service.admin.manager.repository.dao.Manager;
 import com.dbs.mcare.framework.util.AESUtil;
+import com.dbs.mcare.framework.util.ConvertUtil;
 import com.dbs.mcare.service.PnuhConfigureService;
 
 @Controller
@@ -259,11 +260,17 @@ public class ApiController {
             paramMap.put(param.getParamName(), param.getSampleValue());
         }
         
+        if(this.logger.isDebugEnabled()) {
+        	StringBuilder builder = new StringBuilder(FrameworkConstants.NEW_LINE); 
+        	builder.append("정리된 요청 파라미터 ===== ").append(FrameworkConstants.NEW_LINE); 
+        	builder.append(ConvertUtil.convertStringForDebug(paramMap)); 
+        	this.logger.debug(builder.toString());
+        }
+        
         
         try {
-            //api.setIsTesting(true);
             this.executor.validate(api);
-            final Object result = this.executor.execute(api, paramMap);
+            final Object result = this.executor.execute(api, paramMap, null);
             return  result == null? Collections.EMPTY_MAP: result;
         } 
         catch (final Exception e) {
