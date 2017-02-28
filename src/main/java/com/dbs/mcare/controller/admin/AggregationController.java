@@ -28,6 +28,7 @@ import com.dbs.mcare.framework.service.admin.agg.AggMsgSendResultLogService;
 import com.dbs.mcare.framework.service.admin.agg.AggPlatformService;
 import com.dbs.mcare.framework.service.admin.agg.AggUserPlatformService;
 import com.dbs.mcare.framework.service.admin.agg.AggUserRegisterService;
+import com.dbs.mcare.framework.service.admin.agg.AggUserWithdrawalService;
 import com.dbs.mcare.framework.service.admin.agg.repository.dao.AggAccessDaily;
 import com.dbs.mcare.framework.service.admin.agg.repository.dao.AggAccessHourly;
 import com.dbs.mcare.framework.service.admin.agg.repository.dao.AggDailyMsgSendErrorLog;
@@ -37,6 +38,7 @@ import com.dbs.mcare.framework.service.admin.agg.repository.dao.AggMsgSendResult
 import com.dbs.mcare.framework.service.admin.agg.repository.dao.AggPlatform;
 import com.dbs.mcare.framework.service.admin.agg.repository.dao.AggUserPlatform;
 import com.dbs.mcare.framework.service.admin.agg.repository.dao.AggUserRegister;
+import com.dbs.mcare.framework.service.admin.agg.repository.dao.AggUserWithdrawal;
 import com.dbs.mcare.framework.template.AdminAbstractController;
 import com.dbs.mcare.framework.util.ConvertUtil;
 import com.dbs.mcare.framework.util.HttpRequestUtil;
@@ -92,6 +94,8 @@ public class AggregationController extends AdminAbstractController {
 	private AggUserPostnoService aggUserPostnoService; 
 	@Autowired 
 	private AggUserRegisterService aggUserRegisterService; 
+	@Autowired 
+	private AggUserWithdrawalService aggUserWithdrawalService;
 	@Autowired 
 	private AggUserPlatformService aggUserPlatformService; 
 	
@@ -264,6 +268,21 @@ public class AggregationController extends AdminAbstractController {
 		}		
 	}		
 	
+	// 일별 사용자 탈퇴 통계 
+	@RequestMapping(value = "/getUserWithdrawalList.json", method = RequestMethod.POST)
+	public List<AggUserWithdrawal> findUserWithdrawalList( @RequestBody Map<String, Object> map ) throws AdminControllerException {
+		final String strDate = map.get(AggregationController.KEY_START_DATE).toString();
+		final String endDate = map.get(AggregationController.KEY_END_DATE).toString();
+		
+		try { 
+			return this.aggUserWithdrawalService.findByDate(strDate, endDate); 
+		}
+		catch(final MCareServiceException ex) {
+			logger.error("통계정보 수집 실패. strDate : " + strDate + ", endDate : " + endDate, ex); 
+			throw new AdminControllerException(ex); 
+		}		
+	}		
+	
 	// 플랫폼 타입 정보 
 	@RequestMapping(value = "/getUserPlatformList.json", method = RequestMethod.POST)
 	public List<AggUserPlatform> getUserPlatformList() throws AdminControllerException {
@@ -417,6 +436,10 @@ public class AggregationController extends AdminAbstractController {
 		case "dailyRegister":
 			 list =  this.findUserRegisterList(map);
 			 clazz = AggUserRegister.class;
+			 break;
+		case "dailyWithdrawal":
+			 list =  this.findUserWithdrawalList(map);
+			 clazz = AggUserWithdrawal.class;
 			 break;
 		case "userAge":
 			 list =  this.findUserAgeList(map);
