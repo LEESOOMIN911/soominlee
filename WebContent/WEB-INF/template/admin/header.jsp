@@ -55,6 +55,11 @@
 						</a>
 					</li>
 					<li>
+						<a href="${pageContext.request.contextPath}/admin/dailyWithdrawal.page">
+							<span>일자별 탈퇴 현황</span>
+						</a>
+					</li>
+					<li>
 						<a href="${pageContext.request.contextPath}/admin/userAge.page">
 							<span>연령별 가입 현황</span>
 						</a>
