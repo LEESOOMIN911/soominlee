@@ -58,6 +58,7 @@ var i18n = function(){
 		"under14007" : "<s:message code='mobile.view.under14007'/>",
 		"under14008" : "<s:message code='mobile.view.under14008'/>",
 		"under14009" : "<s:message code='mobile.view.under14009'/>",
+		"under14010" : "<s:message code='mobile.view.under14010'/>",
 		"under14013" : "<s:message code='mobile.view.under14013'/>"
 	};
 	

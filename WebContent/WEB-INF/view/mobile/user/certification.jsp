@@ -39,7 +39,7 @@
 		</span>
 	</div>
 	<div class="mn">
-		<i class="fa fa-times-circle"></i>&nbsp;
+		<i class="fa fa-times-circle" style="width:15px;"></i>&nbsp;
 		<span class="ps">
 			<s:message code="mobile.view.certification008"/>
 		</span>

@@ -56,7 +56,7 @@ var mcare_admin_userPlatform = function(){
     			$validUserCnt.html( "&nbsp;" + self.validUserCnt + "&nbsp;" );
     			$cntPersent.html( "( " + ((self.validUserCnt/self.totalUserCnt)*100).toFixed(2) + "% )" );
     			$registeredTokenCnt.html( "&nbsp;" + self.registeredTokenCnt );
-    			$cntPersentUser.html( ( self.validUserCnt/self.registeredTokenCnt).toFixed(2) );
+    			$cntPersentUser.html( ( self.registeredTokenCnt / self.validUserCnt).toFixed(2) );
     		}
     	};
     	var error = function(xhr,d,t){

@@ -17,6 +17,7 @@ overflow-x:hidden;
 	margin-bottom: 80px;
 }
 #currentUser{position:absolute;right:0px;top:-3px}
+.fir_con .ui-input-text.ui-input-has-clear .ui-btn.ui-input-clear{right:35px;}
 button.noticeIcon.ui-btn-icon-notext{width:16px;height:16px;}
 .noticeIcon.ui-btn-icon-notext:after {width:16px;height:16px;margin-left: -8px;margin-top: -8px;}
 /**
