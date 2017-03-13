@@ -23,7 +23,6 @@ import com.dbs.mcare.framework.exception.service.UserBlockException;
 import com.dbs.mcare.framework.service.AuthenticationService;
 import com.dbs.mcare.framework.service.ConfigureService;
 import com.dbs.mcare.framework.util.DateUtil;
-import com.dbs.mcare.framework.util.HashUtil;
 import com.dbs.mcare.service.api.MCareApiCallService;
 import com.dbs.mcare.service.api.PnuhApi;
 import com.dbs.mcare.service.mobile.user.UserAgreementService;
@@ -52,17 +51,19 @@ public class AuthenticationDelegator {
 
 	
 	/**
-	 * 로그인 처리 
-	 * @param request
-	 * @param response
-	 * @param pId
-	 * @param plainPassWord
-	 * @param forcedPage 
-	 * @return
+	 * 로그인 처리 <br/> 
+	 * 기존에는 plainText로만 로그인을 했는데, 생체정보를 이용한 로그인 기능이 추가되면서 hash적용된 상태의 값이 전달되는 것으로 변경되었음 
+	 * 
+	 * @param request 요청객체 
+	 * @param response 응답객체 
+	 * @param pId 환자번호 
+	 * @param hashPassWord hash적용된 비번
+	 * @param forcedPage 강제전이 페이지 
+	 * @return 사용자 
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	public MCareUser authentication(HttpServletRequest request, HttpServletResponse response, String pId, String plainPassWord, String forcedPage) throws Exception {		
+	public MCareUser authentication(HttpServletRequest request, HttpServletResponse response, String pId, String hashPassWord, String forcedPage) throws Exception {		
 		// 사용자 플랫폼 확인 
 		this.authService.checkAccessPlatform(request, pId);
 
@@ -78,9 +79,13 @@ public class AuthenticationDelegator {
 			throw new LoginException("mcare.error.if.system", "시스템 호출 오류가 발생했습니다 (IF)", null);			
 		}
 			
-		// 유효성 확인 
-		if(resultMap == null || plainPassWord == null) { 
-			this.logger.debug("로그인 시도한 사용자 : " + pId);
+		// 유효성 확인. hash적용된 비번은 64bytes, 사용자가 입력하는 비번은 8글자 이상 
+		if(resultMap == null || (hashPassWord == null || hashPassWord.length() < 64)) { 
+			if(this.logger.isDebugEnabled()) { 
+				this.logger.debug("유효하지 않은 정보롤 가지고 로그인 시도한 사용자 : " + pId + ", 비번 : " + hashPassWord);
+			} 
+			
+			
 			// 등록된 사용자가 없는 경우이므로, 로그인 실패처리도 해줄 수 없는 경우임 
 			throw new LoginException("mcare.auth.checkaccount", "아이디 또는 비밀번호를 다시 확인하세요", null);
 		}
@@ -97,12 +102,9 @@ public class AuthenticationDelegator {
 		
 		// block된 사용자인가? 
 		if(user.getLoginFailCnt() != null && user.getLoginFailCnt() >= this.configureService.getPasswordTryCount()) {
-			this.logger.error("block된 사용자 : pId=" + user.getpId()); 
+			this.logger.error("block된 사용자 : " + user.getpId()); 
 			throw new UserBlockException("mcare.auth.blockaccount", "비밀번호 입력회수 실패 초과로 계정이 잠겼습니다. 비밀번호 재설정이 필요합니다.", FrameworkConstants.URI_SPECIAL_PAGE.AUTH_USER_INFO); 
 		}
-		
-		// Sha256 먹이고 
-		final String hashPwd = new HashUtil(this.configureService.getHashSalt()).sha256(plainPassWord); 
 		
 //		if(this.logger.isDebugEnabled()) {
 //			StringBuilder builder = new StringBuilder(); 
@@ -119,7 +121,7 @@ public class AuthenticationDelegator {
 		
 
 		// 비밀번호가 맞나? 
-		if(hashPwd.equals(user.getPasswordValue())) {
+		if(hashPassWord.equals(user.getPasswordValue())) {
 			// 로그인 실패 횟수 초기화 
 			if(user.getLoginFailCnt() > 0) {
 				try {

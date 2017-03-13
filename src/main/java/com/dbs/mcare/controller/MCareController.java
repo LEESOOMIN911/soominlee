@@ -1,11 +1,9 @@
 package com.dbs.mcare.controller;
 
 import java.io.IOException;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -29,20 +27,14 @@ import com.dbs.mcare.exception.mobile.MobileControllerException;
 import com.dbs.mcare.framework.FrameworkConstants;
 import com.dbs.mcare.framework.api.executor.ApiExecuteDelegator;
 import com.dbs.mcare.framework.exception.service.LoginException;
-import com.dbs.mcare.framework.exception.service.PwdOverDueException;
-import com.dbs.mcare.framework.service.admin.history.repository.dao.LoginHistory;
-import com.dbs.mcare.framework.service.log.LogService;
-import com.dbs.mcare.framework.service.log.type.LogType;
 import com.dbs.mcare.framework.service.menu.MenuLocaleResourceService;
 import com.dbs.mcare.framework.util.AESUtil;
-import com.dbs.mcare.framework.util.HashUtil;
 import com.dbs.mcare.framework.util.HttpRequestUtil;
 import com.dbs.mcare.framework.util.SessionUtil;
-import com.dbs.mcare.service.AuthenticationDelegator;
+import com.dbs.mcare.service.LoginService;
 import com.dbs.mcare.service.PnuhConfigureService;
 import com.dbs.mcare.service.RememberMeCookieBaker;
 import com.dbs.mcare.service.mobile.user.MCareUserService;
-import com.dbs.mcare.service.mobile.user.TokenService;
 import com.dbs.mcare.service.mobile.user.UserRegisterService;
 import com.dbs.mcare.service.mobile.user.repository.dao.MCareUser;
 
@@ -53,34 +45,20 @@ public class MCareController {
 	@Autowired
 	@Qualifier("apiExecuteDelegator")
 	private ApiExecuteDelegator apiDelegator;
-	
 	@Autowired
-	private AuthenticationDelegator authDelegator;
-	
-	@Autowired
-	private RememberMeCookieBaker cookieBaker;
-	
+	private RememberMeCookieBaker cookieBaker;	
 	@Autowired
 	private MenuLocaleResourceService cacheLoader;
-	
-	@Autowired 
-	private LogService logService; 
-	
-	@Autowired 
-	private TokenService tokenService; 
 	@Autowired 
 	private PnuhConfigureService configureService; 
 	@Autowired 
 	private MCareUserService userService; 		
 	@Autowired
 	private UserRegisterService registerService;
+	@Autowired 
+	private LoginService loginService; 
+
 	
-	private HashUtil hashUtils; 
-	
-	@PostConstruct 
-	public void afterPropertiesSet() { 
-		this.hashUtils = new HashUtil(this.configureService.getHashSalt()); 
-	}
 	
 	@RequestMapping(value = "/logout.page", method = RequestMethod.GET)
 	public void logout(HttpServletRequest request, HttpServletResponse response) throws MobileControllerException {
@@ -124,25 +102,7 @@ public class MCareController {
 	public Model login(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 		if(this.logger.isDebugEnabled()) { 
 			this.logger.debug("request : " + request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE));
-			
-			
-			// 로그확인 
-			StringBuilder builder = new StringBuilder(FrameworkConstants.NEW_LINE); 
-			
-			Enumeration<String> names = request.getAttributeNames(); 
-			String key = null; 
-			
-			while(names.hasMoreElements()) {
-				key = names.nextElement(); 
-				
-				if(key.startsWith("org.springframework") || key.startsWith("java.")) {
-					continue; 
-				}
-				
-				builder.append("- ").append(key).append(" = ").append(request.getAttribute(key)).append(FrameworkConstants.NEW_LINE); 
-			}
-			
-			this.logger.debug(builder.toString());
+			this.logger.debug("user Agent : " + HttpRequestUtil.getUserAgent(request));
 		}
 		
 		// 세션 비활성화 처리 
@@ -175,63 +135,15 @@ public class MCareController {
 			throw new LoginException("mcare.auth.checkaccount", "아이디 또는 비밀번호를 다시 확인하세요", FrameworkConstants.URI_SPECIAL_PAGE.USER_LOGIN);
 		}
 		
-		// 사용자 인증 
-		MCareUser user = null; 
-		
-		try { 
-			user = this.authDelegator.authentication(request, response, pId, plainPassWord, FrameworkConstants.URI_SPECIAL_PAGE.INDEX.getPage()); 
-			
-			// 로그인에 성공했으면, 자동로그인 쿠키 생성
-			// 실패한 쿠키는 구워둘 필요가 없고, 이미 자동로그인 쿠기가 있더라도 다시 굽는건 만료시간 연장의 목적이 있음 
-			if (rememberMe) { 
-				this.cookieBaker.create(request, response, user.getpId(), plainPassWord);
-			}
-			// 자동로그인 체크 안했으면 기존 자동로그인 쿠키는 삭제되어야 함 
-			else {
-				this.cookieBaker.remove(request, response);
-			}			
-		}
-		catch(final PwdOverDueException pex) { 
-			this.logger.error("로그인 실패. id : " + pId + ", " + pex.toString());
-			throw pex; 			
-		}		
-		catch(final LoginException ex) { 
-			this.logger.error("로그인 실패. id : " + pId + ", " + ex.toString());
-			throw ex; 
-		}
-		catch(final Exception ex) { 
-			this.logger.error("로그인 관련 처리 실패", ex);
-			throw new MobileControllerException(ex); 
-		}
-		
-		// token 갱신 실패하면 예외처리  
-		if(!this.tokenService.processDeviceToken(request, pId, tokenId, certType)) { 
-			// 이전에 로그인 처리를 했으니까 세션 비활성화 처리해주고 
-			this.invalidateSession(request);
-			// TODO 여기 보완해야함.
-			throw new MobileControllerException("mcare.error.register.token", "토큰등록에 실패했습니다. 앱을 종료하고, 재시작해주세요"); 
-		}
-		
-		// 로그인에 성공했으면 로그를 남김 
-		if(user != null) { 
-			final LoginHistory history = new LoginHistory(); 
-			final String key = pId + "_" + rememberMe; 
-			
-			history.setUserId(pId);
-			history.setRememberMeYn(rememberMe);
-			// 로그인 이력 해쉬용 문자 만들기 
-			history.setLoginHashValue(this.hashUtils.sha256(key));
-			
-			// 로그전달  
-			this.logService.addLog(LogType.LOGIN_HISTORY, history); 
-		}
-
-		return user;
+		// 로그인 처리 
+		return this.loginService.login(request, response, pId, plainPassWord, rememberMe, tokenId, certType); 
 	}
 
 	@RequestMapping(value = "**/*.page", method = RequestMethod.GET)
 	public Model submitPage(HttpServletRequest request, HttpServletResponse response, Model model) throws MobileControllerException {		
-		this.logger.debug("request : " + request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE));
+		if(this.logger.isDebugEnabled()) { 
+			this.logger.debug("페이지요청 : " + request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE));
+		}
 
 		// 강제전이 페이지인가? 
 		final String forcedPage = request.getParameter(FrameworkConstants.IS_FORCED_PAGE_PARAM); 
@@ -250,7 +162,9 @@ public class MCareController {
 	@RequestMapping(value = "/hospital.page", method = RequestMethod.GET)
 	public String selectHospital(HttpServletRequest request,
 			@RequestParam(value = "select", required = false) String selectYn) throws MobileControllerException {
-		this.logger.debug("request : " + request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE));
+		if(this.logger.isDebugEnabled()) { 
+			this.logger.debug("request : " + request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE));
+		}
 		
 		// 세션이 없으면 병원목록을 보여줌 
 		String pId = SessionUtil.getUserId(request); 
@@ -289,6 +203,12 @@ public class MCareController {
 		
 		// 사용자 정보 수집 
 		MCareUser user = this.userService.get(pId); 
+		if(user == null) {
+			if(logger.isDebugEnabled()) {
+				logger.debug("대상 환자번호 못 찾음. pId=" + pId);
+			}
+			throw new MobileControllerException("mcare.error.param", "파라미터를 확인해주세요."); 
+		}
 		
 		// external id 만 꺼내서 반환 
 		Map<String, Object> map = new HashMap<>(); 

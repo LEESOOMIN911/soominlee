@@ -25,19 +25,21 @@ public class RememberMeCookieBaker {
 	private AuthenticationDelegator authDelegator;
 	@Autowired 
 	private RememberMeService rememberMeService; 
-//	@Autowired 
-//	private ConfigureService configureService; 
 	
 	/**
 	 * 자동로그인을 위한 환자번호/비번 굽기 
 	 * @param request
 	 * @param response
 	 * @param pId
-	 * @param plainPwd
+	 * @param hashPwd
 	 */
-	public void create(HttpServletRequest request, HttpServletResponse response, String pId, String plainPwd) {
+	public void create(HttpServletRequest request, HttpServletResponse response, String pId, String hashPwd) {
 		// 정보 굽기 
-		this.rememberMeService.create(request, response, pId, plainPwd);
+		this.rememberMeService.create(request, response, pId, hashPwd);
+		
+		if(this.logger.isDebugEnabled()) {
+			this.logger.debug("remember-me 생성 : " + pId);
+		} 
 	}
 	
 	/**
@@ -69,7 +71,10 @@ public class RememberMeCookieBaker {
 		
 		// 복원해서 로그인 처리 
 		if (split.length > 1) {
-			this.logger.debug("자동 로그인 처리 : " + split[0]);
+			if(this.logger.isDebugEnabled()) { 
+				this.logger.debug("자동 로그인 처리 : " + split[0] + ", " + split[1]);
+			} 
+			
 			return this.authDelegator.authentication(request, response, split[0], split[1], forcedPage);
 		}
 
