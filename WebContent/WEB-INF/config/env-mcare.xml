@@ -26,7 +26,7 @@
 	 ========================================================================-->	    
 	<!-- 세션관리 및 중복로그인 -->
 	<entry key="session.root.dir">../mcare_session</entry>
-	<entry key="session.timeout.second">180</entry>  <!-- 600 -->
+	<entry key="session.timeout.second">600</entry>  <!-- 600 -->
 	<entry key="session.duplicate.check">false</entry>
 	<!-- 3분 : 180초, 10분 : 600초, 100분 : 6000초  -->
 	
