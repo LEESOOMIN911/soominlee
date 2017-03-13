@@ -172,7 +172,7 @@ var mcare_mobile_healthHandbook = function(){
 				  } else if( set[key] === "regTime" ){
 					  bodyDiv.append( div.clone().html( span.text( (item["regDt"]).split(" ")[1] ) ) );
 				  } else if( set[key] === "bmiValue" ){
-					  bodyDiv.append( div.clone().html( span.text( item[set[key]]===undefined?"":Math.ceil( parseFloat( item[ set[key] ] ) ) ) ) );
+					  bodyDiv.append( div.clone().html( span.text( (item[set[key]]===undefined || item[set[key]]==="")?"":Math.ceil( parseFloat( item[ set[key] ] ) ) ) ) );
 				  } else {
 					  bodyDiv.append( div.clone().html( span.text( item[ set[key] ]) ) );
 				  }
