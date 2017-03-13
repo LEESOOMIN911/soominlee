@@ -22,6 +22,7 @@
 		<javax.servlet.jsp.version>2.2</javax.servlet.jsp.version>
 		<jstl.version>1.2</jstl.version>
 		<tiles.version>3.0.5</tiles.version>		
+		<com.taskadapter.redmine.version>2.6.0</com.taskadapter.redmine.version>
 		
 		<nice.id.version>1.1</nice.id.version>
 		<ipin.client.version>1.0.0</ipin.client.version>	
@@ -235,7 +236,15 @@
 			<groupId>com.dbs.mcare</groupId>
 			<artifactId>ipinClient</artifactId>
 			<version>${ipin.client.version}</version>
-		</dependency>				
+		</dependency>	
+		
+		
+		<!-- redmine으로 일감보고 -->
+		<dependency>
+			<groupId>com.taskadapter</groupId>
+			<artifactId>redmine-java-api</artifactId>
+			<version>${com.taskadapter.redmine.version}</version>
+      	</dependency>			
 	</dependencies>
 
 </project>
