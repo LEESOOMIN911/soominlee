@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context" 
+	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:tx="http://www.springframework.org/schema/tx" 
+	xmlns:mvc="http://www.springframework.org/schema/mvc" 
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd 
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+		
+	<context:component-scan base-package="com.dbs.mcare" />	
+	
+	<!-- 정적 환경설정 -->
+	<util:properties id="mcareConfig" location="WEB-INF/config/env-mcare-dev.xml" />
+	<context:property-placeholder properties-ref="mcareConfig"/>	
+	
+	<tx:annotation-driven transaction-manager="mcareTransactionManager" />
+	<bean id="mcareTransactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="mcareDataSource" />
+	</bean>
+	
+	<!-- 기본 데이터 소스 짝 ======================================================================== --> 
+	<!-- M-Care 기본 데이터 소스를 바라보는 JDBC Template -->
+	<bean id="mcareNamedParameterJdbcTemplate"
+		class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
+		<constructor-arg>
+			<ref bean="mcareDataSource" />
+		</constructor-arg>
+	</bean>
+
+	<!-- M-Care 서비스용 데이터 소스 -->
+	<bean id="mcareDataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="#{mcareConfig['mcare.db.driverClassName']}" />
+		<property name="url" value="#{mcareConfig['mcare.db.url']}" />
+		<property name="username" value="#{mcareConfig['mcare.db.username']}" />
+		<property name="password" value="#{mcareConfig['mcare.db.password']}" />
+		<property name="validationQuery" value="SELECT 1 FROM DUAL" />
+		<property name="testWhileIdle" value="true" />
+	</bean>
+	
+	<!-- M-Care 서비스를 위한 중간 테이블에 접근하기 위한 데이터 소스 -->
+	<bean id="mcareExtDataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="#{mcareConfig['mcare.ext.db.driverClassName']}" />
+		<property name="url" value="#{mcareConfig['mcare.ext.db.url']}" />
+		<property name="username" value="#{mcareConfig['mcare.ext.db.username']}" />
+		<property name="password" value="#{mcareConfig['mcare.ext.db.password']}" />
+		<property name="validationQuery" value="SELECT 1 FROM DUAL" />
+		<property name="testWhileIdle" value="true" />
+	</bean>	
+	
+	<!-- 기간계 SMS 전송을 전달하기 위해 필요한 데이터 소스 -->
+	<bean id="mcsSmsDataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="#{mcareConfig['mcs.sms.db.driverClassName']}" />
+		<property name="url" value="#{mcareConfig['mcs.sms.db.url']}" />
+		<property name="username" value="#{mcareConfig['mcs.sms.db.username']}" />
+		<property name="password" value="#{mcareConfig['mcs.sms.db.password']}" />
+		<property name="validationQuery" value="SELECT 1 FROM DUAL" />
+		<property name="testWhileIdle" value="true" />
+	</bean>	
+	
+	<!-- 예약저장용 -->
+	<bean id="mcareExtReservationDataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="#{mcareConfig['mcare.ext.reservation.db.driverClassName']}" />
+		<property name="url" value="#{mcareConfig['mcare.ext.reservation.db.url']}" />
+		<property name="username" value="#{mcareConfig['mcare.ext.reservation.db.username']}" />
+		<property name="password" value="#{mcareConfig['mcare.ext.reservation.db.password']}" />
+		<property name="validationQuery" value="SELECT 1 FROM DUAL" />
+		<property name="testWhileIdle" value="true" />
+	</bean>		
+	
+	<bean id="messageSource"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basename" value="WEB-INF/messages/message" />
+		<property name="defaultEncoding" value="UTF-8" />
+		<property name="cacheSeconds" value="180" />
+	</bean>
+	
+	<bean id="localeResolver"
+		class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+		<property name="cookieName" value="user_locale" />
+		<property name="cookieMaxAge" value="31536000" />
+		<!-- 
+		<property name="defaultLocale" value="ko" />
+		 -->
+	</bean>
+	
+	<mvc:interceptors>
+		<bean id="localeChangeInterceptor"
+			class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+			<property name="paramName" value="_locale" />
+		</bean>
+		<mvc:interceptor>
+      		<mvc:mapping path="/**/*.page"/>
+      		<mvc:mapping path="/**/*.json"/>
+      		<mvc:mapping path="/**/*.ext"/>
+      		<mvc:exclude-mapping path="/**/logout.page"/>
+      		<bean class="com.dbs.mcare.interceptor.MCareAuthenticationInterceptor" />
+    	</mvc:interceptor>
+    	<mvc:interceptor>
+      		<mvc:mapping path="/**/*.page"/>
+      		<mvc:exclude-mapping path="/login.page"/>
+      		<mvc:exclude-mapping path="/admin/**"/>
+      		<bean class="com.dbs.mcare.framework.interceptor.RequestLoggingInterceptor"/>		
+    	</mvc:interceptor>
+	</mvc:interceptors>
+	
+	<bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+		<property name="order" value="1" />
+		
+		<property name="contentNegotiationManager">
+			<bean class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+				<property name="mediaTypes">
+				    <map>
+						<entry key="page" value="text/html" />
+						<entry key="json" value="application/json" />
+						<entry key="ext" value="text/plain" />
+				    </map>
+				</property>
+			</bean>
+		</property>
+
+		<property name="viewResolvers">
+			<list>
+				<bean class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+					<property name="viewClass"
+						value="org.springframework.web.servlet.view.tiles3.TilesView" />
+				</bean>
+				<bean class="org.springframework.web.servlet.view.BeanNameViewResolver" />
+			</list>
+		</property>		
+		<property name="defaultViews">
+			<list>
+				<ref bean="jsonView" />
+			</list>
+		</property>
+	</bean>
+	 
+	
+	 
+	<bean id="tilesConfigurer"
+		class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
+		<property name="definitions">
+			<list>
+				<value>/WEB-INF/config/tiles/template.xml</value>
+			</list>
+		</property>
+	</bean>
+	
+
+	<bean id="jsonView" class="org.springframework.web.servlet.view.json.MappingJackson2JsonView" />
+	  
+	<mvc:annotation-driven>
+		<mvc:message-converters>
+			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<value>text/html;charset=UTF-8</value>
+						<value>text/plain; charset=UTF-8</value>
+					</list>
+				</property>
+			</bean>
+			<bean class="org.springframework.http.converter.FormHttpMessageConverter">
+				<property name="charset">
+					<bean class="java.nio.charset.Charset" factory-method="forName">
+						<constructor-arg value="UTF-8" />
+					</bean>
+				</property>
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+	
+	<!-- application 확인용. tomcat에서는 이걸 열면 context가 안뜸..
+	<bean id="frameworkAppListener" class="com.dbs.mcare.framework.listener.MCareFrameworkApplicationListener"/> 
+	-->	
+	<bean id="serviceAppListener" class="com.dbs.mcare.listener.MCareServiceApplicationListener"/> 
+	
+</beans>
