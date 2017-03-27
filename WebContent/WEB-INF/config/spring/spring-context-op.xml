@@ -16,7 +16,7 @@
 	<context:component-scan base-package="com.dbs.mcare" />	
 	
 	<!-- 정적 환경설정 -->
-	<util:properties id="mcareConfig" location="WEB-INF/config/env-mcare.xml" />
+	<util:properties id="mcareConfig" location="WEB-INF/config/env-mcare-op.xml" />
 	<context:property-placeholder properties-ref="mcareConfig"/>	
 	
 	<tx:annotation-driven transaction-manager="mcareTransactionManager" />
