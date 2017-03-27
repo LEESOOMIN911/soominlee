@@ -48,7 +48,7 @@ public class AnnounceArrivalService {
 		
 		try { 
 			// api 호출 
-			return (List<Map<String, Object>>) this.apiCallService.execute(PnuhApi.WAITTIME_ARRIVECONFIRMTARGETLIST, reqMap); 
+			return this.apiCallService.execute(PnuhApi.WAITTIME_ARRIVECONFIRMTARGETLIST, reqMap).getResultAsList();
 		}
 		catch(ApiCallException ex) { 
 			if(this.logger.isDebugEnabled()) {
@@ -106,7 +106,7 @@ public class AnnounceArrivalService {
 		// 하나씩 돌면서 
 		for(final Map<String, Object> reqMap : reqMapList) { 
 			// 처리 
-			resultMap = (Map<String, Object>) this.apiCallService.execute(PnuhApi.WAITTIME_REQARRIVEDCONFIRM, reqMap); 
+			resultMap = this.apiCallService.execute(PnuhApi.WAITTIME_REQARRIVEDCONFIRM, reqMap).getResultAsMap(); 
 			// 요청에 결과담고 
 			reqMap.put("result", resultMap.get("result")); 
 			// 결과에 추가 

@@ -55,9 +55,12 @@ public class NextLocationController extends AbstractController {
 		} 
 
 		// 진료과 목록을 뽑아옴 
-		final List<Map<String, Object>> deptList = (List<Map<String, Object>>) this.apiCallService.execute(PnuhApi.ROADLIST_GETORDERDEPT, reqMap);
+		final List<Map<String, Object>> deptList = this.apiCallService.execute(PnuhApi.ROADLIST_GETORDERDEPT, reqMap).getResultAsList(); 
 		if(deptList == null || deptList.isEmpty()) {
-			this.logger.debug("가야할 진료과 목록이 없음.. ");
+			if(this.logger.isDebugEnabled()) { 
+				this.logger.debug("가야할 진료과 목록이 없음.. ");
+			} 
+			
 			return ResponseUtil.wrapEmptyResultListMap(); 
 		}
 		
@@ -72,7 +75,10 @@ public class NextLocationController extends AbstractController {
 			// 가야할 곳 목록을 뽑아옴 
 			deptRoadList = (List<Map<String, Object>>) this.apiCallService.execute(PnuhApi.ROADLIST_GETVISITINFO, reqMap); 
 			if(deptRoadList == null || deptRoadList.isEmpty()) {
-				this.logger.debug("진료과 내에 가셔야할 곳이 없음. 진료과 = " + deptMap.get("departmentNm") + ", 영수증=" + reqMap.get("receiptNo"));
+				if(this.logger.isDebugEnabled()) { 
+					this.logger.debug("진료과 내에 가셔야할 곳이 없음. 진료과 = " + deptMap.get("departmentNm") + ", 영수증=" + reqMap.get("receiptNo"));
+				} 
+				
 				continue; 
 			}
 			
@@ -152,46 +158,6 @@ public class NextLocationController extends AbstractController {
 		 
 		return resultList; 
 	}
-	
-	
-	
-//	/**
-//	 * 테스트용 데이터 
-//	 * @return
-//	 */
-//	private List<Map<String, Object>> getTestData() { 
-//		final List<Map<String, Object>> list = new ArrayList<Map<String, Object>>(); 
-//		List<Map<String, Object>> roadList = null; 
-//		Map<String, Object> map = null; 
-//		Map<String, Object> roadMap = null;
-//		
-//		// 
-//		map = new HashMap<String, Object>(); 
-//		map.put("receiptNo", "TEST_1"); 
-//		map.put("departmentNm", "[테스트] 진료과1"); 
-//		map.put("doctorNm", "허난설헌"); 
-//		roadMap = new HashMap<String, Object>(); 
-//		roadMap.put("내시경실", "내시경실"); 
-//		roadMap.put("주사실", "주사실"); 
-//		roadList = new ArrayList<Map<String, Object>>(); 
-//		roadList.add(roadMap); 
-//		map.put("nextLocationList", roadList); 
-//		list.add(map); 
-//		//
-//		map = new HashMap<String, Object>(); 
-//		map.put("receiptNo", "TEST_2"); 
-//		map.put("departmentNm", "[테스트] 진료과2"); 
-//		map.put("doctorNm", "양만춘"); 
-//		roadMap = new HashMap<String, Object>(); 
-//		roadMap.put("X-Ray실", "X-Ray실"); 
-//		roadMap.put("소변검사실", "소변검사실"); 
-//		roadList = new ArrayList<Map<String, Object>>(); 
-//		roadList.add(roadMap); 
-//		map.put("nextLocationList", roadList); 
-//		list.add(map); 		
-//		
-//		return list; 
-//	}
 }
 
 

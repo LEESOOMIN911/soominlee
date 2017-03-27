@@ -48,7 +48,6 @@ public class VersionCheckController {
 	 * @return
 	 * @throws MobileControllerException
 	 */
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/appVersion.json", method = RequestMethod.POST) 
 	@ResponseBody
 	public Map<String, Object> checkAppVersion(HttpServletRequest request, HttpServletResponse response,
@@ -63,7 +62,7 @@ public class VersionCheckController {
 		
 		try { 
 			// 이 메소드는 UI가 아닌 device에서 호출됨 
-			map = (Map<String, Object>) this.apiCallService.execute(PnuhApi.APP_CHECKAPPNAMEVERSION, paramMap);
+			map = this.apiCallService.execute(PnuhApi.APP_CHECKAPPNAMEVERSION, paramMap).getResultAsMap(); 
 		}
 		catch(final ApiCallException ex) { 
 			// 결과가 2개 조회되는 경우 CastException이 발생할것임 

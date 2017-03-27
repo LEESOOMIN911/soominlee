@@ -95,18 +95,24 @@ public class TokenService {
 		
 		
 		// 기존에는 등록된 정보 갯수를 확인했으나 이제 최근 로그인 시간을 업데이트 해둠 
-		Map<String, Object> resultMap = (Map<String, Object>) this.apiCallService.execute(PnuhApi.USER_TOKENS_UPDATETOKENDATE, map);
+		Map<String, Object> resultMap = this.apiCallService.execute(PnuhApi.USER_TOKENS_UPDATETOKENDATE, map).getResultAsMap(); 
 		
 		// 비정상적인 경우임 
 		if(resultMap == null || resultMap.isEmpty()) {
-			this.logger.error("토큰기반 로그인 시간 갱신실패. param : " + map.toString());
+			if(this.logger.isErrorEnabled()) { 
+				this.logger.error("토큰기반 로그인 시간 갱신실패. param : " + map.toString());
+			} 
+			
 			return false; 
 		}
 
 		// update가 적용된 행의 갯수를 체크하는 방식으로 insert가 필요한지 검사 
 		final long userCnt = ConvertUtil.convertInteger(resultMap.get(FrameworkConstants.UIRESPONSE_EMPTY_RESULT_KEY)); 
 		if(userCnt >= 1) { 
-			this.logger.debug("이미 등록된 토큰. pId=" + pId + ", platformType=" + platformType);
+			if(this.logger.isDebugEnabled()) { 
+				this.logger.debug("이미 등록된 토큰. pId=" + pId + ", platformType=" + platformType);
+			} 
+			
 		}
 		else {
 			// 등록이 안되어 있으면 저장 

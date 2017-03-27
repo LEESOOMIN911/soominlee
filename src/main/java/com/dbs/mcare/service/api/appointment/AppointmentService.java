@@ -34,12 +34,11 @@ public class AppointmentService {
 	 * @param reqMap
 	 * @throws MobileControllerException
 	 */
-	@SuppressWarnings("unchecked")
 	public Map<String, Object> cancel(Map<String, Object> reqMap) throws MobileControllerException {
 		// 단순 api call만 있지만, 여러군데에서 사용될 수 있어서 서비스단으로 옮겨온 케이스임 
 		try { 
 			// 예약취소 요청 
-			return (Map<String, Object>) this.apiCallService.execute(PnuhApi.RESERVATION_PUTRESCANCEL, reqMap); 
+			return this.apiCallService.execute(PnuhApi.RESERVATION_PUTRESCANCEL, reqMap).getResultAsMap(); 
 		}
 		catch(ApiCallException ex) { 
 			if(this.logger.isDebugEnabled()) {
@@ -56,7 +55,6 @@ public class AppointmentService {
 	 * @return
 	 * @throws MobileControllerException
 	 */
-	@SuppressWarnings("unchecked")
 	public List<Map<String, Object>> getList(Map<String, Object> reqMap) throws MobileControllerException {
 		// 결과맵 
 		final List<Map<String, Object>> resultMapList = new ArrayList<Map<String, Object>>(); 
@@ -65,7 +63,7 @@ public class AppointmentService {
 		List<Map<String, Object>> list = null; 
 		
 		// 예약조회 
-		list = (List<Map<String, Object>>) this.apiCallService.execute(PnuhApi.RESERVATION_GETREVLIST, reqMap); 
+		list = this.apiCallService.execute(PnuhApi.RESERVATION_GETREVLIST, reqMap).getResultAsList(); 
 		if(list != null && !list.isEmpty()) {
 			// 예약된 항목이 있으면 복사 
 			resultMapList.addAll(list); 
@@ -73,7 +71,7 @@ public class AppointmentService {
 		}
 		
 		// 인터넷 예약조회 
-		list = (List<Map<String, Object>>) this.apiCallService.execute(PnuhApi.RESERVATION_GETREVINTERNET, reqMap); 
+		list = this.apiCallService.execute(PnuhApi.RESERVATION_GETREVINTERNET, reqMap).getResultAsList(); 
 		if(list != null && !list.isEmpty()) {
 			resultMapList.addAll(list); 
 		}

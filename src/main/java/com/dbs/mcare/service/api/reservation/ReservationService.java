@@ -123,18 +123,12 @@ public class ReservationService {
 	 * @return
 	 * @throws MobileControllerException
 	 */
-	@SuppressWarnings("unchecked")
 	public Map<String, Object> reservation(HttpServletRequest request, HttpServletResponse response, Map<String, Object> reqMap ) throws MobileControllerException{
 		Map<String, Object> userMap = null; 
 		String data = null; 
 		
 		// 사용자 정보 구하기 
-		userMap = (Map<String, Object>) this.apiCallService.execute(PnuhApi.USER_USERINFO_GETUSERINFO, reqMap); 
-		
-//		// 디버깅 #6046 
-//		{
-//			logger.debug("사용자정보 ===== " + FrameworkConstants.NEW_LINE + ConvertUtil.convertStringForDebug(userMap));
-//		}
+		userMap = this.apiCallService.execute(PnuhApi.USER_USERINFO_GETUSERINFO, reqMap).getResultAsMap(); 
 		
 		// 유효성 확인 - 주소 
 		data = (String) userMap.get("address"); 

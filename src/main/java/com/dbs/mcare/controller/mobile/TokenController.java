@@ -37,7 +37,6 @@ public class TokenController extends AbstractController {
 	
 	
 	// 토큰을 가지고 있는 환자목록 반환 
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/getList.json", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object>  getList(HttpServletRequest request, HttpServletResponse response, 
@@ -56,7 +55,7 @@ public class TokenController extends AbstractController {
 		
 		// 기능호출 
 		try { 
-			resultList = (List<Map<String, Object>>) this.apiCallService.execute(PnuhApi.USER_USERINFO_GETDEVICETOKENUSERLIST, reqMap); 
+			resultList = this.apiCallService.execute(PnuhApi.USER_USERINFO_GETDEVICETOKENUSERLIST, reqMap).getResultAsList();
 		}
 		catch(ApiCallException ex) { 
 			if(this.logger.isDebugEnabled()) {

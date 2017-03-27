@@ -44,7 +44,6 @@ public class WaitingTimeController  extends AbstractController {
 	 * @return
 	 * @throws MobileControllerException
 	 */
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/waitingTime.json", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> getWaitingTime(HttpServletRequest request, HttpServletResponse response
@@ -60,7 +59,7 @@ public class WaitingTimeController  extends AbstractController {
 		 
 		List<Map<String, Object>> resultList = null; 
 		// 결과 받아와서 
-		resultList = (List<Map<String, Object>>) this.apiCallService.execute(PnuhApi.WAITTIME_GETWAITINGLIST, reqMap); 		
+		resultList = this.apiCallService.execute(PnuhApi.WAITTIME_GETWAITINGLIST, reqMap).getResultAsList(); 	
 		// 시간순으로 sort 
 		if(!resultList.isEmpty()) {
 			Collections.sort(resultList, new DateTimeComparator("date", "time"));

@@ -651,7 +651,7 @@ public class UserController {
 		
 		// Client 에서 파라미터 검사는 했을테니 SHA256변환만 수행..  
 		final String hashPwd = new HashUtil(this.configureService.getHashSalt()).sha256(passWordValue); 
-		final String key = this.userService.insertUser(pId, hashPwd); 
+		final String key = this.userService.insertUser(pId, hashPwd, false); 
 		
 		// 결과 맵 
 		final Map<String, String> resultMap = new HashMap<String, String>(); 
@@ -691,7 +691,7 @@ public class UserController {
 		Map<String, Object> resultMap = null; 
 		
 		try{
-			resultMap = (Map<String, Object>) this.apiCallService.execute(PnuhApi.USER_USERINFO_FINDPID, reqMap); 
+			resultMap = this.apiCallService.execute(PnuhApi.USER_USERINFO_FINDPID, reqMap).getResultAsMap(); 
 		} catch(ApiCallException ex){
 			if(this.logger.isDebugEnabled()) {
 				this.logger.debug("예외발생", ex); 
@@ -768,7 +768,6 @@ public class UserController {
 	 * @return
 	 * @throws MobileControllerException
 	 */
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/checkUserInfo.json", method = RequestMethod.POST)
 	public Map<String, Object> checkUserInfo(HttpServletRequest request, HttpServletResponse response, 
 			@RequestBody Map<String, Object> reqMap) throws MobileControllerException { 
@@ -789,7 +788,7 @@ public class UserController {
 		Map<String, Object> resultMap = null; 
 		
 		try { 
-			resultMap = (Map<String, Object>) this.apiCallService.execute(PnuhApi.USER_USERINFO_GETUSERINFO, reqMap); 
+			resultMap = this.apiCallService.execute(PnuhApi.USER_USERINFO_GETUSERINFO, reqMap).getResultAsMap(); 
 		}
 		catch(ApiCallException ex) { 
 			if(this.logger.isDebugEnabled()) {
@@ -863,7 +862,6 @@ public class UserController {
 	 * @return
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/getCarNo.json", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object>  getCarNo(HttpServletRequest request, HttpServletResponse response, 
@@ -880,7 +878,7 @@ public class UserController {
 		Map<String, Object> resultMap = null; 
 		
 		try { 
-			resultMap = (Map<String, Object>) this.apiCallService.execute(PnuhApi.USER_USERINFO_GETUSERINFO, reqMap); 
+			resultMap = this.apiCallService.execute(PnuhApi.USER_USERINFO_GETUSERINFO, reqMap).getResultAsMap();
 		}
 		catch(ApiCallException ex) { 
 			if(this.logger.isDebugEnabled()) {
@@ -921,7 +919,7 @@ public class UserController {
 
 		try { 
 			// 호출 및 결과 반환 
-			return ResponseUtil.wrapResultMap( this.apiCallService.execute(PnuhApi.PARK_CARNO, reqMap) );
+			return ResponseUtil.wrapResultMap( this.apiCallService.execute(PnuhApi.PARK_CARNO, reqMap).getResultAsMap() );
 		}
 		catch(ApiCallException ex) { 
 			if(this.logger.isDebugEnabled()) {
@@ -949,7 +947,7 @@ public class UserController {
 		reqMap = ParamMappingUtil.requestParam(request, reqMap); 
 		// 실행 
 		try { 
-			return ResponseUtil.wrapResultMap( this.apiCallService.execute(PnuhApi.USER_USERINFO_GETUSERINFO, reqMap) ); 
+			return ResponseUtil.wrapResultMap( this.apiCallService.execute(PnuhApi.USER_USERINFO_GETUSERINFO, reqMap).getResultAsMap() ); 
 		}
 		catch(ApiCallException ex) { 
 			if(this.logger.isDebugEnabled()) {

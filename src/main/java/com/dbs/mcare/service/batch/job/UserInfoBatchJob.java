@@ -48,7 +48,6 @@ public class UserInfoBatchJob extends BatchJob {
 		super("연령별/지역별사용자통계");
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void execute(Date aggDt) throws Exception {
 		// 임시테이블 정리. 실패 시 데이터가 유효하지 않으므로 더 이상 처리하지 않음. 그리고 간단한 DELETE문이라 에러나기도 어려울것으로 예상됨  
@@ -58,7 +57,7 @@ public class UserInfoBatchJob extends BatchJob {
 		List<Map<String, Object>> pidList = null; 
 	
 		try { 
-			pidList = (List<Map<String, Object>>) this.apiCallService.execute(PnuhApi.USER_USERINFO_GETPIDLIST, Collections.<String, Object> emptyMap()); 
+			pidList = this.apiCallService.execute(PnuhApi.USER_USERINFO_GETPIDLIST, Collections.<String, Object> emptyMap()).getResultAsList(); 
 		}
 		catch(ApiCallException ex) { 
 			if(logger.isErrorEnabled()) { 
@@ -85,7 +84,7 @@ public class UserInfoBatchJob extends BatchJob {
 			Map<String, Object> pInfoMap = null; 
 			
 			try { 
-				pInfoMap = (Map<String, Object>) this.apiCallService.execute(PnuhApi.USER_USERINFO_GETUSERINFO, "pId", pId); 
+				pInfoMap = this.apiCallService.execute(PnuhApi.USER_USERINFO_GETUSERINFO, "pId", pId).getResultAsMap(); 
 			}
 			catch(ApiCallException ex) { 
 				if(logger.isErrorEnabled()) { 

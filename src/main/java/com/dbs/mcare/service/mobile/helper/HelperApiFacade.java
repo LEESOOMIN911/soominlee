@@ -68,8 +68,10 @@ public class HelperApiFacade {
 		try { 
 			this.apiCallService.execute(PnuhApi.HELPERPUSH_TICKET, map); 
 		}
-		catch(ApiCallException ex) {
-			this.logger.error("Push 요청 실패", ex); 
+		catch(final ApiCallException ex) {
+			if(this.logger.isErrorEnabled()) { 
+				this.logger.error("번호표 뽑으라는 Push 요청 실패", ex); 
+			} 
 		}
 	}
 	
@@ -91,8 +93,10 @@ public class HelperApiFacade {
 		try { 
 			this.apiCallService.execute(PnuhApi.HELPERPUSH_APPOINTMENTSEARCH, map); 
 		}
-		catch(ApiCallException ex) { 
-			this.logger.error("Push 요청 실패", ex); 
+		catch(final ApiCallException ex) { 
+			if(this.logger.isErrorEnabled()) { 
+				this.logger.error("오늘 예약내역 전달을 위한 Push 요청 실패", ex); 
+			} 
 		}
 	}
 
@@ -128,7 +132,9 @@ public class HelperApiFacade {
 			this.apiCallService.execute(PnuhApi.HELPERPUSH_PARKING, map); 
 		}
 		catch(ApiCallException ex) { 
-			this.logger.error("Push 요청 실패", ex); 
+			if(this.logger.isErrorEnabled()) { 
+				this.logger.error("차량번호를 알려주기 위한 Push 요청 실패", ex); 
+			} 
 		}
 	}
 	/**
@@ -168,7 +174,9 @@ public class HelperApiFacade {
 			}
 			catch(final MobileControllerException ex) { 
 				// 시스템 오류가 발생했을때 굳이 push로 보낼 필요는 없겠지 
-				this.logger.error("다음 내원일 구하기 실패", ex);
+				if(this.logger.isErrorEnabled()) { 
+					this.logger.error("다음 내원일 구하기 실패", ex);
+				} 
 				return; 				
 			}
 		}
@@ -189,7 +197,9 @@ public class HelperApiFacade {
 				this.apiCallService.execute(PnuhApi.HELPERPUSH_RESERVATION, map); 
 			}
 			catch(ApiCallException ex) { 
-				this.logger.error("Push 요청 실패", ex); 
+				if(this.logger.isErrorEnabled()) { 
+					this.logger.error("진료예약할건지 물어보는 Push 요청 실패", ex); 
+				} 
 			}
 		}
 		// 다음 예약일이 있으면 알려주기 
@@ -207,7 +217,9 @@ public class HelperApiFacade {
 				this.apiCallService.execute(PnuhApi.HELPERPUSH_APPOINTMENTSEARCH, map); 	
 			}
 			catch(ApiCallException ex) { 
-				this.logger.error("Push 요청 실패", ex); 
+				if(this.logger.isErrorEnabled()) { 
+					this.logger.error("다음 진료예약일 알려주는 Push 요청 실패", ex); 
+				} 
 			}
 		}
 	}
@@ -323,7 +335,6 @@ public class HelperApiFacade {
 	 * @param pId
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	public List<Map<String, Object>> getTodayReservation(String pId) { 
 		final Map<String, Object> reqMap = new HashMap<String, Object>(); 
 		final String today = DateUtil.convertYYYYMMDD(Calendar.getInstance().getTime()); 
@@ -333,7 +344,7 @@ public class HelperApiFacade {
 		reqMap.put("endDt", today); 
 		
 		// 오늘 예약 반환 
-		return (List<Map<String, Object>>) this.apiCallService.execute(PnuhApi.RESERVATION_GETREVLIST, reqMap); 
+		return this.apiCallService.execute(PnuhApi.RESERVATION_GETREVLIST, reqMap).getResultAsList(); 
 	}
 
 	

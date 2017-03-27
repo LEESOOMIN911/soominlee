@@ -105,15 +105,13 @@ public class UserRegisterService {
 	 * @param phoneNo
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	public Map<String, Object> getPatientInfo(String pName, String phoneNo) {
-
 		Map<String, Object> reqMap = new HashMap<String, Object>();
 		reqMap.put("pName", pName);
 		reqMap.put("cellphoneNo", phoneNo);
 		
 		try { 
-			return (Map<String, Object>) this.apiCallService.execute(PnuhApi.USER_USERINFO_FINDPID, reqMap); 
+			return this.apiCallService.execute(PnuhApi.USER_USERINFO_FINDPID, reqMap).getResultAsMap(); 
 		}
 		catch(ApiCallException ex) { 
 			if(this.logger.isDebugEnabled()) {
