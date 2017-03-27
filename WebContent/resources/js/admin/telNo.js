@@ -87,8 +87,14 @@ var mcare_admin_telNo = function(){
 	 */
 	function gridActionComplete( e ){
 		var result = self.util.parseJson( e.responseText );
-		if( result.msg )
-			alert( result.msg );
+		if( result.msg ){
+			if(result.type === "AdminControllerException"){
+				alert("전화번호 형식이 유효하지 않습니다. 지역번호-국번-전화번호 형태로 입력해주세요")
+			}else{
+				alert( result.msg );
+			}
+		}
+			
 		$grid.data("kendoGrid").dataSource.read(); 
 	};
 	/**
@@ -124,7 +130,13 @@ var mcare_admin_telNo = function(){
                 ,{ field: "buildingDesc", title: "건물명", width: 120, attributes: {style: "text-align: center;"}}
                 ,{ field: "roomDesc", title: "호수", width: 120, attributes: {style: "text-align: center;"}}
                 ,{ field: "telnoOrder", title: "순서", width: 50, attributes: {style: "text-align: center;"}}
-                ,{ field: "telValue", title: "전화번호", width: 150, attributes: {style: "text-align: center;"}}
+                ,{ field: "telValue", title: "전화번호", width: 150, attributes: {style: "text-align: center;"},
+                 	editor : function(container , options){
+                    	var input = $("<input/>");
+                    	input.attr({"name" : options.field , "data-bind" : "value:telValue" , "placeholder" : "지역번호-국번-전화번호"}).addClass("k-input k-textbox");
+                    	input.appendTo(container);
+                    }
+                 }
                 ,{ command: ["edit", "destroy"], title: "&nbsp;", width: 120, attributes: {style: "text-align: center;"}}
             ],
             editable: {
