@@ -37,8 +37,6 @@ public class LoginService {
 	private LogService logService; 
 	@Autowired 
 	private TokenService tokenService; 
-//	@Autowired 
-//	private MCareApiCallService apiService; 	
 	@Autowired 
 	private PnuhConfigureService configureService; 
 	
@@ -88,15 +86,25 @@ public class LoginService {
 			}
 		}
 		catch(final PwdOverDueException pex) { 
-			this.logger.error("로그인 실패. id : " + pId + ", " + pex.getClass().getSimpleName());
+			if(this.logger.isErrorEnabled()) { 
+				this.logger.error("로그인 실패. id : " + pId + ", " + pex.getClass().getSimpleName());
+			} 
+			
 			throw pex; 			
 		}		
 		catch(final LoginException ex) { 
-			this.logger.error("로그인 실패. id : " + pId + ", " + ex.getClass().getSimpleName());
+			// id/pwd등이 달라서 로그인에 실패하는 것은 늘상 있는 일이므로 debug레벨로 찍음 
+			if(this.logger.isDebugEnabled()) { 
+				this.logger.debug("로그인 실패. id : " + pId + ", " + ex.getClass().getSimpleName());
+			} 
+			
 			throw ex; 
 		}
 		catch(final Exception ex) { 
-			this.logger.error("로그인 관련 처리 실패", ex);
+			if(this.logger.isErrorEnabled()) { 
+				this.logger.error("로그인 관련 처리 실패", ex);
+			} 
+			
 			throw new MobileControllerException(ex); 
 		}
 		

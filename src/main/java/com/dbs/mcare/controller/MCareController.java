@@ -12,7 +12,6 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,7 +24,7 @@ import org.springframework.web.servlet.HandlerMapping;
 
 import com.dbs.mcare.exception.mobile.MobileControllerException;
 import com.dbs.mcare.framework.FrameworkConstants;
-import com.dbs.mcare.framework.api.executor.ApiExecuteDelegator;
+import com.dbs.mcare.framework.api.cache.ApiResourceService;
 import com.dbs.mcare.framework.exception.service.LoginException;
 import com.dbs.mcare.framework.service.menu.MenuLocaleResourceService;
 import com.dbs.mcare.framework.util.AESUtil;
@@ -43,20 +42,19 @@ public class MCareController {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired
-	@Qualifier("apiExecuteDelegator")
-	private ApiExecuteDelegator apiDelegator;
-	@Autowired
-	private RememberMeCookieBaker cookieBaker;	
+	private ApiResourceService apiResourceService; 
 	@Autowired
 	private MenuLocaleResourceService cacheLoader;
 	@Autowired 
-	private PnuhConfigureService configureService; 
+	private RememberMeCookieBaker cookieBaker;
 	@Autowired 
 	private MCareUserService userService; 		
 	@Autowired
 	private UserRegisterService registerService;
 	@Autowired 
 	private LoginService loginService; 
+	@Autowired 
+	private PnuhConfigureService configureService; 
 
 	
 	
@@ -101,8 +99,12 @@ public class MCareController {
 	@RequestMapping(value = "/login.page", method = RequestMethod.GET)
 	public Model login(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 		if(this.logger.isDebugEnabled()) { 
-			this.logger.debug("request : " + request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE));
-			this.logger.debug("user Agent : " + HttpRequestUtil.getUserAgent(request));
+			StringBuilder builder = new StringBuilder(FrameworkConstants.NEW_LINE); 
+			
+			builder.append("request : ").append(request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE)).append(FrameworkConstants.NEW_LINE); 
+			builder.append("user Agent : ").append(HttpRequestUtil.getUserAgent(request)).append(FrameworkConstants.NEW_LINE);
+			
+			this.logger.debug(builder.toString());
 		}
 		
 		// 세션 비활성화 처리 
@@ -228,66 +230,84 @@ public class MCareController {
 			this.logger.debug("## cacheReload process start...");
 		}
 		
+		// 구조적 유효성 검사 
 		if (payload == null || payload.isEmpty()) {
-			this.logger.debug("payload 없어서 실패처리");
-			return 0;
-			
-		} else {
-			if (payload.containsKey("requestTimeMillis") == false) {
-				this.logger.debug("필수키가 없어서 실패처리");
-				return 0;
-			}
-			
-			String requestTimeMillis = (String) payload.getFirst("requestTimeMillis");
-			final String encryptionKey = (String) payload.getFirst("encryptionKey");
-			String target = (String) payload.getFirst("target");
-			
-			try { 
-				AESUtil aesUtil = new AESUtil(this.configureService.getAesIv()); 
-				requestTimeMillis = aesUtil.decrypt(requestTimeMillis, encryptionKey);
-				
-			} catch(final Exception ex) { 
-				this.logger.error("요청시간 복호화 실패", ex);
-				throw new MobileControllerException(ex); 
-			}
-			
-			final long availableTime = System.currentTimeMillis() - Long.parseLong(requestTimeMillis);
-			if (availableTime > 3000) { // 요청이 3초 이상 지난 경우 실패 
-				this.logger.debug("요청시간 만료로 실패처리");
-				return 0;
-			}
-			
-			try {
-				// 공백제거 
-				target = target.trim(); 
-				if (this.logger.isDebugEnabled()) {
-					this.logger.debug("## cache target : {}", target);
-				}
-				
-				if (FrameworkConstants.CACHE_TARGET_API.equals(target) == true) { // API 캐시
-					this.apiDelegator.loaded();
-					this.logger.debug("api 리로드 완료");
-					return 1;
-				
-				} 
-				else if (FrameworkConstants.CACHE_TARGET_API.equals(target) == true) { // 메뉴 캐시
-					this.cacheLoader.loaded();
-					this.logger.debug("menu 리로드 완료");
-					return 1;
-				}
-				else {
-					this.logger.error("준비되지 않은 유형의 캐시 리로딩 요청을 수신함 : " + target);
-				}
-				
+			if(this.logger.isErrorEnabled()) { 
+				this.logger.error("payload 없어서 실패처리");
 			} 
-			catch (final Exception e) {
-				this.logger.error("## {} 캐시 리로드 실패", target, e);
-				return 0;
+			
+			return 0;
+		} 
+			
+		// 구조적 유효성 검사 
+		if (payload.containsKey("requestTimeMillis") == false) {
+			if(this.logger.isErrorEnabled()) { 
+				this.logger.error("필수키가 없어서 실패처리");
+			} 
+			
+			return 0;
+		}
+			
+		// 요청의 의미적 유효성 검사 
+		String requestTimeMillis = (String) payload.getFirst("requestTimeMillis");
+		final String encryptionKey = (String) payload.getFirst("encryptionKey");
+		String target = (String) payload.getFirst("target");
+			
+		try { 
+			AESUtil aesUtil = new AESUtil(this.configureService.getAesIv()); 
+			requestTimeMillis = aesUtil.decrypt(requestTimeMillis, encryptionKey);
+		} 
+		catch(final Exception ex) { 
+			if(this.logger.isErrorEnabled()) { 
+				this.logger.error("요청시간 복호화 실패", ex);
+			}
+			throw new MobileControllerException(ex); 
+		}
+			
+		final long availableTime = System.currentTimeMillis() - Long.parseLong(requestTimeMillis);
+		if (availableTime > 3000) { // 요청이 3초 이상 지난 경우 실패 
+			if(this.logger.isErrorEnabled()) { 
+				this.logger.error("요청시간 만료로 실패처리");
+			} 
+		
+			return 0;
+		}
+			
+		
+		// 처리시작 
+		try {
+			// 공백제거 
+			target = target.trim(); 
+			if (this.logger.isDebugEnabled()) {
+				this.logger.debug("## cache target : {}", target);
 			}
 			
-		}
+			// API 캐시
+			if (FrameworkConstants.CACHE_TARGET_API.equals(target)) { 
+				this.apiResourceService.loaded();
+				return 1;
+			} 
+			// 메뉴 캐시
+			else if (FrameworkConstants.CACHE_TARGET_API.equals(target)) { 
+				this.cacheLoader.loaded();
+				return 1;
+			}
+			// 에러 
+			else {
+				if(this.logger.isErrorEnabled()) { 
+					this.logger.error("준비되지 않은 유형의 캐시 리로딩 요청을 수신하여 무시함. " + target);
+				}
+				
+				return 0; 
+			} 
+		} 
+		catch (final Exception e) {
+			if(this.logger.isErrorEnabled()) { 
+				this.logger.error("## {} 캐시 리로드 실패", target, e);
+			}
 		
-		return 0;
+			return 0;
+		}
 	}
 
 	

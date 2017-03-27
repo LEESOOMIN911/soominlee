@@ -39,10 +39,6 @@ import com.dbs.mcare.service.PnuhConfigureService;
 @RequestMapping("/admin/menu")
 public class MenuController {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
-	
-//	@Autowired
-//	@Qualifier("apiExecuteDelegator")
-//    private ApiExecuteDelegator executor;
 	@Autowired 
 	private PnuhConfigureService configureService; 
 	@Autowired
@@ -57,7 +53,10 @@ public class MenuController {
 			model.addAttribute("supportedLanguages", this.configureService.getI18nSupported().split(","));
 		}
 		catch(final Exception ex) {
-			this.logger.error("", ex);
+			if(this.logger.isErrorEnabled()) { 
+				this.logger.error("view.page 정보구성 실패", ex);
+			} 
+			
 			throw new AdminControllerException(ex); 
 		}
 		
@@ -71,7 +70,10 @@ public class MenuController {
 			return this.menuService.getList(menu);
 		}
 		catch(final MCareServiceException ex) {
-			this.logger.error("메뉴 가져오기 실패", ex);
+			if(this.logger.isErrorEnabled()) { 
+				this.logger.error("메뉴 가져오기 실패", ex);
+			}
+			
 			throw new AdminControllerException(ex); 
 		}
 	}
@@ -83,7 +85,10 @@ public class MenuController {
 			this.menuService.save(menu);
 		}
 		catch(final MCareServiceException ex) {
-			this.logger.error("메뉴 저장실패. menu : " + menu, ex);
+			if(this.logger.isErrorEnabled()) { 
+				this.logger.error("메뉴 저장실패. menu : " + menu, ex);
+			} 
+			
 			throw new AdminControllerException(ex); 
 		}
 		
@@ -111,46 +116,69 @@ public class MenuController {
 				payload.add("target", FrameworkConstants.CACHE_TARGET_MENU);
 			} 
 	        catch (final Exception e) {
-				this.logger.error("키 복원실패. 리로드하지 않음", e);
-				throw e; 
+	        	if(this.logger.isErrorEnabled()) { 
+	        		this.logger.error("키 복원실패. 리로드하지 않음", e);
+	        	}
+	        
+				throw new AdminControllerException(e); 
 			}
 	        
 	        final String[] reloadUrls = this.configureService.getCacheReloadUrls().split(",");
 	        for (final String reloadUrl : reloadUrls) {
 	        	// 비교 
-	        	this.logger.debug("대상 : " + reloadUrl + ", 요청 : " + this.configureService.getServerServiceAddr());
+	        	if(this.logger.isDebugEnabled()) { 
+	        		this.logger.debug("대상 : " + reloadUrl + ", 요청 : " + this.configureService.getServerServiceAddr());
+	        	} 
+	        	
 	        	// 현재 서버는 즉시 리로드
 	        	if (reloadUrl.equals(this.configureService.getServerServiceAddr()) == true) {
-	        		this.logger.error("현재 컨테이너 리로드 : {}", reloadUrl);
-	        		//this.executor.loaded();
+	        		if(this.logger.isDebugEnabled()) { 
+	        			this.logger.debug("현재 컨테이너 리로드 : {}", reloadUrl);
+	        		} 
+	        		
 	        		this.cacheLoader.loaded();
 	        	} 
 	        	// 다른 서버는 http 요청을 만들어서 해당 서버에 의뢰 
 	        	else {
 	        		final String urlIncludeContextPath = reloadUrl + request.getContextPath() + FrameworkConstants.URI_CACHE_RELOAD;
-	        		this.logger.error("다른 컨테이너 리로드로 인식함 : {}", urlIncludeContextPath);
 	        		final int result = restTemplate.postForObject(urlIncludeContextPath, new HttpEntity<MultiValueMap<String, String>>(payload, headers), Integer.class);
 	        		if (result == 0) {
 	        			failedServerUrls.add(urlIncludeContextPath);
-	        			this.logger.debug("- 다른 컨테이너 리로드 실패로 인식함 : " + urlIncludeContextPath);
-	        		}
+	        			
+	        			if(this.logger.isErrorEnabled()) { 
+	        				this.logger.debug("- 다른 컨테이너 리로드 실패로 인식함 : " + urlIncludeContextPath);
+	        			}
+	        		}	
 	        	}
 	        }
 	        
 	        if (failedServerUrls.size() > 0) {
-	        	for (final String serverUrl : failedServerUrls) {
-	        		this.logger.error("캐시 리로드실패 : {}", serverUrl);
+	        	if(this.logger.isErrorEnabled()) {
+	        		StringBuilder builder = new StringBuilder("menu 캐쉬 리로드 실패 === ");
+	        		builder.append(FrameworkConstants.NEW_LINE); 
+	        		
+	        		for (final String serverUrl : failedServerUrls) {
+		        		builder.append(serverUrl).append(FrameworkConstants.NEW_LINE); 
+		        	}	        		
+	        		
+	        		this.logger.error(builder.toString());
 	        	}
+	        	
 	        	return 0;
 	        } 
 	        else {
-	        	this.logger.error("캐시 리로드성공");
+	        	if(this.logger.isInfoEnabled()) {
+	        		this.logger.info("캐시 리로드성공");
+	        	}
 	        	return 1;
 	        }
 	        
 		} 
 		catch (final Exception e) {
-			this.logger.error("캐시 리로드실패");
+			if(this.logger.isErrorEnabled()) { 
+				this.logger.error("캐시 리로드실패", e);
+			} 
+			
 			throw new AdminControllerException(e); 
 		}
 	}
@@ -161,7 +189,10 @@ public class MenuController {
 			this.menuService.remove(menuId);
 		}
 		catch(final MCareServiceException ex) { 
-			this.logger.error("메뉴 삭제실패. menuId : " + menuId);
+			if(this.logger.isErrorEnabled()) { 
+				this.logger.error("메뉴 삭제실패. menuId : " + menuId);
+			} 
+			
 			throw new AdminControllerException(ex); 
 		}
 	}
@@ -173,7 +204,10 @@ public class MenuController {
 			return this.menuService.getMenuI18nListByMenuId(menuId); 
 		}
 		catch(final MCareServiceException ex) {
-			this.logger.error("다국어 가져오기 실패. menuId : " + menuId);
+			if(this.logger.isErrorEnabled()) { 
+				this.logger.error("다국어 가져오기 실패. menuId : " + menuId);
+			} 
+			
 			throw new AdminControllerException(ex); 
 		}
 	}
@@ -192,7 +226,10 @@ public class MenuController {
     		return this.menuService.getMenuParamListByMenuId(menuId);
     	}
     	catch(final Exception ex) {
-    		this.logger.error("MENU 파리미터 조회 실패. menuId : " + menuId, ex);
+    		if(this.logger.isErrorEnabled()) { 
+    			this.logger.error("MENU 파리미터 조회 실패. menuId : " + menuId, ex);
+    		} 
+    		
     		throw new AdminControllerException(ex); 
     	}
     }

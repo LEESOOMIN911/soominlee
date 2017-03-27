@@ -14,6 +14,7 @@ import org.springframework.util.StringUtils;
 import com.dbs.mcare.exception.admin.AdminControllerException;
 import com.dbs.mcare.exception.mobile.ApiCallException;
 import com.dbs.mcare.exception.mobile.MobileControllerException;
+import com.dbs.mcare.framework.exception.service.TypeCastingException;
 import com.dbs.mcare.framework.service.MessageService;
 import com.dbs.mcare.framework.util.HashUtil;
 import com.dbs.mcare.service.PnuhConfigureService;
@@ -56,7 +57,6 @@ public class AdminUserService {
 	 * @return 결과 {success:true/false, message:결과메시지}. 실패면 그 이유. 성공이면 어디로 전화번호를 넘겼는지 안내. 
 	 * @throws MobileControllerException
 	 */
-	@SuppressWarnings("unchecked")
 	public Map<String, Object> registerUser(String pId, String phoneNumber, HttpServletRequest request) throws MobileControllerException {
 		//Message Resource
 		Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -74,7 +74,7 @@ public class AdminUserService {
 		Map<String, Object> userMap = null;
 		
 		try { 
-			userMap = (Map<String, Object>) this.apiCallService.execute(PnuhApi.USER_USERINFO_GETUSERINFO, "pId", pId); 
+			userMap = this.apiCallService.execute(PnuhApi.USER_USERINFO_GETUSERINFO, "pId", pId).getResultAsMap();
 			//기간계에 환자 번호가 존재하지 않는 경우
 			if(userMap == null || userMap.isEmpty()) {
 				resultMap.put("message", this.messageService.getMessage("mobile.message.register022", request));
@@ -107,7 +107,7 @@ public class AdminUserService {
 			//패스워드 생성
 			final String hashPwd = new HashUtil(this.configureService.getHashSalt()).sha256(tmpPwd);
 			//SMS전송을 위한 요건이 되나 판단해서 보내자
-			this.userService.insertUser(pId, hashPwd);
+			this.userService.insertUser(pId, hashPwd, true);
 			
 			//SMS 전송 문자 ex) 홍길동님의 임시패스워드는 ab20160101!@입니다.
 			String tmpPWDMessage = this.messageService.getMessage("admin.user.register.message", request, new String[]{pName, tmpPwd});
@@ -139,7 +139,6 @@ public class AdminUserService {
 	 * @return
 	 * @throws MobileControllerException
 	 */
-	@SuppressWarnings("unchecked")
 	public Map<String, Object> checkUser(String pId, HttpServletRequest request) throws MobileControllerException {
 		//Local에서 테스트 하는 경우 아래 기능을 전부 주석처리해주세요.
 		MCareUser userInfo = null; 
@@ -165,7 +164,7 @@ public class AdminUserService {
 		}
 		
 		try { 
-			Map<String, Object> userMap = (Map<String, Object>) this.apiCallService.execute(PnuhApi.USER_USERINFO_GETUSERINFO, "pId", pId); 
+			Map<String, Object> userMap = this.apiCallService.execute(PnuhApi.USER_USERINFO_GETUSERINFO, "pId", pId).getResultAsMap(); 
 
 			//기간계에 환자 번호가 존재하지 않는 경우
 			if(userMap == null || userMap.isEmpty()) {
@@ -173,7 +172,7 @@ public class AdminUserService {
 				return resultMap;
 			}
 		}
-		catch(ApiCallException ex) { 
+		catch(TypeCastingException | ApiCallException ex) { 
 			if(this.logger.isDebugEnabled()) {
 				this.logger.debug("예외발생", ex); 
 			}

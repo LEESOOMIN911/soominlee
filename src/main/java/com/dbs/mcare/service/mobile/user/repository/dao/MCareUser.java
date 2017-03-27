@@ -1,6 +1,5 @@
 package com.dbs.mcare.service.mobile.user.repository.dao;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -46,11 +45,9 @@ public class MCareUser extends GeneralUser {
 	 */
 	public static MCareUser convert(Map<String, Object> userMap) { 
 		final MCareUser user = new MCareUser(); 
-		final BigDecimal b = (BigDecimal) userMap.get("loginFailCnt"); 
 		
 		user.setpId((String) userMap.get("pId"));
-//		user.setpName((String) userMap.get("pName"));
-		user.setLoginFailCnt(ConvertUtil.convertInteger(b));
+		user.setLoginFailCnt(ConvertUtil.convertInteger(userMap.get("loginFailCnt")));
 		user.setPasswordValue((String) userMap.get("passwordValue"));
 		user.setPasswordUpdateDt((Date) userMap.get("passwordUpdateDt"));
 		user.setLocalCipherKeyValue((String) userMap.get("localCipherKeyValue"));

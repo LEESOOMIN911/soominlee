@@ -11,9 +11,15 @@
 	<!-- 정상로그용 -->
 	<appender name="fileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
 	    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-	    	<fileNamePattern>../logs/mcare.%d{yyyy-MM-dd}.log</fileNamePattern>
-	    	<maxHistory>10</maxHistory>
+	    	<fileNamePattern>../logs/mcare_log_%d{yyyy-MM-dd}_%i.log</fileNamePattern>
+	    	<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<!-- 100MB 마다 로그파일 새로 생성 -->
+				<maxFileSize>100MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
 	    </rollingPolicy>
+	    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>INFO</level>
+		</filter>
 		<encoder>
 			<pattern>@@ %date{MM-dd HH:mm:ss.SSS}|%-5level|%throwable{4}%logger{0}.%M\(%line\)::%msg | ${application-name:-mcare} %thread %n</pattern>
 		</encoder>
@@ -22,42 +28,40 @@
 	<!-- 에러로그용 -->
 	<appender name="errorFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
 	    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-	    	<fileNamePattern>../logs/mcare_error.%d{yyyy-MM-dd}.log</fileNamePattern>
-	    	<maxHistory>10</maxHistory>
+	    	<fileNamePattern>../logs/mcare_error_%d{yyyy-MM-dd}_%i.log</fileNamePattern>
+	    	<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<!-- 100MB 마다 로그파일 새로 생성 -->
+				<maxFileSize>100MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
 	    </rollingPolicy>
-		<filter class="ch.qos.logback.classic.filter.LevelFilter">
-			<level>ERROR</level>
-			<onMatch>ACCEPT</onMatch>
-			<onMismatch>DENY</onMismatch>
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>WARN</level>
 		</filter>	    
 		<encoder>
 			<pattern>@@ %date{MM-dd HH:mm:ss.SSS}|%-5level|%throwable{10}%logger{0}.%M\(%line\)::%msg | ${application-name:-mcare} %thread %n</pattern>
 		</encoder>
 	</appender>	
 	
-	<!-- 로그 저장용. mcare2계정에 붙은것은 의도적인 것임 -->
-	<!-- 
-    <appender name="db" class="ch.qos.logback.classic.db.DBAppender">
-        <connectionSource class="ch.qos.logback.core.db.DriverManagerConnectionSource">
-            <driverClass>oracle.jdbc.driver.OracleDriver</driverClass>
-            <url>jdbc:oracle:thin:@//localhost:1521/Mcare</url>
-            <user>mcare2</user>
-            <password>mcare2</password> 
-        </connectionSource>
-		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+	<!-- redmine 등록용 
+		redmineUrl - 이슈서버 URL
+		apiAccessKey - API를 사용하여 일감을 등록할 계정 API key
+		projectKey - 등록될 프로젝트 키 ex) http://mcare-issue.idatabank.com/projects/mcare-exreporter-2017
+		assigneeId - 일감담당자 - (로그인계정 클릭하면 보이는 URL에서 확인)
+	-->
+	<appender name="redmineAppender" class="com.dbs.mcare.framework.service.log.appender.RedmineAppender" >
+		<redmineUrl>http://mcare-issue.idatabank.com/</redmineUrl>
+		<apiAccessKey>c2324174c2aca4df23dbbf534fd011e8419d9710</apiAccessKey>
+		<projectKey>mcare-error-core</projectKey>
+		<assigneeId>12</assigneeId>
+		<siteName>MCARE_DEV</siteName>
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
 			<level>ERROR</level>
-			<onMatch>ACCEPT</onMatch>
-			<onMismatch>DENY</onMismatch>
-		</filter>	  
+		</filter>
 		<encoder>
-			<pattern>%msg</pattern>
-		</encoder>        
-    </appender>		
-    <appender name="async_db" class="ch.qos.logback.classic.AsyncAppender">
-            <appender-ref ref="db" />
-            <includeCallerData>true</includeCallerData>
-    </appender>
-     -->
+			<pattern>@@ %date{MM-dd HH:mm:ss.SSS}|%-5level|%throwable{4}%logger{0}.%M\(%line\)::%msg | ${application-name:-mcare} %thread %n</pattern>
+		</encoder>
+	</appender>
+
 
 	<logger name="com.dbs.mcare">
 	    <level value="debug"/> 
@@ -71,6 +75,30 @@
 	<logger name="org.springframework">
 	    <level value="warn"/> 
 	</logger> 
+	<logger name="com.dbs.mcare.framework.service.admin.agreement.repository">
+	    <level value="info"/> 
+	</logger>
+	<logger name="com.dbs.mcare.framework.service.admin.api.repository">
+	    <level value="info"/> 
+	</logger>	
+	<logger name="com.dbs.mcare.framework.service.admin.history.repository">
+	    <level value="info"/> 
+	</logger>	
+	<logger name="com.dbs.mcare.framework.service.admin.manager.repository">
+	    <level value="info"/> 
+	</logger>	
+	<logger name="com.dbs.mcare.framework.service.admin.menu.repository">
+	    <level value="info"/> 
+	</logger>
+	<logger name="com.dbs.mcare.framework.service.admin.push.repository">
+	    <level value="info"/> 
+	</logger>
+	<logger name="com.dbs.mcare.framework.service.admin.telno.repository">
+	    <level value="info"/> 
+	</logger>	
+	<logger name="com.dbs.mcare.framework.service.admin.version.repository">
+	    <level value="info"/> 
+	</logger>						
 	<!-- 디버깅용 
 	<logger name="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
 	    <level value="debug"/> 
@@ -90,13 +118,14 @@
 	<logger name="org.apache.http">
 	    <level value="warn"/> 
 	</logger>
+	<logger name="com.taskadapter.redmineapi">
+		<level value="error"/> 
+	</logger>
 	<root level="DEBUG">
 		<appender-ref ref="consoleAppender" />
 		<appender-ref ref="fileAppender" />
 		<appender-ref ref="errorFileAppender" />
-		<!-- 
-		<appender-ref ref="async_db" /> 
-		 -->
+		<appender-ref ref="redmineAppender" />
 	</root>
 	
 </configuration>

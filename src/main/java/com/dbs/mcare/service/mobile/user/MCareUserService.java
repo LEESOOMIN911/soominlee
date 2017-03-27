@@ -39,14 +39,14 @@ public class MCareUserService extends GenericService<MCareUser, MCareUserReposit
 	
 	/**
 	 * 사용자 추가 
-	 * @param pId
-	 * @param pName
-	 * @param sha256PassWord
-	 * @param aggList 동의서 목록 
+	 * @param pId 환자번호 
+	 * @param hashPwd 비번 
+	 * @param bExternal 외부에서 추가된 사용자인지 여부 
+	 * @return 추가된 localCipherKey 
 	 * @throws MCareServiceException
 	 */
-	public String insertUser(String pId, String hashPwd) throws MCareServiceException {
-		return this.generalUserService.insertUser(pId, hashPwd); 
+	public String insertUser(String pId, String hashPwd, boolean bExternal) throws MCareServiceException {
+		return this.generalUserService.insertUser(pId, hashPwd, bExternal); 
 	}
 	
 	/**

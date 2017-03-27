@@ -1,7 +1,6 @@
 package com.dbs.mcare.controller.admin;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,14 +10,13 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 
+import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -37,6 +35,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.dbs.mcare.exception.admin.AdminControllerException;
 import com.dbs.mcare.framework.FrameworkConstants;
+import com.dbs.mcare.framework.api.cache.ApiResourceService;
 import com.dbs.mcare.framework.api.executor.ApiExecuteDelegator;
 import com.dbs.mcare.framework.api.model.ApiModel.ApiType;
 import com.dbs.mcare.framework.api.model.ApiModel.HttpMethodType;
@@ -66,9 +65,11 @@ public class ApiController {
 
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	@Autowired
-	@Qualifier("apiExecuteDelegator")
-    private ApiExecuteDelegator executor;
+	@Autowired  // cache reload용 
+	private ApiResourceService apiResourceService; 
+	@Autowired  // 관리자 콘솔의 api테스트용 
+	private ApiExecuteDelegator apiExecuteDelegator;  
+	// 
 	@Autowired 
 	private PnuhConfigureService configureService; 
 	@Autowired
@@ -186,20 +187,30 @@ public class ApiController {
 				payload.add("target", FrameworkConstants.CACHE_TARGET_API);
 			} 
 	        catch (final Exception e) {
-				e.printStackTrace();
-				this.logger.error("키 복원실패. 리로드하지 않음", e);
-				throw e; 
+	        	if(this.logger.isErrorEnabled()) { 
+	        		this.logger.error("키 복원실패. 리로드하지 않음", e);
+	        	}
+	        
+				throw new AdminControllerException(e); 
 			}
 	        
 	        final String[] reloadUrls = this.configureService.getCacheReloadUrls().split(",");
 	        for (final String reloadUrl : reloadUrls) {
 	        	// 현재 서버는 즉시 리로드
 	        	if (reloadUrl.equals(this.configureService.getServerServiceAddr()) == true) {
-	        		this.logger.error("현재 컨테이너 리로드 : {}", reloadUrl);
-	        		this.executor.loaded();
-	        	} else {
+	        		if(this.logger.isInfoEnabled()) { 
+	        			this.logger.info("현재 컨테이너 리로드 : {}", reloadUrl);
+	        		}
+	        		
+	        		this.apiResourceService.loaded();
+	        	} 
+	        	else {
 	        		final String urlIncludeContextPath = reloadUrl + request.getContextPath() + FrameworkConstants.URI_CACHE_RELOAD;
-	        		this.logger.error("다른 컨테이너 리로드 : {}", urlIncludeContextPath);
+	        		
+	        		if(this.logger.isInfoEnabled()) { 
+	        			this.logger.info("다른 컨테이너 리로드 : {}", urlIncludeContextPath);
+	        		} 
+	        		
 	        		final int result = restTemplate.postForObject(urlIncludeContextPath, new HttpEntity<MultiValueMap<String, String>>(payload, headers), Integer.class);
 	        		if (result == 0) {
 	        			failedServerUrls.add(urlIncludeContextPath);
@@ -213,7 +224,9 @@ public class ApiController {
 	        	}
 	        	return 0;
 	        } else {
-	        	this.logger.error("캐시 리로드성공");
+	        	if(this.logger.isInfoEnabled()) {
+	        		this.logger.info("캐시 리로드성공");
+	        	}
 	        	return 1;
 	        }
 	        
@@ -253,6 +266,13 @@ public class ApiController {
     @RequestMapping(value = "/test.json", method = RequestMethod.POST)
     @ResponseBody
     public Object test(HttpServletRequest request, HttpServletResponse response, @RequestBody Api api) throws AdminControllerException {
+        // 유효성 검사 
+    	if(api == null) { 
+        	response.setStatus(HttpStatus.SC_BAD_REQUEST); 
+        	return "ApiNotFound, api is null"; 
+        }
+        
+    	
         final Map<String, Object> paramMap = new HashMap<String, Object>();
         
         // 요청 파라미터 정리 
@@ -267,16 +287,24 @@ public class ApiController {
         	this.logger.debug(builder.toString());
         }
         
-        
+        // 실행 
         try {
-            this.executor.validate(api);
-            final Object result = this.executor.execute(api, paramMap, null);
-            return  result == null? Collections.EMPTY_MAP: result;
+        	// 아무런 가공이 없는 순수한 리턴값 전달 
+        	return this.apiExecuteDelegator.executeForTest(api.getCatPathName() + api.getReqUrlAddr(), paramMap, null); 
         } 
-        catch (final Exception e) {
-        	this.logger.error("테스트 실행 중 예외발생. api : " + api + ", paramMap : " + paramMap, e);
-            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            return e.getMessage();
+        // 관리자 화면에서 호출되는 내용이라서 모든 예외를 다 잡기 위함임 
+        catch(final Exception ex) { 
+        	if(this.logger.isDebugEnabled()) {
+        		StringBuilder builder = new StringBuilder(FrameworkConstants.NEW_LINE); 
+        		builder.append("관리자 콘솔에서 테스트 실행 중 예외발생 ").append(FrameworkConstants.NEW_LINE); 
+        		builder.append("- api : ").append(api).append(FrameworkConstants.NEW_LINE); 
+        		builder.append("- paramMap : ").append(ConvertUtil.convertStringForDebug(paramMap)).append(FrameworkConstants.NEW_LINE); 
+        		
+        		this.logger.debug(builder.toString(), ex);
+        	}
+        	
+            response.setStatus(HttpStatus.SC_INTERNAL_SERVER_ERROR);
+            return ex.getMessage();
         }
     }
     

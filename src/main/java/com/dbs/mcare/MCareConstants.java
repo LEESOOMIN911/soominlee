@@ -16,6 +16,8 @@ public abstract class MCareConstants {
 	public static final String INVALID_POSTNO = "00"; 
 	/* 생년월일 정보가 없거나 비정상적인 경우 */ 
 	public static final int INVALID_AGE_GROUP = 200; 	
+	/* 생체인증 관련한 기능이 있는 사이트에서만 필요한 상수, 생체정보관리 페이지 */ 
+	public static final String TARGET_PAGE_USER_BIOMETRICS = "/mobile/user/userBiometrics.page&menuId=userBiometrics"; 
 	
 	/**
 	 * MCare 실험용 환자 
@@ -207,14 +209,15 @@ public abstract class MCareConstants {
 			return this.serviceDomain.getStartPage(); 
 		}
 		/**
-		 * 링크걸때 사용할 주소 
+		 * 시작페이지 링크걸때 사용할 주소 
+		 * this.domain + this.contextName + this.startPage
 		 * @return
 		 */
 		public String getLinkUrl() { 
 			return this.serviceDomain.getLinkUrl(); 
 		}		
 		/**
-		 * 이미지 URL 
+		 * 로고 이미지 경로 (전체 URL) 
 		 * @return
 		 */
 		public String getLogoImageUrl() { 
