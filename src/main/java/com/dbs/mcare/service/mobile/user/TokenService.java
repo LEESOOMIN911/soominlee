@@ -45,7 +45,6 @@ public class TokenService {
 	 * @return true : 작업성공, false : 작업실패 
 	 * @throws ApiCallException
 	 */
-	@SuppressWarnings("unchecked")
 	public boolean processDeviceToken(HttpServletRequest request, String pId, String tokenId, String certType) throws ApiCallException {
 		// 웹 접근이 허용된 사용자인가? 그럼 토큰이 없더라도 받아줌 
 		// 웹 접근이 허용된 사용자는 최소한으로 유지 필요. 현실적으로는 서버개발자와 화면개발자 두명만 해당 
@@ -107,13 +106,10 @@ public class TokenService {
 		}
 
 		// update가 적용된 행의 갯수를 체크하는 방식으로 insert가 필요한지 검사 
-		final long userCnt = ConvertUtil.convertInteger(resultMap.get(FrameworkConstants.UIRESPONSE_EMPTY_RESULT_KEY)); 
-		if(userCnt >= 1) { 
-			if(this.logger.isDebugEnabled()) { 
-				this.logger.debug("이미 등록된 토큰. pId=" + pId + ", platformType=" + platformType);
-			} 
-			
-		}
+		final Integer userCnt = ConvertUtil.convertInteger(resultMap.get(FrameworkConstants.UIRESPONSE_EMPTY_RESULT_KEY)); 
+		if(userCnt != null && userCnt >= 1) { 
+			this.logger.debug("이미 등록된 토큰. pId=" + pId + ", platformType=" + platformType);
+		} 
 		else {
 			// 등록이 안되어 있으면 저장 
 			this.apiCallService.execute(PnuhApi.USER_TOKEN_SAVEDEVICETOKEN, map); 

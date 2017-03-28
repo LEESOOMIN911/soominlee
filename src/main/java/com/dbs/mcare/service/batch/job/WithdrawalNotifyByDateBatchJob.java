@@ -87,9 +87,6 @@ public class WithdrawalNotifyByDateBatchJob extends BatchJob {
 		}		
 	}
 	
-	
-	
-	@SuppressWarnings("unchecked")
 	@Override
 	public void execute(Date aggDt) throws Exception {
 		if(this.logger.isInfoEnabled()) {
@@ -105,7 +102,7 @@ public class WithdrawalNotifyByDateBatchJob extends BatchJob {
 			List<Map<String, Object>> targetList = null; 
 			
 			try { 
-				targetList = (List<Map<String, Object>>) this.apiCallService.execute(PnuhApi.USER_LOGIN_GETACCESSDAY, "baseDay", baseDay); 
+				targetList = this.apiCallService.execute(PnuhApi.USER_LOGIN_GETACCESSDAY, "baseDay", baseDay).getResultAsList(); 
 				if(this.logger.isInfoEnabled()) {
 					StringBuilder builder = new StringBuilder(FrameworkConstants.NEW_LINE); 
 					
@@ -133,6 +130,10 @@ public class WithdrawalNotifyByDateBatchJob extends BatchJob {
 				Integer lastAccessDay = ConvertUtil.convertInteger(String.valueOf(map.get("lastAccessDay"))); 
 				// 가입한지 얼마나 됐는지 
 				Integer registerDay = ConvertUtil.convertInteger(String.valueOf(map.get("registerDay"))); 
+				if(registerDay == null) { 
+					registerDay = 0; 
+				}
+				
 				// 누구인지 
 				String pId = (String) map.get("pId"); 
 				
