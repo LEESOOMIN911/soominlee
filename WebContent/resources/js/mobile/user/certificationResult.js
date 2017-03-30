@@ -32,6 +32,8 @@ var mcare_mobile_certification_result = function() {
 		
 		if(reservedParam2 == "searchPId") {
 			reqUrl = "/login.page?loginType=" + reservedParam2;
+		}else if (reservedParam2 == "registerPId") {
+			reqUrl = "/mobile/user/register.page?menuId=userRegister&registerType=" + reservedParam2;
 		}else{
 			reqUrl = "/mobile/user/" + reservedParam2 + ".page?menuId=" + reservedParam2;
 		}
