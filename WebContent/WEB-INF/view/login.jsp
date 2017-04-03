@@ -22,7 +22,7 @@
 			</div>
 		</div>
 		<div class="thi_con">
-			<label><input type="checkbox" id="rememberMe" checked="checked"/><s:message code="mobile.view.login008"/></label>
+			<label><input type="checkbox" id="rememberMe" checked="checked"/><s:message code="mobile.view.login018"/></label>
 			<button id="login_btn" data-theme="b"><s:message code="mobile.view.login001"/></button>
 		</div>
 		<div class="fif_con">
