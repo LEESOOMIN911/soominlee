@@ -7,7 +7,7 @@
 	<packaging>war</packaging>
 
 	<properties>
-		<com.dbs.mcare.framework.version>3.0.0.3</com.dbs.mcare.framework.version>
+		<com.dbs.mcare.framework.version>3.0.0.4</com.dbs.mcare.framework.version>
 		<com.oracl.version>12.1.0.2</com.oracl.version>
 		<findbugs.maven.plugin.version>3.0.1</findbugs.maven.plugin.version>
 		<maven.ant.run.plugin.version>1.7</maven.ant.run.plugin.version>
