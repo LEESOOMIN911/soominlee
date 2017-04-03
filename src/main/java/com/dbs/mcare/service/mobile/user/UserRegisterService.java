@@ -19,11 +19,13 @@ import com.dbs.mcare.MCareConstants.MCARE_TEST_USER.INFO;
 import com.dbs.mcare.exception.mobile.ApiCallException;
 import com.dbs.mcare.exception.mobile.MobileControllerException;
 import com.dbs.mcare.framework.FrameworkConstants;
+import com.dbs.mcare.framework.exception.MCareServiceException;
 import com.dbs.mcare.framework.service.ConfigureService;
 import com.dbs.mcare.framework.service.MessageService;
 import com.dbs.mcare.framework.util.Base64ConvertUtil;
 import com.dbs.mcare.framework.util.ConvertUtil;
 import com.dbs.mcare.framework.util.ResponseUtil;
+import com.dbs.mcare.framework.util.ThrowableUtil;
 import com.dbs.mcare.service.api.MCareApiCallService;
 import com.dbs.mcare.service.api.PnuhApi;
 import com.dbs.mcare.service.api.SendSmsService;
@@ -113,9 +115,18 @@ public class UserRegisterService {
 		try { 
 			return this.apiCallService.execute(PnuhApi.USER_USERINFO_FINDPID, reqMap).getResultAsMap(); 
 		}
-		catch(ApiCallException ex) { 
+		catch(MCareServiceException ex){
 			if(this.logger.isDebugEnabled()) {
 				this.logger.debug("예외발생", ex); 
+			}
+			
+			// 동명이인이 발생해서 난 에러인지 확인 
+			// 운영에서는 ClassCastException이 발생하나, 개발환경에서는 IncorrectResultSizeDataAccessException 발생함  
+			// 일단 guide는 운영코드에 넣는게 목적이므로 ClassCastException으로 남겨둠 
+			if(ThrowableUtil.hasCausedException(ex, ClassCastException.class)) { 
+				if(this.logger.isDebugEnabled()) {
+					this.logger.debug("동명2인 발생으로 인식. user = " + reqMap, ex);
+				}				
 			}
 			
 			return null; 
