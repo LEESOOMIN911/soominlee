@@ -12,7 +12,6 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -124,7 +123,7 @@ public class UserController {
 			// 동명이인이 발생해서 난 에러인지 확인 
 			// 운영에서는 ClassCastException이 발생하나, 개발환경에서는 IncorrectResultSizeDataAccessException 발생함 
 			//if(ThrowableUtil.hasCausedException(ex, ClassCastException.class)) { 
-			if(ThrowableUtil.hasCausedException(ex, IncorrectResultSizeDataAccessException.class)) { 
+			if(ThrowableUtil.hasCausedException(ex, ClassCastException.class)) { 
 				if(this.logger.isDebugEnabled()) {
 					this.logger.debug("동명2인 발생으로 인식. user = " + userMap, ex);
 				}
