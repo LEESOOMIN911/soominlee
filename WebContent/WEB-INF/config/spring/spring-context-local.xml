@@ -91,6 +91,7 @@
       		<!-- 
       		<mvc:exclude-mapping path="/**/login.page"/>
       		--> 
+      		<mvc:exclude-mapping path="/error/error*.page"/>
       		<mvc:exclude-mapping path="/**/logout.page"/>
       		<bean class="com.dbs.mcare.interceptor.MCareAuthenticationInterceptor" />
     	</mvc:interceptor>
