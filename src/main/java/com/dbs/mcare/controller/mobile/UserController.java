@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.HandlerMapping;
 
@@ -28,7 +30,9 @@ import com.dbs.mcare.MCareConstants.MCARE_TEST_USER.INFO;
 import com.dbs.mcare.exception.mobile.ApiCallException;
 import com.dbs.mcare.exception.mobile.MobileControllerException;
 import com.dbs.mcare.framework.FrameworkConstants;
+import com.dbs.mcare.framework.exception.MCareApiServiceException;
 import com.dbs.mcare.framework.exception.MCareServiceException;
+import com.dbs.mcare.framework.exception.service.TypeCastingException;
 import com.dbs.mcare.framework.service.MessageService;
 import com.dbs.mcare.framework.util.Base64ConvertUtil;
 import com.dbs.mcare.framework.util.ConvertUtil;
@@ -71,32 +75,77 @@ public class UserController {
 
 	
 	/**
-	 * 본인인증 페이지
-	 * 
+	 * 사용등록 시작 
 	 * @param request
 	 * @param response
-	 * @param model
+	 * @param pName
+	 * @param cellphoneNo
+	 * @param yYmmdd
 	 * @return
-	 * @throws Exception
+	 * @throws MobileControllerException
 	 */
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/checkPatientId.json", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> checkPatientId(HttpServletRequest request, HttpServletResponse response, 
-			@RequestBody(required = false) MCareUser user) throws MobileControllerException {
-		if(this.logger.isDebugEnabled()) {
-			this.logger.debug("가입을 시도하는 환자 : " + user);
+			@RequestParam(value = "pName", required = true) String pName,
+			@RequestParam(value = "cellphoneNo", required = true) String cellphoneNo,
+			@RequestParam(value = "birthDt", required = false) String yYmmdd) throws MobileControllerException {
+		
+		if(this.logger.isDebugEnabled()) { 
+			StringBuilder builder = new StringBuilder(FrameworkConstants.NEW_LINE);
+			
+			builder.append("request : ").append(request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE)).append(FrameworkConstants.NEW_LINE); 
+			builder.append("가입을 시도하는 환자 : ").append(pName).append(", ").append(cellphoneNo).append(", ").append(yYmmdd).append(FrameworkConstants.NEW_LINE); 
+			
+			this.logger.debug(builder.toString());
 		}
 		
+		Map<String, Object> userMap = null; 
 		
-		//Local에서 테스트 하는 경우 아래 기능을 전부 주석처리해주세요.
+		// 기간계에서 사용자 찾기 
+		try { 
+			userMap = new HashMap<String, Object>(); 
+			userMap.put("pName", pName); 
+			userMap.put("cellphoneNo", cellphoneNo); 
+			if(!StringUtils.isEmpty(yYmmdd)) {  // 병원에 따라 생년월일 필요성 여부는 다름 
+				userMap.put("birthDt", yYmmdd); 
+			}
+			
+			userMap = this.apiCallService.execute(PnuhApi.USER_USERINFO_FINDPID, userMap).getResultAsMap(); 
+		}
+		catch(final ApiCallException ex) {
+			throw new MobileControllerException("mcare.error.system", "시스템 호출 오류가 발생했습니다."); 
+		}
+		catch(MCareApiServiceException ex) { //
+			if(this.logger.isDebugEnabled()) {
+				this.logger.debug("예외발생", ex); 
+			}
+			
+			// 동명이인이 발생해서 난 에러인지 확인 
+			// 운영에서는 ClassCastException이 발생하나, 개발환경에서는 IncorrectResultSizeDataAccessException 발생함 
+			//if(ThrowableUtil.hasCausedException(ex, ClassCastException.class)) { 
+			if(ThrowableUtil.hasCausedException(ex, IncorrectResultSizeDataAccessException.class)) { 
+				if(this.logger.isDebugEnabled()) {
+					this.logger.debug("동명2인 발생으로 인식. user = " + userMap, ex);
+				}
+				
+				throw new MobileControllerException("mcare.auth.user.samename", "개인정보가 동일한 사람이 존재합니다. 번거로우시겠지만 원무과로 가서 사용등록 신청해주세요.");
+			}
+			
+			// 이외의 것이면 시스템호출에러로 처리 
+			throw new MobileControllerException("mcare.error.if.system", "시스템 호출 오류가 발생했습니다 (IF)");
+		}
+		
+		// 기간계에서 검색되었는지 확인 
+		if(userMap == null || userMap.isEmpty()) { 
+			throw new MobileControllerException("mobile.message.register020", "해당 환자가 없습니다. 원무과로 가서 정보를 확인하세요.");
+		}
+
+		// 이미 등록된 사용자는 아닌지 확인 
 		MCareUser userInfo = null; 
 		
 		try { 
-			userInfo = this.userRegisterService.getUserInfo(user.getpId()); 
-			if(this.logger.isDebugEnabled()) {
-				this.logger.debug("M-Care 등록여부 검사 : " + user.getpId() + ", DB확인결과 : " + userInfo);
-			}
+			userInfo = this.userRegisterService.getUserInfo((String) userMap.get("pId")); 
 		}
 		catch(final ApiCallException ex) {
 			throw new MobileControllerException("mcare.error.system", "시스템 호출 오류가 발생했습니다."); 
@@ -104,22 +153,14 @@ public class UserController {
 		
 		//등록된 사용자인지 확인한다.
 		if(userInfo != null) {
-			throw new MobileControllerException("mobile.message.register005", "이미 등록된 환자번호입니다.");
+			throw new MobileControllerException("mobile.message.register008", "이미 등록된 환자번호입니다.");
 		}
-		
-		Map<String, Object> resultMap = null;
+
 		Map<String, Object> resMap = new HashMap<String, Object>(); //응답 결과 생성을 위한 Map
 		
 		String birthDay = null;
 		try { 
-			resultMap = (Map<String, Object>) this.apiCallService.execute(PnuhApi.USER_USERINFO_GETUSERINFO, "pId", user.getpId()); 
-			
-			//기간계에 환자 번호가 존재하지 않는 경우
-			if(resultMap == null || resultMap.isEmpty()) {
-				throw new MobileControllerException("mobile.message.register022", "환자번호가 없습니다. 원무과로 가서 환자번호를 확인하세요.");
-			}
-			
-			birthDay = (String)resultMap.get("birthDt");
+			birthDay = (String) userMap.get("birthDt"); 
 			boolean bUnder14 = DateUtil.checkUnder14(birthDay);
 			//14세 미만인지 리턴
 			resMap.put("bUnder14", bUnder14);
@@ -132,7 +173,7 @@ public class UserController {
 				}
 			}
 		}
-		catch(ApiCallException ex) { 
+		catch(TypeCastingException | ApiCallException ex) { 
 			if(this.logger.isDebugEnabled()) {
 				this.logger.debug("예외발생", ex); 
 			}
@@ -142,6 +183,9 @@ public class UserController {
 		catch (ParseException e) {
 			throw new MobileControllerException("mcare.error.date.parse", "생일이 유효하지 않습니다. (" + birthDay + ")");  
 		}	
+		
+		// 사용자정보 붙이기 
+		resMap.putAll(userMap);
 		
 		
 		return ResponseUtil.wrapResultMap(resMap);
