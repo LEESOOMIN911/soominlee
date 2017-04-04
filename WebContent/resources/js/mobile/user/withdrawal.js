@@ -19,15 +19,26 @@ var mcare_mobile_withdrawal = function(){
 	var addEvent = function(){
 		$withdrawalBtn.on("click",function(e){
 			$(this).addClass("active");
-			var options = {
-					content : self.getI18n("withdrawal010"),
-					callback : function(e){
-						validatePWD();
-					}
-			};
+
+			var inputPwd = $pwdInput.val(),
+			reason = $forReason.val()==="etc"?$reasonInput.val():$forReason.val();
+			
+			if(validatePWD(inputPwd,reason)){
+				
+				var options = {
+						content : self.getI18n("withdrawal010"),
+						callback : function(e){
+							withdrawal(inputPwd, reason);
+						}
+				};
+				
+				self.popup( options );
+			}
+			
+			
 			//버튼 클릭 배경제거
 			$withdrawalBtn.removeClass("active");
-			self.popup( options );
+			
 		});
 		
 		$forReason.on("change",function(e){
@@ -41,9 +52,7 @@ var mcare_mobile_withdrawal = function(){
 	/**
 	 * 
 	 */
-	var validatePWD = function(){
-		var inputPwd = $pwdInput.val(),
-			reason = $forReason.val()==="etc"?$reasonInput.val():$forReason.val();
+	var validatePWD = function(inputPwd, reason){
 			
 		var patt = /(script)/gi; // script 찾기 정규식
 
@@ -51,21 +60,25 @@ var mcare_mobile_withdrawal = function(){
 			self.alert( self.getI18n("withdrawal005"),function(){
 				$pwdInput.focus();
 			});
+			return false;
 		} else if( reason === "" ){
 			self.alert( self.getI18n("withdrawal019"),function(){
 				
 			});
+			return false;
 		} else if( reason.length > 255 ){
 			self.alert( self.getI18n("withdrawal020"),function(){
 				
 			});
+			return false;
 		} else if( patt.test( reason ) ){
 			self.alert( self.getI18n("withdrawal021"),function(){
 				
 			});
-		} else {
-			withdrawal(inputPwd, reason);
-		}
+			return false;
+		} 
+		
+		return true;
 	};
 	/**
 	 * 
