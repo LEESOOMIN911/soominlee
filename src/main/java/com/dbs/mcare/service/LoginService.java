@@ -188,22 +188,34 @@ public class LoginService {
 			throw new MobileControllerException("mcare.error.register.token", "토큰등록에 실패했습니다. 앱을 종료하고, 재시작해주세요"); 
 		}
 		
-
 		// 로그인에 성공했으면 로그를 남김 
-		if(user != null) { 
+		this.addloginHistory(user, false);
+	}
+
+	/**
+	 * 로그인 후 로그인 히스토리 등록
+	 * @param user 사용자 정보
+	 * @param isRememberMe 자동로그인여부
+	 */
+	public void addloginHistory(MCareUser user, boolean isRememberMe) {
+		if(user != null) {
+			String rememberMeYn = "N";
+			if(isRememberMe == true) {
+				rememberMeYn = "Y";
+			}
+			
 			final LoginHistory history = new LoginHistory(); 
-			final String key = user.getpId() + "_" + "N"; 
+			final String key = user.getpId() + "_" + rememberMeYn; 
 			
 			history.setUserId(user.getpId());
-			history.setRememberMeYn("N");
+			history.setRememberMeYn(rememberMeYn);
 			// 로그인 이력 해쉬용 문자 만들기 
 			history.setLoginHashValue(this.hashUtils.sha256(key));
 			
 			// 로그전달  
-			this.logService.addLog(LogType.LOGIN_HISTORY, history); 
+			this.logService.addLog(LogType.LOGIN_HISTORY, history);
 		}
 	}
-	
 	
 	/**
 	 * 세션비활성화 처리 

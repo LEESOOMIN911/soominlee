@@ -18,6 +18,7 @@ import com.dbs.mcare.framework.FrameworkConstants;
 import com.dbs.mcare.framework.interceptor.AuthenticationInterceptor;
 import com.dbs.mcare.framework.service.ConfigureService;
 import com.dbs.mcare.framework.util.HttpRequestUtil;
+import com.dbs.mcare.service.LoginService;
 import com.dbs.mcare.service.RememberMeCookieBaker;
 import com.dbs.mcare.service.mobile.user.repository.dao.MCareUser;
 /**
@@ -35,6 +36,8 @@ public class MCareAuthenticationInterceptor extends AuthenticationInterceptor {
 	private RememberMeCookieBaker cookieBaker;
 	@Autowired 
 	private ConfigureService configureService; 
+	@Autowired
+	private LoginService loginService;
 	
 	// 패턴 매칭 작업용 
 	private final AntPathMatcher matcher; 
@@ -115,7 +118,9 @@ public class MCareAuthenticationInterceptor extends AuthenticationInterceptor {
 		final String restoreUri = HttpRequestUtil.getRedirectURI(request); 
 		// 자동로그인 체크되어있으면 복원하기 
 		try { 
-			user = this.cookieBaker.restore(request, response, restoreUri); 	
+			user = this.cookieBaker.restore(request, response, restoreUri); 
+	        // 복원 성공했으면 로그를 남김 
+			this.loginService.addloginHistory(user, true);
 		}
 		catch(Exception ex) { 
 			if(this.logger.isDebugEnabled()) {
