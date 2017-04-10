@@ -29,6 +29,7 @@ var mcare_mobile_login = function(){
 	 */
 	this.init = function(){
 		setParameterMap();
+		checkStorage();
 		initDeviceToken();
 		addEvent();
 		checkSearchPid();
@@ -87,6 +88,13 @@ var mcare_mobile_login = function(){
 				}
 		}; 
 		self.toNative( msg );
+	};
+	var checkStorage = function(){
+		var pId = localStorage.getItem("registerPid");
+		if( pId !== "" ){
+			$pId.val( pId );
+			localStorage.removeItem("registerPid")
+		}
 	};
 	/**
 	 * 
@@ -171,7 +179,7 @@ var mcare_mobile_login = function(){
 		    			
 		    			if( parameterMap["returnUrl"] && parameterMap["returnUrl"] !== "" ){
 		    				//context 붙어와서 뺐음
-		    				self.changePage( parameterMap["returnUrl"] );
+		    				self.changePage( parameterMap["returnUrl"] + "?menuId=" + parameterMap["menuId"] );
 		    			} else {		        		
 		    				location.replace(contextPath + data.nextPage);
 		    			}
