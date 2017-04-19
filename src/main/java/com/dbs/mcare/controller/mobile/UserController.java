@@ -647,7 +647,7 @@ public class UserController {
 			this.userService.insertUserAgreement(pid, user.getAgreementList());
 		} 
 		catch (final Exception e) {
-			throw new MobileControllerException("mobile.message.agreement0007", "동의서 등록에 실패하였습니다.");
+			throw new MobileControllerException("mobile.message.agreement007", "동의서 등록에 실패하였습니다.");
 		}
 		
 		// 약관 등록 성공했으면 강제전이 세션 키 지우기 
