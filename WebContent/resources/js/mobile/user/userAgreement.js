@@ -13,7 +13,10 @@ var mcare_mobile_user_agreement = function(){
 		$question = $("p.question"),
 		$radio = $("input[name='agreement']");
 		$saveUserAgreement = $("#saveUserAgreement"),
-		$mainContainer = $(".mainContainer");
+		$allAgree = $(".allAgree"),
+		$allAgreeCheck= $("#allAgreeCheck"),
+		$mainContainer = $(".mainContainer"),
+		$pId = $("#pId");
 		
 	//전달 받은 파라미터 
 	var parameterMap = null;
@@ -47,6 +50,10 @@ var mcare_mobile_user_agreement = function(){
 			$(this).addClass("active");
 			saveUserAgreement(e);
 		});
+		//전체동의
+		$allAgreeCheck.on("click",function(e){	
+			allAgreeCheck( $(this).prop("checked") );
+		});
 	};
 	
 	var initAgreement = function(){
@@ -75,7 +82,13 @@ var mcare_mobile_user_agreement = function(){
 			success : function(data){
 				try{
 					if( data.msg !== undefined ){
-						self.alert( data.msg );
+						self.alert(data.msg);
+						return false;
+					} else if( data.extraMsg !== undefined ){
+						self.alert( data.extraMsg );
+						if( data.result !== undefined ){
+							displayData(data.result);
+						}
 						return;
 					} else {
 						displayData( data.result );
@@ -127,7 +140,7 @@ var mcare_mobile_user_agreement = function(){
 				 
 				 var collapse = div.clone().addClass("agreement_collapse gray");
 	
-				 var title = h3.clone().addClass( "title" ).html( item["agreementName"]+"&nbsp;"+(item["requiredYn"]=="Y"?"["+self.getI18n("agreement008")+"]":"") ),
+				 var title = h3.clone().addClass( "title" ).html( item["agreementName"]+(item["requiredYn"]=="Y"?"":"&nbsp;("+self.getI18n("agreement008")+")") ),
 				 	 contents = div.clone().html( p.clone().addClass( "contents" ).html( item["agreementCl"] ) );
 				 var agreeInput = input.clone().attr( 
 						 {
@@ -156,8 +169,8 @@ var mcare_mobile_user_agreement = function(){
 								 "name":under14["agreementId"].replace(/(\s*)/g,"")+"_"+under14["versionNumber"]+"_agreement"
 							 } ),
 					under14Checkbox = $("<div></div>").html(under14Input).append(under14Label),
-					under14Content = $("<div></div>").html(under14["agreementCl"]),
-					under14title = $("<div></div>").addClass("title").html(under14["agreementName"]+"&nbsp;"+(under14["requiredYn"]=="Y"?"["+self.getI18n("agreement008")+"]":"") ).css("display","none");
+					under14Content = $("<div></div>").addClass("under14").html(under14["agreementCl"]),
+					under14title = $("<div></div>").addClass("title").html(under14["agreementName"]+(under14["requiredYn"]=="Y"?"":"&nbsp;("+self.getI18n("agreement008")+")") ).css("display","none");
 				
 				under14Div.html( under14Content ).append(under14Checkbox).append(under14title);
 				$mainContainer.append(under14Div);			 
@@ -171,6 +184,15 @@ var mcare_mobile_user_agreement = function(){
 				expandCueText:""
 			});
 			$("input[name$=agreement]").checkboxradio();
+		}
+		//전체동의 체크박스 표시 여부
+		var min = self.util.getMenuParam("minimum"),
+			minNum = (min!==null?min : 5 );
+		
+		if( $("input[name$=agreement]").length <= minNum ){
+			$allAgree.hide();
+		} else {
+			$allAgree.show();
 		}
 	};
 
@@ -203,6 +225,9 @@ var mcare_mobile_user_agreement = function(){
 					if( data.msg !== undefined ){
 						self.alert(data.msg);
 						return false;
+					} else if( data.extraMsg !== undefined ){
+						self.alert( data.extraMsg );
+						return;
 					} else {					
 						showMain();
 					}
@@ -254,8 +279,8 @@ var mcare_mobile_user_agreement = function(){
 					 agreementArray.push( obj );
 				 //필수니까 동의하세요
 				 } else {
-					 var title = $( "#"+id+"[data-version="+version+"] .title" ).text().split("[");
-					 self.alert( title[0] + self.getI18n("agreement006") );
+					 var title = $( "#"+id+"[data-version="+version+"] .title" ).text();
+					 self.alert( "< "+title +" > " + self.getI18n("agreement006") );
 					//버튼 클릭 배경 제거
 					$saveUserAgreement.removeClass("active");
 					 return;
@@ -282,9 +307,20 @@ var mcare_mobile_user_agreement = function(){
 	 * 메인 화면(login) 요청
 	 */
 	var showMain = function (){
+		localStorage.setItem("registerPid", $pId.val());
 		self.alert( self.getI18n("agreement011"),function(){			
 			self.changePage( contextPath + "/logout.page");
 		});
-	}
-	
+	};
+	/**
+	 * 전체동의
+	 */
+	var allAgreeCheck = function( bool ){	
+		if( bool ){			
+			$("input[name$=agreement]").prop("checked",true);
+		} else {
+			$("input[name$=agreement]").prop("checked",false);
+		}
+		$("input[name$=agreement]").checkboxradio("refresh");
+	};
 };

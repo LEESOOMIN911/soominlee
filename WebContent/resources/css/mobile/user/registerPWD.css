@@ -2,3 +2,37 @@
 .gray {
 	color: gray;
 }
+div.txtWrap{    background-color: #fff;
+    border-color: #ddd;
+    color: #333;
+    margin: .5em 0;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: .3125em;}
+div.txtWrap > label {
+	margin: 0;
+    min-height: 2.2em;
+    text-align: left;
+    border: 0;
+    background: transparent none;
+    -webkit-appearance: none;
+    -webkit-border-radius: inherit;
+    border-radius: inherit;
+    padding: .4em;
+    line-height: 1.4em;
+    display: block;
+    width: 100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    outline: 0;
+}
+.userWrap{padding-bottom:10px;}
+/*직원 선택 부분*/
+.elWrap{position: relative;}
+.elCont{position: absolute; z-index: 55; width: 100%; background: #fff; top: 40px; display: none; opacity: 0;border: 1px solid #ccc;}
+.elList{list-style: none;}
+.elList > li.elItem { height: 50px; text-align: center; border-bottom: 1px solid #ccc; line-height: 50px;}
+.elList > li.elItem.last{border-bottom: 0;}
+.elList > li.elItem a{color:#333;}
+.elScreen{position:fixed;position: fixed;top: 0;left: 0;right: 0;bottom: 0;background: #333;opacity:0;display:none;z-index:50;}

@@ -4,9 +4,9 @@
 <link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/mobile/login/login.css"/>" />
 <script type="text/javascript" src="<c:url value='/resources/js/mobile/login/login.js' />"></script>
 <div data-role="header">
-	<h2><s:message code="mobile.view.login001"/></h2>
-	<a href="<c:url value="/index.page"/>"  data-direction="reverse" class="ui-btn-left" id="headerArrowLeft_btn">&nbsp;</a>
-	<a href="#sidebar" class="ui-btn-right" id="menuBars_btn">&nbsp;</a>
+	<h2><s:message code="mobile.view.login019"/></h2>
+	<a href="<c:url value="/index.page"/>"  data-direction="reverse" class="ui-btn-left" id="headerArrowLeft_btn"><i class="fa fa-arrow-left"></i></a>
+	<a href="#sidebar" class="ui-btn-right" id="menuBars_btn"><i class="fa fa-bars"></i></a>
 </div>
 <div data-role="content">
 	<div class="mainContainer">

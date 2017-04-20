@@ -6,15 +6,20 @@
 <!-- 동의서 -->
 <div data-role="content">
 	<div class="mainContainer">
+	</div>
+	<div class="allAgree" style="display:none;">
+		<label for="allAgreeCheck"><s:message code="mobile.view.agreement013"/></label>
+		<input type="checkbox" id="allAgreeCheck" />
 	</div>	
 	<div class="btnContainer">
 		<div>
 			<button id="saveUserAgreement" class="ui-btn ui-btn-b">
-				<span><s:message code="mobile.view.agreement001"/></span>
+				<span><s:message code="mobile.view.agreement012"/></span>
 			</button>
 		</div>
 	</div>
 </div>
+<input type="hidden" id="pId" value="${param.pId }"/>
 <script type="text/javascript">
 //다국어 사용
 var i18n = function(){

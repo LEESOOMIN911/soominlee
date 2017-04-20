@@ -51,12 +51,15 @@
 	<input type="hidden" name="EncodeData" id="EncodeData" value="">	<!-- 인증 기관에서 EncodeData로 사용하기 때문에 이대로 둬야함. -->
 	<input type="hidden" name="enc_data" id="enc_data" value="">
 	<!-- param_1을 인증 타입 구분 값으로 사용 (ex:checkPlus = 휴대폰인증, iPin = iPin인증)-->
-	<input type="hidden" name="param_r1" id=certType value="">
+	<input type="hidden" name="param_r1" id=certType value=""> 
 	<!-- param_2를 인증 요청 타입입을 사용 (ex:registerUser = 사용자 등록, searchId = 사용자 ID 찾기, resetPWD = 패스워드 재등록) -->
-	<input type="hidden" name="param_r2" id="certReqType" value="${param.certReqType}">
+	<input type="hidden" name="param_r2" id="certReqType" value="${param.certReqType}"> 
+	<!-- param_2 환자번호 -->
 	<input type="hidden" name="param_r3" id="pid" value="${param.pId}">
 	<!-- 핸드폰 번호 -->
 	<input type="hidden" name="phoneNo" id="phoneNo" value="${param.phoneNo}">
+	<!-- 핸드폰 번호 -->
+	<input type="hidden" name="pName" id="pName" value="${param.pName}">
 </form>
 
 <script type="text/javascript">

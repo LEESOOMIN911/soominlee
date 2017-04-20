@@ -1,17 +1,6 @@
 @CHARSET "UTF-8";
-.formDiv {
-	/*display: inline-block;*/
-	position:relative;
-}
 
-.formDiv.w90 {
-	/*width: 90%;*/
-}
-
-#search{position:absolute;right:0px;top:-3px}
-.ui-input-text.ui-input-has-clear .ui-btn.ui-input-clear{right:35px;}
-
-div.example{margin-top:20px;}
+div.example{margin-top:40px;}
 div.example > div{margin:8px 0;}
 div.example img {width: 100%;}
 div.example p{color:#eb6100;}
@@ -22,3 +11,13 @@ ul {list-style:none;}
     background-color: #999;
     color: #fff;
 }
+.described {
+	font-size: 9pt;
+	font-weight: 100;
+}
+.gray {
+	color: gray;
+}
+.ui-noboxshadow.dev .ui-listview li .ui-btn span{color:#333;}
+span.issueIpin{text-decoration: underline;}
+div.mn{margin-top:15px;}

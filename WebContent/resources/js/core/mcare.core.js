@@ -345,6 +345,7 @@ var mcare = function(){
 			 */
 			addEvent : function( object, type, callback ){
 				try {
+					object.off();
 					object.on( type, callback );
 				} catch (e) {
 					self.log(e, "mcare_event_addEvent" );
@@ -413,7 +414,6 @@ var mcare = function(){
 
 /**
  * mcare/core/admin
- * @extend mcare
  * @description mcare 관리자 
  */
 var mcare_admin = function(){
@@ -627,7 +627,7 @@ var mcare_admin = function(){
 	this.ajaxAdmin = function( opt, successFn, errorFn ){
 		var sFn = function(data){
 			if( data.msg !== undefined ){
-				if( data.type !== undefined && data.type === "AuthException" ){
+				if( data.type !== undefined && data.type === "MCareAuthException" ){
 					window.location.href = contextPath + "/admin/login.page";
 				} else {
 					alert(data.msg);
@@ -690,11 +690,21 @@ var mcare_admin = function(){
 	    form.submit();
 	    document.body.removeChild(form);
 	};
+	/**
+	 * read, all 권한 추가에 따라 체크 로직 추가
+	 * viewAuth, $("#constALL") 은 template/admin/include.jsp 에 선언
+	 */
+	this.checkAuth = function(){
+		if( viewAuth === $("#constALL").val() ){
+			return true;
+		} else {
+			return false;
+		}
+	}
 }
 
 /**
  * mcare/core/mobile
- * @extend mcare
  * @description mcare 모바일 어플리케이션
  */
 var mcare_mobile = function(){
@@ -836,7 +846,6 @@ var mcare_mobile = function(){
 	};
 	/**
 	 * 날짜간 차이 계산 - 1년 기준
-	 * @parivate
 	 * @param strDate {string} strDate value
 	 * @param endDate {string} endDate value 
 	 */
@@ -892,7 +901,9 @@ var mcare_mobile = function(){
 				"callbackFn":"window.activeObj.init"
 			}
 		};
-		try{			
+		try{	
+			//사이드버튼 숨기기 추가 2017-03-17 
+			$("#menuBars_btn").hide();
 			this.toNative( reqParam);
 		} catch(e) {
 			self.log(e,"mcare_mobile_changeOrientation");
@@ -915,7 +926,9 @@ var mcare_mobile = function(){
 			callback.off();
 			callback.on("click",function(e){
 				e.preventDefault();
-				options["callback"]();
+				if( options["callback"] !== undefined && typeof options["callback"] == "function" ){					
+					options["callback"]();
+				}
 				popup.popup("close");
 			});
 			
@@ -938,14 +951,18 @@ var mcare_mobile = function(){
 			if( text === "" || text === undefined ){
 				console.log( "text empty or undefined" );
 			}
-			content.html( text );
-			
+			content.html( text );			
 			callback.off();
-			callback.on("click",function(e){
-				e.preventDefault();
+			callback.on("click",function(e){			
 				alert.popup("close");
-				if( callbackFn !== undefined && typeof callbackFn == "function" ){					
-					callbackFn();
+			});
+			
+			alert.popup({
+				afterclose: function(e,ui){
+					e.preventDefault();
+					if( callbackFn !== undefined && typeof callbackFn == "function" ){					
+						callbackFn();
+					}
 				}
 			});
 			setTimeout(function(){				
@@ -1001,6 +1018,37 @@ var mcare_mobile = function(){
 			$("div[data-role=header]").css("position", "fixed");
 		});
     };
+    /**
+	 * mobile 통신 wrapper 
+	 */
+	this.ajaxMobile = function( opt, successFn, errorFn ){
+		var originSFn = opt["success"],
+			originError = opt["error"];
+		
+		var sFn = function(data){
+			//공통적으로 처리하기 위해서 wrapper 를 만듦 
+			if( data["msg"] !== undefined ){
+				if( data["type"] !== undefined && data["type"] === "MCareAuthException" ){
+					self.alert(data["msg"],function(){
+						self.changePage( contextPath + data["nextPage"]);
+					});
+				} else {
+					originSFn( data );
+				}
+			} else {
+				originSFn(data);
+			}
+		};
+		var eFn = function(xhr,d,t){
+			originError(xhr,d,t);
+		};
+		
+		try{			
+			self.ajax.send( opt, sFn, eFn );
+		} catch(e) {
+			self.log(e, "mcare_admin_ajaxAdmin" );
+		}
+	};
 }
 
 

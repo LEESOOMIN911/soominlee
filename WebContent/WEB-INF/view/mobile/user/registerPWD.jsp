@@ -9,6 +9,26 @@
 	<input type="hidden" id="pName" value="${pName}"/>
 	<input type="hidden" id="userBirthDate" value="${userBirthDate}"/>
 	<input type="hidden" id="userGenderCode" value="${userGenderCode}"/>
+	<div class="userWrap">
+		<h3 class="subTitle"> <i class="fa fa-user"></i>&nbsp;${pName } ( ${pId } )</h3>
+	</div>
+	<!--
+	<h3 class="subTitle"> <i class="fa fa-thumbs-o-up"></i> <s:message code="mobile.view.registerPWD017" /></h3>
+	<div>
+		<div class="elWrap">
+			<div class="formDiv">
+				<input type="text" id="employee" data-clear-btn="turn" value="" placeholder=" <s:message code="mobile.message.registerPWD018" />" />
+				<input type="hidden" id="hEmployee" value="" />
+			</div>
+			<div class="elCont">
+				<ul class="elList">
+					
+				</ul>
+			</div>
+			<div class="elScreen"></div>
+		</div>
+	</div>
+	-->
 	<div>
 		<h3 class="subTitle"> <i class="fa fa-info-circle"></i>&nbsp;<s:message code="mobile.view.registerPWD013"/></h3>
 	</div>
@@ -17,6 +37,7 @@
 		<h3 class="subTitle"> <i class="fa fa-info-circle"></i>&nbsp;<s:message code="mobile.view.registerPWD014"/></h3>
 	</div>
 	<input type="password" id="pass3" placeholder="<s:message code="mobile.view.registerPWD003"/>"/>
+	<button id="btn1"  class="ui-btn ui-btn-b"><span><s:message code="mobile.view.common001"/></span></button>
 	<div class="mt" >
 		<ul class="ps" style="padding:0 15px;">
 			<li><s:message code="mobile.view.registerPWD004"/></li>
@@ -26,7 +47,6 @@
 			<li><s:message code="mobile.view.registerPWD012"/></li>
 		</ul>
 	</div>
-	<button id="btn1"  class="ui-btn ui-btn-b"><span><s:message code="mobile.view.common001"/></span></button>
 </div>
 
 <script type="text/javascript"> 
