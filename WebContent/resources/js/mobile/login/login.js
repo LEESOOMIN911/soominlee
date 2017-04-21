@@ -154,7 +154,7 @@ var mcare_mobile_login = function(){
 		    					var options = {
 		    							content : data.msg,
 		    							pwdChange : function(e){
-		    								self.changePage( contextPath + data.nextPage );
+		    								self.changePage( contextPath + data.nextPage +"?over=true" );
 		    							},
 		    							laterChange : function(e){
 		    								pwdLaterChange();
@@ -179,7 +179,7 @@ var mcare_mobile_login = function(){
 		    			
 		    			if( parameterMap["returnUrl"] && parameterMap["returnUrl"] !== "" ){
 		    				//context 붙어와서 뺐음
-		    				self.changePage( parameterMap["returnUrl"] + "?menuId=" + parameterMap["menuId"] );
+		    				self.changePage( parameterMap["returnUrl"] + createLocation() );
 		    			} else {		        		
 		    				location.replace(contextPath + data.nextPage);
 		    			}
@@ -303,5 +303,16 @@ var mcare_mobile_login = function(){
 		    	$loginBtn.removeClass("active");
 		    }
 		});
+	};
+	var createLocation = function(){
+		var loc = "?";
+		
+		for ( var key in parameterMap ) {
+			  if( key !== "returnUrl" ){
+				  loc = loc + key + "=" + parameterMap[key] + "&"
+			  }
+		}
+		
+		return loc.substr(0,loc.length-1);
 	};
 };
