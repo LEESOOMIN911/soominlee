@@ -4,6 +4,7 @@ import java.security.InvalidParameterException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,10 +17,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.dbs.mcare.exception.admin.AdminControllerException;
+import com.dbs.mcare.framework.FrameworkConstants;
 import com.dbs.mcare.framework.exception.MCareServiceException;
 import com.dbs.mcare.framework.service.admin.api.CategoryService;
 import com.dbs.mcare.framework.service.admin.api.repository.dao.Category;
-import com.dbs.mcare.framework.util.SessionUtil;
+import com.dbs.mcare.framework.service.admin.manager.repository.dao.Manager;
 
 @Controller
 @RequestMapping("/admin/category")
@@ -60,13 +62,14 @@ public class CategoryController {
 	@RequestMapping(value = "/save.json", method = RequestMethod.POST)
     @ResponseBody
     public Object save(HttpServletRequest request, @RequestBody Category category) throws AdminControllerException {
-		final String userId = SessionUtil.getUserId(request); 
+		final HttpSession session = request.getSession();
+    	final Manager admin = (Manager) session.getAttribute(FrameworkConstants.SESSION.ADMIN.getKey());
 		
 		try { 
 	        if (category.getCatSeq() == null) {
-	            category.setCreateId(userId);
+	            category.setCreateId(admin.getUserId());
 	        } else {
-	            category.setUpdateId(userId);
+	            category.setUpdateId(admin.getUserId());
 	        }
 	        this.categoryService.save(category);
 		}
