@@ -122,7 +122,7 @@ public class MCareHandlerExceptionResolver extends FrameworkHandlerExceptionReso
 			int max = 5; 
 			
 			while(th.getCause() != null && max > 0) { 
-				th = ex.getCause(); 
+				th = th.getCause(); 
 				// SQLException에서 계속 cause가 있어서 요청이 끝나지 않는 문제가 있음 
 				// 하여 최대한 추적되는 깊이를 체크하는 것임 
 				max--; 
