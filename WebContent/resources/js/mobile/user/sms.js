@@ -102,7 +102,7 @@ var mcare_mobile_sms = function(){
 				url : contextPath + "/mobile/user/checkSMSCode.json",
 				method : "GET",
 				dataType : "json",
-				data: {'smsCode':$smsCode.val()},
+				data: {'smsCode':$smsCode.val(),'certReqType' : $certReqType.val(),'encodePid' : $encodePid.val()},
 				contentType : "application/json",
 				success : function(data){
 					try{

@@ -365,6 +365,27 @@ public class UserController {
 		//session에 담았던 인증코드와 입력받은 인증코드가 같으면 success 반환
 		if(smsCode.equals(sessionSmsCode)){
 			resultMap.put("resultMsg", "success");
+			
+			//환자번호를 화면에 꼽아주는 부분에서 결함이 생길 수도 있기에 sms로도 환자번호를 전송해줌
+			//기존에는 화면에서 인증코드값만 올려줬기 때문에 여기서는 환자 정보를 알수 없기 때문에 화면에서 인코딩된 환자번호와 action(비번찾기인지 환자번호찾기인지)값을 올려줌
+			if("searchPId".equals(request.getParameter("certReqType"))){
+				final String pId = Base64ConvertUtil.base64Decode(request.getParameter("encodePid"));
+				final Map<String, Object> responseMap = this.userRegisterService.getPatientInfo(pId);
+				
+				try{
+					String smsMessage = null;
+					//SMS 전송 API를 위한 파라미터 설정
+					smsMessage = messageService.getMessage("mobile.message.searchPId010", request, new String[]{(String)responseMap.get("pName"),pId});
+					if(this.logger.isDebugEnabled()) { 
+						this.logger.debug("smsMessage : " + smsMessage);
+					}
+					//sms전송 요청 
+					this.smsService.sendSms((String) responseMap.get("pName"), (String) responseMap.get("cellphoneNo"), smsMessage);
+				}catch(Exception ex){
+					this.logger.error("SMS 전송 실패", ex);
+				}
+				
+			}
 		} 
 		else {
 			resultMap.put("resultMsg", "fail");
