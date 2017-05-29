@@ -903,7 +903,9 @@ var mcare_mobile = function(){
 		};
 		try{	
 			//사이드버튼 숨기기 추가 2017-03-17 
-			$("#menuBars_btn").hide();
+			if( mode === "landscape" ){				
+				$("#menuBars_btn").hide();
+			}
 			this.toNative( reqParam);
 		} catch(e) {
 			self.log(e,"mcare_mobile_changeOrientation");
