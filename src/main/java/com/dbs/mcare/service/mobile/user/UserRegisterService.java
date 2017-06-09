@@ -261,6 +261,25 @@ public class UserRegisterService {
 			if(this.comparePatientInfo(sReserved3, sName, sBirthDate)) {
 				sMessage = "정상 처리되었습니다.";
 				result = "success";
+				
+				//환자번호를 화면에 꼽아주는 부분에서 결함이 생길 수도 있기에 sms로도 환자번호를 전송해줌
+				//환자번호를 찾는 본인인증 프로세스가 정상적으로 동작한 후에 sms를 보내주기 위해 여기에 소스를 추가함
+				if("searchPId".equals(sReserved2)){
+					final Map<String, Object> responseMap = this.getPatientInfo(sReserved3);
+					
+					try{
+						String smsMessage = null;
+						//SMS 전송 API를 위한 파라미터 설정
+						smsMessage = messageService.getMessage("mobile.message.searchPId010", request, new String[]{(String)responseMap.get("pName"),sReserved3});
+						if(this.logger.isDebugEnabled()) { 
+							this.logger.debug("smsMessage : " + smsMessage);
+						}
+						//sms전송 요청 
+						this.smsService.sendSms((String) responseMap.get("pName"), (String) responseMap.get("cellphoneNo"), smsMessage);
+					}catch(Exception ex){
+						this.logger.error("SMS 전송 실패", ex);
+					}
+				}
 			}
 			else {
 				sMessage = "환자정보와 인증정보가 같지 않습니다.";
@@ -488,6 +507,25 @@ public class UserRegisterService {
 			if(this.comparePatientInfo(sReserved3, sName, sBirthDate)) {
 				sRtnMsg = "정상 처리되었습니다.";
 				result = "success";
+				
+				//환자번호를 화면에 꼽아주는 부분에서 결함이 생길 수도 있기에 sms로도 환자번호를 전송해줌
+				//환자번호를 찾는 본인인증 프로세스가 정상적으로 동작한 후에 sms를 보내주기 위해 여기에 소스를 추가함
+				if("searchPId".equals(sReserved2)){
+					final Map<String, Object> responseMap = this.getPatientInfo(sReserved3);
+					
+					try{
+						String smsMessage = null;
+						//SMS 전송 API를 위한 파라미터 설정
+						smsMessage = messageService.getMessage("mobile.message.searchPId010", request, new String[]{(String)responseMap.get("pName"),sReserved3});
+						if(this.logger.isDebugEnabled()) { 
+							this.logger.debug("smsMessage : " + smsMessage);
+						}
+						//sms전송 요청 
+						this.smsService.sendSms((String) responseMap.get("pName"), (String) responseMap.get("cellphoneNo"), smsMessage);
+					}catch(Exception ex){
+						this.logger.error("SMS 전송 실패", ex);
+					}
+				}
 			}
 			else {
 				sRtnMsg = "환자정보와 인증정보가 같지 않습니다.";
